@@ -28,20 +28,20 @@ Chain strategy: feature-branch-chain
 
 ## Phase 1 — Bootstrap (PR 1)
 
-- [ ] **T01** · `package.json` — add deps: express, @types/express, prisma, @prisma/client, pino, typescript, vitest, supertest, @types/supertest, ts-node, tsx. Script: `test`, `test:integration`, `dev`, `build`. · Spec: api-bootstrap/req-1 · Est: 40 lines
-- [ ] **T02** · `tsconfig.json` — strict mode, paths `@/ → src/`, `@api/ → api/`, rootDir, outDir. · Spec: api-bootstrap/req-1 · Est: 25 lines · Dep: T01
-- [ ] **T03** · `vitest.config.ts` — include `api/**/*.test.ts`, resolve aliases `@api/` and `@/`. · Spec: api-bootstrap/req-1 · Est: 20 lines · Dep: T02
-- [ ] **T04** · `docker/my.cnf` — `ft_min_word_len=2`, `innodb_ft_min_token_size=2`. · Spec: api-bootstrap/req-2 · Est: 8 lines
-- [ ] **T05** · `docker-compose.yml` — services `api` (port 3000, env_file) and `db` (MySQL 8, my.cnf volume, data volume). · Spec: api-bootstrap/req-2 · Est: 35 lines · Dep: T04
-- [ ] **T06** · `.env.example` — document `DATABASE_URL`, `PORT`, `NODE_ENV`. · Spec: api-bootstrap/req-2 · Est: 5 lines
-- [ ] **T07** · `prisma/schema.prisma` — mysql provider, `previewFeatures = ["fullTextSearch","fullTextIndex"]`, `Client` model with `@@fulltext([name,email])`, no `@relation` fields, `status Int @db.TinyInt @default(1)`. · Spec: client-management/req-schema · Est: 30 lines · Dep: T01
-- [ ] **T08** · `api/observability/logger.ts` — export pino JSON logger; level from `LOG_LEVEL` env or `'info'`. · Spec: api-bootstrap/req-4 · Est: 12 lines · Dep: T01
-- [ ] **T09** · `api/shared/infrastructure/prisma.ts` — singleton `PrismaClient` export (global cache pattern for hot-reload). · Spec: api-bootstrap/req-5 · Est: 15 lines · Dep: T07
-- [ ] **T10** · `api/shared/domain/BaseEntity.ts` — shared interface `{ id: number; createdAt: Date; updatedAt: Date }`. · Spec: client-management/req-1 · Est: 8 lines
-- [ ] **T11** · **RED** `api/shared/utils/sanitizeFtsQuery.test.ts` — failing tests: each of 6 operators stripped individually, combined `'+(cat) -dog* "poodle"'`, operators-only → `''`, empty → `''`, normal term trimmed. · Spec: client-search/req-1 · Est: 45 lines · Dep: T03
-- [ ] **T12** · **GREEN** `api/shared/utils/sanitizeFtsQuery.ts` — pure function strips `+ - * " ( )`, trims whitespace. All T11 tests pass. · Spec: client-search/req-1 · Est: 10 lines · Dep: T11
-- [ ] **T13** · **RED** `api/index.ts` health test — supertest test in `api/index.test.ts`: `GET /health → 200 { status: ok }`, unknown route → 404. · Spec: api-bootstrap/req-3 · Est: 18 lines · Dep: T03
-- [ ] **T14** · **GREEN** `api/index.ts` — Express app, mount `/api/v1` (stub router), `GET /health → 200 { status: ok }`, validate `DATABASE_URL` on startup or exit non-zero. All T13 tests pass. · Spec: api-bootstrap/req-3 · Est: 30 lines · Dep: T08, T09, T13
+- [x] **T01** · `package.json` — add deps: express, @types/express, prisma, @prisma/client, pino, typescript, vitest, supertest, @types/supertest, ts-node, tsx. Script: `test`, `test:integration`, `dev`, `build`. · Spec: api-bootstrap/req-1 · Est: 40 lines
+- [x] **T02** · `tsconfig.json` — strict mode, paths `@/ → src/`, `@api/ → api/`, rootDir, outDir. · Spec: api-bootstrap/req-1 · Est: 25 lines · Dep: T01
+- [x] **T03** · `vitest.config.ts` — include `api/**/*.test.ts`, resolve aliases `@api/` and `@/`. · Spec: api-bootstrap/req-1 · Est: 20 lines · Dep: T02
+- [x] **T04** · `docker/my.cnf` — `ft_min_word_len=2`, `innodb_ft_min_token_size=2`. · Spec: api-bootstrap/req-2 · Est: 8 lines
+- [x] **T05** · `docker-compose.yml` — services `api` (port 3000, env_file) and `db` (MySQL 8, my.cnf volume, data volume). · Spec: api-bootstrap/req-2 · Est: 35 lines · Dep: T04
+- [x] **T06** · `.env.example` — document `DATABASE_URL`, `PORT`, `NODE_ENV`. · Spec: api-bootstrap/req-2 · Est: 5 lines
+- [x] **T07** · `prisma/schema.prisma` — mysql provider, `previewFeatures = ["fullTextSearch","fullTextIndex"]`, `Client` model with `@@fulltext([name,email])`, no `@relation` fields, `status Int @db.TinyInt @default(1)`. · Spec: client-management/req-schema · Est: 30 lines · Dep: T01
+- [x] **T08** · `api/observability/logger.ts` — export pino JSON logger; level from `LOG_LEVEL` env or `'info'`. · Spec: api-bootstrap/req-4 · Est: 12 lines · Dep: T01
+- [x] **T09** · `api/shared/infrastructure/prisma.ts` — singleton `PrismaClient` export (global cache pattern for hot-reload). · Spec: api-bootstrap/req-5 · Est: 15 lines · Dep: T07
+- [x] **T10** · `api/shared/domain/BaseEntity.ts` — shared interface `{ id: number; createdAt: Date; updatedAt: Date }`. · Spec: client-management/req-1 · Est: 8 lines
+- [x] **T11** · **RED** `api/shared/utils/sanitizeFtsQuery.test.ts` — failing tests: each of 6 operators stripped individually, combined `'+(cat) -dog* "poodle"'`, operators-only → `''`, empty → `''`, normal term trimmed. · Spec: client-search/req-1 · Est: 45 lines · Dep: T03
+- [x] **T12** · **GREEN** `api/shared/utils/sanitizeFtsQuery.ts` — pure function strips `+ - * " ( )`, trims whitespace. All T11 tests pass. · Spec: client-search/req-1 · Est: 10 lines · Dep: T11
+- [x] **T13** · **RED** `api/index.ts` health test — supertest test in `api/index.test.ts`: `GET /health → 200 { status: ok }`, unknown route → 404. · Spec: api-bootstrap/req-3 · Est: 18 lines · Dep: T03
+- [x] **T14** · **GREEN** `api/index.ts` — Express app, mount `/api/v1` (stub router), `GET /health → 200 { status: ok }`, validate `DATABASE_URL` on startup or exit non-zero. All T13 tests pass. · Spec: api-bootstrap/req-3 · Est: 30 lines · Dep: T08, T09, T13
 
 ---
 
