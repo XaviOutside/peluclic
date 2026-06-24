@@ -36,4 +36,6 @@ export interface UpdateClientInput {
   phone?: string;
   phone2?: string | null;
   address?: string | null;
+  /** Only set by DeactivateClient use case — not exposed via UpdateClientDto */
+  status?: ClientStatus;
 }
