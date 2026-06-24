@@ -10,10 +10,10 @@ datasource db {
 
 model Client {
   id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(100)
-  email     String    @db.VarChar(150)
-  phone     String    @db.VarChar(20)
-  phone2    String?   @db.VarChar(20)
+  name      String    @db.VarChar(255)
+  email     String    @db.VarChar(255)
+  phone     String    @db.VarChar(50)
+  phone2    String?   @db.VarChar(50)
   address   String?   @db.VarChar(255)
   status    Int       @db.TinyInt @default(1) // 0=inactive, 1=active
   createdAt DateTime  @default(now()) @map("created_at")

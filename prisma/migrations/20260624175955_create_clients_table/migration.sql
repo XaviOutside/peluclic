@@ -1,10 +1,10 @@
 -- CreateTable
 CREATE TABLE `clients` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
-    `email` VARCHAR(150) NOT NULL,
-    `phone` VARCHAR(20) NOT NULL,
-    `phone2` VARCHAR(20) NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(50) NOT NULL,
+    `phone2` VARCHAR(50) NULL,
     `address` VARCHAR(255) NULL,
     `status` TINYINT NOT NULL DEFAULT 1,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
