@@ -63,7 +63,7 @@ export default function PetCreatePage() {
 
     try {
       const pet = await createMutation.mutate({
-        client_id: Number(data.clientId),
+        clientId: Number(data.clientId),
         name: data.name.trim(),
         species: data.species.trim(),
         breed: data.breed.trim(),

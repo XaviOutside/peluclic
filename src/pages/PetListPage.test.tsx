@@ -7,7 +7,7 @@ afterEach(cleanup);
 
 const mockPet = {
   id: 1,
-  client_id: 10,
+  clientId: 10,
   name: 'Max',
   species: 'Dog',
   breed: 'Golden Retriever',

@@ -161,7 +161,7 @@ export default function PetTable({
               </Td>
               <Td label="Species">{pet.species}</Td>
               <Td label="Breed">{pet.breed}</Td>
-              <Td label="Client">{getClientDisplay(pet.client_id, clientNames)}</Td>
+              <Td label="Client">{getClientDisplay(pet.clientId, clientNames)}</Td>
               <Td label="Status">
                 <StatusBadge status={pet.status} />
               </Td>

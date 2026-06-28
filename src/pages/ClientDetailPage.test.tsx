@@ -20,7 +20,7 @@ const mockClient = {
 const mockPets = [
   {
     id: 1,
-    client_id: 1,
+    clientId: 1,
     name: 'Max',
     species: 'Dog',
     breed: 'Golden Retriever',
@@ -34,7 +34,7 @@ const mockPets = [
   },
   {
     id: 2,
-    client_id: 1,
+    clientId: 1,
     name: 'Bella',
     species: 'Dog',
     breed: 'Labrador',

@@ -9,7 +9,7 @@ import {
 
 const samplePet = {
   id: 1,
-  client_id: 10,
+  clientId: 10,
   name: 'Max',
   species: 'Dog',
   breed: 'Golden Retriever',
@@ -42,7 +42,7 @@ describe('useCreatePet', () => {
     let created;
     await act(async () => {
       created = await result.current.mutate({
-        client_id: 10,
+        clientId: 10,
         name: 'Max',
         species: 'Dog',
         breed: 'Golden Retriever',
@@ -61,7 +61,7 @@ describe('useCreatePet', () => {
       json: () =>
         Promise.resolve({
           error: 'Invalid client',
-          fieldErrors: { client_id: 'Client does not exist or is inactive' },
+          fieldErrors: { clientId: 'Client does not exist or is inactive' },
         }),
     });
 
@@ -70,7 +70,7 @@ describe('useCreatePet', () => {
     await act(async () => {
       try {
         await result.current.mutate({
-          client_id: 999,
+          clientId: 999,
           name: 'Ghost',
           species: 'Dog',
           breed: 'Unknown',

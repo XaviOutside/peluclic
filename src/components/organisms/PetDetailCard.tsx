@@ -107,7 +107,7 @@ export default function PetDetailCard({
           ) : (
             <DetailRow
               label="Client"
-              value={`Client #${pet.client_id}`}
+              value={`Client #${pet.clientId}`}
             />
           )}
           <DetailRow label="Created" value={formatDate(pet.createdAt)} />

@@ -177,7 +177,7 @@ export default function PetEditPage() {
             dateOfBirth: pet.dateOfBirth ?? '',
             weightKg: pet.weightKg?.toString() ?? '',
             notes: pet.notes ?? '',
-            clientId: String(pet.client_id),
+            clientId: String(pet.clientId),
           }}
           onSubmit={handleSubmit}
           isLoading={updateMutation.isLoading}

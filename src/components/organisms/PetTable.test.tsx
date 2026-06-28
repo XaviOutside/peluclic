@@ -8,7 +8,7 @@ afterEach(cleanup);
 const mockPets: Pet[] = [
   {
     id: 1,
-    client_id: 10,
+    clientId: 10,
     name: 'Buddy',
     species: 'Dog',
     breed: 'Golden Retriever',
@@ -22,7 +22,7 @@ const mockPets: Pet[] = [
   },
   {
     id: 2,
-    client_id: 20,
+    clientId: 20,
     name: 'Luna',
     species: 'Cat',
     breed: 'Siamese',

@@ -19,7 +19,7 @@ beforeEach(() => {
 
 const samplePet = {
   id: 1,
-  client_id: 10,
+  clientId: 10,
   name: 'Max',
   species: 'Dog',
   breed: 'Golden Retriever',
@@ -113,7 +113,7 @@ describe('getPet', () => {
 
 describe('createPet', () => {
   it('posts data and returns created pet', async () => {
-    const input = { client_id: 10, name: 'Bella', species: 'Dog', breed: 'Labrador' };
+    const input = { clientId: 10, name: 'Bella', species: 'Dog', breed: 'Labrador' };
     const created = { id: 2, ...input, sex: 'unknown', dateOfBirth: null, weightKg: null, notes: null, status: 'active', createdAt: '', updatedAt: '' };
     mockFetch.mockResolvedValueOnce({
       ok: true,
