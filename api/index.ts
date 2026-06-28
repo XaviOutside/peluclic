@@ -22,6 +22,16 @@ import { SoftDeletePetUseCase } from './pets/application/SoftDeletePet';
 import { SearchPetsUseCase } from './pets/application/SearchPets';
 import { PetController } from './pets/interface/PetController';
 import { createPetRouter } from './pets/interface/petRouter';
+import { PrismaServiceRepository } from './services/infrastructure/PrismaServiceRepository';
+import { CreateServiceUseCase } from './services/application/CreateService';
+import { GetServiceUseCase } from './services/application/GetService';
+import { ListServicesUseCase } from './services/application/ListServices';
+import { UpdateServiceUseCase } from './services/application/UpdateService';
+import { DeactivateServiceUseCase } from './services/application/DeactivateService';
+import { SoftDeleteServiceUseCase } from './services/application/SoftDeleteService';
+import { SearchServicesUseCase } from './services/application/SearchServices';
+import { ServiceController } from './services/interface/ServiceController';
+import { createServiceRouter } from './services/interface/serviceRouter';
 
 // Validate required environment variables at startup (skip in test environment)
 if (process.env['NODE_ENV'] !== 'test' && !process.env['DATABASE_URL']) {
@@ -48,6 +58,7 @@ app.get('/health', (_req: Request, res: Response) => {
 // Repositories — shared across bounded contexts for cascade operations
 const clientRepository = new PrismaClientRepository();
 const petRepository = new PrismaPetRepository();
+const serviceRepository = new PrismaServiceRepository();
 
 // Clients bounded context — wire dependencies
 const clientController = new ClientController(
@@ -72,6 +83,18 @@ const petController = new PetController(
   new SearchPetsUseCase(petRepository),
 );
 app.use('/api/v1/pets', createPetRouter(petController));
+
+// Services bounded context — wire dependencies
+const serviceController = new ServiceController(
+  new CreateServiceUseCase(serviceRepository),
+  new GetServiceUseCase(serviceRepository),
+  new ListServicesUseCase(serviceRepository),
+  new UpdateServiceUseCase(serviceRepository),
+  new DeactivateServiceUseCase(serviceRepository),
+  new SoftDeleteServiceUseCase(serviceRepository),
+  new SearchServicesUseCase(serviceRepository),
+);
+app.use('/api/v1/services', createServiceRouter(serviceController));
 
 // 404 handler — must be last route
 app.use((_req: Request, res: Response) => {
