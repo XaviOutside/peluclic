@@ -32,28 +32,28 @@ Chain strategy: pending
 
 ## PR 2: Infrastructure
 
-- [ ] T-05 RED Integration tests for PrismaPetRepository vs real DB.
-- [ ] T-06 GREEN `PrismaPetRepository.ts` — Prisma impl with FTS `$queryRaw`.
+- [x] T-05 RED Integration tests for PrismaPetRepository vs real DB.
+- [x] T-06 GREEN `PrismaPetRepository.ts` — Prisma impl with FTS `$queryRaw`.
 
 ## PR 3: Application — Create/Get/List/Search
 
-- [ ] T-07 RED+GREEN CreatePet — validate name/species/client_id, check client active, create.
-- [ ] T-08 RED+GREEN GetPet — by id, NotFound if null or deleted.
-- [ ] T-09 RED+GREEN ListPets — pagination, optional clientId, active-only.
-- [ ] T-10 RED+GREEN SearchPets — sanitize FTS, delegate to repo.
+- [x] T-07 RED+GREEN CreatePet — validate name/species/client_id, check client active, create.
+- [x] T-08 RED+GREEN GetPet — by id, NotFound if null or deleted.
+- [x] T-09 RED+GREEN ListPets — pagination, optional clientId, active-only.
+- [x] T-10 RED+GREEN SearchPets — sanitize FTS, delegate to repo.
 
 ## PR 4: Application — Update/Deactivate/SoftDelete
 
-- [ ] T-11 RED+GREEN UpdatePet — block status, validate client_id if provided.
-- [ ] T-12 RED+GREEN DeactivatePet — set status=INACTIVE.
-- [ ] T-13 RED+GREEN SoftDeletePet — set deletedAt, 409 if already deleted.
+- [x] T-11 RED+GREEN UpdatePet — block status, validate client_id if provided.
+- [x] T-12 RED+GREEN DeactivatePet — set status=INACTIVE.
+- [x] T-13 RED+GREEN SoftDeletePet — set deletedAt, 409 if already deleted.
 
 ## PR 5: Interface
 
-- [ ] T-14 DTOs — CreatePetDto, UpdatePetDto, PetResponseDto + TINYINT mapper.
-- [ ] T-15 PetController — 7 handlers, handleError (404/409/422).
-- [ ] T-16 petRouter — factory, /search before /:id.
-- [ ] T-17 RED+GREEN Controller supertest — all codes, DTO shape, no stack in 500.
+- [x] T-14 DTOs — CreatePetDto, UpdatePetDto, PetResponseDto + TINYINT mapper.
+- [x] T-15 PetController — 7 handlers, handleError (404/409/422).
+- [x] T-16 petRouter — factory, /search before /:id.
+- [x] T-17 RED+GREEN Controller supertest — all codes, DTO shape, no stack in 500.
 
 ## PR 6: Cascade + Wiring
 
