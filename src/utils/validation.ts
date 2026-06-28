@@ -178,6 +178,50 @@ export function validatePetForm(data: PetFormData): FieldErrors {
   return errors;
 }
 
+export interface ServiceFormData {
+  name: string;
+  description: string;
+  durationMinutes: string;
+  price: string;
+}
+
+/**
+ * Validates all fields in a service form.
+ */
+export function validateServiceForm(data: ServiceFormData): FieldErrors {
+  const errors: FieldErrors = {};
+
+  // Name: required, 1-255
+  let err = validateRequired(data.name, 'Name');
+  if (err) {
+    errors.name = err;
+  } else {
+    err = validateLength(data.name, 'Name', 1, 255);
+    if (err) errors.name = err;
+  }
+
+  // Price: required, must be a valid non-negative dollar amount
+  err = validateRequired(data.price, 'Price');
+  if (err) {
+    errors.price = err;
+  } else {
+    const priceNum = Number(data.price);
+    if (isNaN(priceNum) || priceNum < 0) {
+      errors.price = 'Price must be a non-negative number';
+    }
+  }
+
+  // Duration: if provided, must be a positive integer
+  if (data.durationMinutes) {
+    const dur = Number(data.durationMinutes);
+    if (isNaN(dur) || dur <= 0 || !Number.isInteger(dur)) {
+      errors.durationMinutes = 'Duration must be a positive whole number';
+    }
+  }
+
+  return errors;
+}
+
 /**
  * Returns true if a field errors map has no actual errors.
  * Fields with empty-string values are considered valid.
