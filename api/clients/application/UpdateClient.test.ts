@@ -36,6 +36,7 @@ function makeRepository(): IClientRepository {
   return {
     create: vi.fn(),
     findById: vi.fn(),
+    existsById: vi.fn(),
     findAll: vi.fn(),
     update: vi.fn(),
     softDelete: vi.fn(),
@@ -47,6 +48,7 @@ function makePetRepository(): IPetRepository {
   return {
     create: vi.fn(),
     findById: vi.fn(),
+    existsById: vi.fn(),
     findAll: vi.fn(),
     findAllByClientId: vi.fn(),
     update: vi.fn(),
@@ -119,25 +121,28 @@ describe('SoftDeleteClientUseCase', () => {
     useCase = new SoftDeleteClientUseCase(repository, petRepository);
   });
 
-  it('calls repository.softDelete when client is active', async () => {
+  it('calls repository.softDelete when client is active (existsById true, findById returns record)', async () => {
+    vi.mocked(repository.existsById).mockResolvedValue(true);
     vi.mocked(repository.findById).mockResolvedValue(activeClient);
     vi.mocked(repository.softDelete).mockResolvedValue(undefined);
 
     await useCase.execute(1);
 
+    expect(repository.existsById).toHaveBeenCalledWith(1);
     expect(repository.findById).toHaveBeenCalledWith(1);
     expect(repository.softDelete).toHaveBeenCalledWith(1);
   });
 
-  it('throws ClientNotFoundError when client does not exist', async () => {
-    vi.mocked(repository.findById).mockResolvedValue(null);
+  it('throws ClientNotFoundError when client does not exist (existsById returns false)', async () => {
+    vi.mocked(repository.existsById).mockResolvedValue(false);
 
     await expect(useCase.execute(99)).rejects.toThrow(ClientNotFoundError);
     expect(repository.softDelete).not.toHaveBeenCalled();
   });
 
-  it('throws ClientAlreadyDeletedError when client is already soft-deleted', async () => {
-    vi.mocked(repository.findById).mockResolvedValue(deletedClient);
+  it('throws ClientAlreadyDeletedError when client is already soft-deleted (existsById true, findById null)', async () => {
+    vi.mocked(repository.existsById).mockResolvedValue(true);
+    vi.mocked(repository.findById).mockResolvedValue(null); // deletedAt filter hides it
 
     await expect(useCase.execute(2)).rejects.toThrow(ClientAlreadyDeletedError);
     expect(repository.softDelete).not.toHaveBeenCalled();

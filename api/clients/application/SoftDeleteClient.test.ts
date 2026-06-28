@@ -28,6 +28,7 @@ function makeClientRepository(): IClientRepository {
   return {
     create: vi.fn(),
     findById: vi.fn().mockResolvedValue(mockClient),
+    existsById: vi.fn().mockResolvedValue(true),
     findAll: vi.fn(),
     update: vi.fn(),
     softDelete: vi.fn().mockResolvedValue(undefined),
@@ -39,6 +40,7 @@ function makePetRepository(): IPetRepository {
   return {
     create: vi.fn(),
     findById: vi.fn(),
+    existsById: vi.fn(),
     findAll: vi.fn(),
     findAllByClientId: vi.fn(),
     update: vi.fn(),
@@ -61,24 +63,27 @@ describe('SoftDeleteClientUseCase', () => {
     useCase = new SoftDeleteClientUseCase(clientRepository, petRepository);
   });
 
-  it('calls softDeleteAllByClientId after soft-deleting the client', async () => {
+  it('calls softDeleteAllByClientId after soft-deleting the client (existsById true, findById returns record)', async () => {
     await useCase.execute(1);
 
+    expect(clientRepository.existsById).toHaveBeenCalledWith(1);
+    expect(clientRepository.findById).toHaveBeenCalledWith(1);
     expect(clientRepository.softDelete).toHaveBeenCalledWith(1);
     expect(petRepository.softDeleteAllByClientId).toHaveBeenCalledWith(1);
     expect(petRepository.softDeleteAllByClientId).toHaveBeenCalledOnce();
   });
 
-  it('throws ClientNotFoundError when client does not exist (null)', async () => {
-    vi.mocked(clientRepository.findById).mockResolvedValue(null);
+  it('throws ClientNotFoundError when client does not exist (existsById returns false)', async () => {
+    vi.mocked(clientRepository.existsById).mockResolvedValue(false);
 
     await expect(useCase.execute(99)).rejects.toThrow(ClientNotFoundError);
     expect(clientRepository.softDelete).not.toHaveBeenCalled();
     expect(petRepository.softDeleteAllByClientId).not.toHaveBeenCalled();
   });
 
-  it('throws ClientAlreadyDeletedError when client is already soft-deleted', async () => {
-    vi.mocked(clientRepository.findById).mockResolvedValue(mockDeletedClient);
+  it('throws ClientAlreadyDeletedError when client is already soft-deleted (existsById true, findById null)', async () => {
+    vi.mocked(clientRepository.existsById).mockResolvedValue(true);
+    vi.mocked(clientRepository.findById).mockResolvedValue(null); // deletedAt filter hides it
 
     await expect(useCase.execute(2)).rejects.toThrow(ClientAlreadyDeletedError);
     expect(clientRepository.softDelete).not.toHaveBeenCalled();

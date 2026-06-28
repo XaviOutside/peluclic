@@ -35,4 +35,6 @@ export interface UpdateServiceInput {
   description?: string | null;
   durationMinutes?: number | null;
   price?: number; // integer cents
+  /** Only set by DeactivateService use case — not exposed via UpdateServiceDto */
+  status?: ServiceStatus;
 }

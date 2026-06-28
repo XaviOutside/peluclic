@@ -141,6 +141,29 @@ describe('PrismaClientRepository', () => {
     });
   });
 
+  describe('existsById', () => {
+    it('returns true for an active, non-deleted client', async () => {
+      const seeded = await seedClient({ name: 'Exists Client', email: 'exists@example.com' });
+      createdIds.push(seeded.id);
+
+      const exists = await repo.existsById(seeded.id);
+      expect(exists).toBe(true);
+    });
+
+    it('returns true for a soft-deleted client (row still exists)', async () => {
+      const seeded = await seedClient({ name: 'Del Exists', email: 'delexists@example.com', deletedAt: new Date() });
+      createdIds.push(seeded.id);
+
+      const exists = await repo.existsById(seeded.id);
+      expect(exists).toBe(true);
+    });
+
+    it('returns false when client does not exist at all', async () => {
+      const exists = await repo.existsById(9999999);
+      expect(exists).toBe(false);
+    });
+  });
+
   describe('update', () => {
     it('modifies fields and returns the updated client', async () => {
       const seeded = await seedClient({ name: 'Before Update', email: 'before@example.com' });

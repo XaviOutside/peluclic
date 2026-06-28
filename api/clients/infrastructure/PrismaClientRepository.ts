@@ -41,6 +41,15 @@ export class PrismaClientRepository implements IClientRepository {
     return this.mapToClient(row);
   }
 
+  async existsById(id: number): Promise<boolean> {
+    const row = await prisma.client.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    return row !== null;
+  }
+
   async findAll(page: number, limit: number): Promise<Client[]> {
     const skip = (page - 1) * limit;
 

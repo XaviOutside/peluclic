@@ -46,6 +46,15 @@ export class PrismaPetRepository implements IPetRepository {
     return this.mapToPet(row);
   }
 
+  async existsById(id: number): Promise<boolean> {
+    const row = await prisma.pet.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    return row !== null;
+  }
+
   async findAll(page: number, limit: number): Promise<Pet[]> {
     const skip = (page - 1) * limit;
 

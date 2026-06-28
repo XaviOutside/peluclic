@@ -90,4 +90,21 @@ describe('UpdateServiceUseCase', () => {
       useCase.execute(1, { durationMinutes: -5 }),
     ).rejects.toThrow('Duration must be a positive integer');
   });
+
+  it('passes status field through to repository.update when provided', async () => {
+    const updated = {
+      ...mockService,
+      name: 'Updated',
+      status: SERVICE_STATUS.INACTIVE,
+    };
+    const repo = makeRepository({
+      update: vi.fn().mockResolvedValue(updated),
+    });
+    const uc = new UpdateServiceUseCase(repo);
+
+    const result = await uc.execute(1, { name: 'Updated', status: SERVICE_STATUS.INACTIVE });
+
+    expect(result.status).toBe(SERVICE_STATUS.INACTIVE);
+    expect(repo.update).toHaveBeenCalledWith(1, { name: 'Updated', status: SERVICE_STATUS.INACTIVE });
+  });
 });

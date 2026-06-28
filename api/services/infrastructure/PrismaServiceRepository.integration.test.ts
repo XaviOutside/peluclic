@@ -207,6 +207,69 @@ describe('PrismaServiceRepository', () => {
     });
   });
 
+  describe('update status', () => {
+    it('applies status change when provided in update input', async () => {
+      const seeded = await seedService({
+        name: 'Status Change Test',
+        price: 1000,
+        status: SERVICE_STATUS.ACTIVE,
+      });
+      serviceIds.push(seeded.id);
+
+      const updated = await repo.update(seeded.id, { status: SERVICE_STATUS.INACTIVE });
+
+      expect(updated.status).toBe(SERVICE_STATUS.INACTIVE);
+    });
+
+    it('only updates status when status is the only field provided', async () => {
+      const seeded = await seedService({
+        name: 'Partial Status',
+        description: 'Keep me',
+        durationMinutes: 30,
+        price: 2000,
+        status: SERVICE_STATUS.INACTIVE,
+      });
+      serviceIds.push(seeded.id);
+
+      const updated = await repo.update(seeded.id, { status: SERVICE_STATUS.ACTIVE });
+
+      expect(updated.status).toBe(SERVICE_STATUS.ACTIVE);
+      expect(updated.name).toBe('Partial Status'); // unchanged
+      expect(updated.description).toBe('Keep me'); // unchanged
+      expect(updated.price).toBe(2000); // unchanged
+    });
+  });
+
+  describe('existsById', () => {
+    it('returns true for an active, non-deleted service', async () => {
+      const seeded = await seedService({
+        name: 'Exists Check',
+        price: 1000,
+      });
+      serviceIds.push(seeded.id);
+
+      const exists = await repo.existsById(seeded.id);
+      expect(exists).toBe(true);
+    });
+
+    it('returns true for a soft-deleted service (row still exists)', async () => {
+      const seeded = await seedService({
+        name: 'Still Exists',
+        price: 1000,
+        deletedAt: new Date(),
+      });
+      serviceIds.push(seeded.id);
+
+      const exists = await repo.existsById(seeded.id);
+      expect(exists).toBe(true);
+    });
+
+    it('returns false when service does not exist at all', async () => {
+      const exists = await repo.existsById(9999999);
+      expect(exists).toBe(false);
+    });
+  });
+
   describe('softDelete', () => {
     it('sets deletedAt so findById returns null afterwards', async () => {
       const seeded = await seedService({ name: 'To Delete', price: 1000 });

@@ -7,6 +7,10 @@ import PetListPage from '@/pages/PetListPage';
 import PetCreatePage from '@/pages/PetCreatePage';
 import PetDetailPage from '@/pages/PetDetailPage';
 import PetEditPage from '@/pages/PetEditPage';
+import ServiceListPage from '@/pages/ServiceListPage';
+import ServiceCreatePage from '@/pages/ServiceCreatePage';
+import ServiceDetailPage from '@/pages/ServiceDetailPage';
+import ServiceEditPage from '@/pages/ServiceEditPage';
 import Button from '@/components/atoms/Button';
 
 function NotFoundPage() {
@@ -58,6 +62,16 @@ export default function App() {
               >
                 Pets
               </a>
+              <a
+                href="/services"
+                className="text-sm font-medium text-gray-600 hover:text-gray-900"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = '/services';
+                }}
+              >
+                Services
+              </a>
             </nav>
           </div>
         </header>
@@ -72,6 +86,10 @@ export default function App() {
             <Route path="/pets/new" element={<PetCreatePage />} />
             <Route path="/pets/:id" element={<PetDetailPage />} />
             <Route path="/pets/:id/edit" element={<PetEditPage />} />
+            <Route path="/services" element={<ServiceListPage />} />
+            <Route path="/services/new" element={<ServiceCreatePage />} />
+            <Route path="/services/:id" element={<ServiceDetailPage />} />
+            <Route path="/services/:id/edit" element={<ServiceEditPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

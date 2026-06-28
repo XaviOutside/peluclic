@@ -7,6 +7,7 @@ import { Pet, CreatePetInput, UpdatePetInput } from './Pet';
 export interface IPetRepository {
   create(data: CreatePetInput): Promise<Pet>;
   findById(id: number): Promise<Pet | null>;
+  existsById(id: number): Promise<boolean>;
   findAll(page: number, limit: number): Promise<Pet[]>;
   findAllByClientId(clientId: number, page: number, limit: number): Promise<Pet[]>;
   update(id: number, data: UpdatePetInput): Promise<Pet>;

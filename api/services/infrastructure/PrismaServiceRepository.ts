@@ -40,6 +40,15 @@ export class PrismaServiceRepository implements IServiceRepository {
     return this.mapToService(row);
   }
 
+  async existsById(id: number): Promise<boolean> {
+    const row = await prisma.service.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    return row !== null;
+  }
+
   async findAll(page: number, limit: number): Promise<Service[]> {
     const skip = (page - 1) * limit;
 
@@ -60,6 +69,7 @@ export class PrismaServiceRepository implements IServiceRepository {
     if (data.description !== undefined) updatePayload['description'] = data.description;
     if (data.durationMinutes !== undefined) updatePayload['durationMinutes'] = data.durationMinutes;
     if (data.price !== undefined) updatePayload['price'] = data.price;
+    if (data.status !== undefined) updatePayload['status'] = data.status;
 
     const row = await prisma.service.update({
       where: { id },

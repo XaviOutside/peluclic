@@ -8,6 +8,8 @@ export class UpdateServiceUseCase {
   constructor(private readonly repository: IServiceRepository) {}
 
   async execute(id: number, input: UpdateServiceInput): Promise<Service> {
+    // status is accepted internally for DeactivateService but must not leak
+    // through the public update endpoint — the controller layer strips it.
     const service = await this.repository.findById(id);
 
     if (!service || service.deletedAt !== null) {
@@ -34,13 +36,14 @@ export class UpdateServiceUseCase {
       }
     }
 
-    const { name, description, durationMinutes, price } = input;
+    const { name, description, durationMinutes, price, status } = input;
     const updateData: UpdateServiceInput = {};
 
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
     if (durationMinutes !== undefined) updateData.durationMinutes = durationMinutes;
     if (price !== undefined) updateData.price = price;
+    if (status !== undefined) updateData.status = status;
 
     return this.repository.update(id, updateData);
   }

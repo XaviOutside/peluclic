@@ -9,13 +9,15 @@ export class SoftDeleteClientUseCase {
   ) {}
 
   async execute(id: number): Promise<void> {
-    const client = await this.repository.findById(id);
+    const exists = await this.repository.existsById(id);
 
-    if (!client) {
+    if (!exists) {
       throw new ClientNotFoundError(id);
     }
 
-    if (client.deletedAt !== null) {
+    const client = await this.repository.findById(id);
+
+    if (!client) {
       throw new ClientAlreadyDeletedError(id);
     }
 

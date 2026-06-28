@@ -5,13 +5,15 @@ export class SoftDeleteServiceUseCase {
   constructor(private readonly repository: IServiceRepository) {}
 
   async execute(id: number): Promise<void> {
-    const service = await this.repository.findById(id);
+    const exists = await this.repository.existsById(id);
 
-    if (!service) {
+    if (!exists) {
       throw new NotFoundError('Service', id);
     }
 
-    if (service.deletedAt !== null) {
+    const service = await this.repository.findById(id);
+
+    if (!service) {
       throw new AlreadyDeletedError('Service', id);
     }
 

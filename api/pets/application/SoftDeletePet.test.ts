@@ -30,6 +30,7 @@ function makeRepository(): IPetRepository {
   return {
     create: vi.fn(),
     findById: vi.fn(),
+    existsById: vi.fn(),
     findAll: vi.fn(),
     findAllByClientId: vi.fn(),
     update: vi.fn(),
@@ -50,25 +51,28 @@ describe('SoftDeletePetUseCase', () => {
     useCase = new SoftDeletePetUseCase(repository);
   });
 
-  it('calls repository.softDelete when pet is active', async () => {
+  it('calls repository.softDelete when pet is active (existsById true, findById returns record)', async () => {
+    vi.mocked(repository.existsById).mockResolvedValue(true);
     vi.mocked(repository.findById).mockResolvedValue(activePet);
     vi.mocked(repository.softDelete).mockResolvedValue(undefined);
 
     await useCase.execute(7);
 
+    expect(repository.existsById).toHaveBeenCalledWith(7);
     expect(repository.findById).toHaveBeenCalledWith(7);
     expect(repository.softDelete).toHaveBeenCalledWith(7);
   });
 
-  it('throws PetNotFoundError when pet does not exist (null)', async () => {
-    vi.mocked(repository.findById).mockResolvedValue(null);
+  it('throws PetNotFoundError when pet does not exist (existsById returns false)', async () => {
+    vi.mocked(repository.existsById).mockResolvedValue(false);
 
     await expect(useCase.execute(99)).rejects.toThrow(PetNotFoundError);
     expect(repository.softDelete).not.toHaveBeenCalled();
   });
 
-  it('throws PetAlreadyDeletedError when pet is already soft-deleted', async () => {
-    vi.mocked(repository.findById).mockResolvedValue(deletedPet);
+  it('throws PetAlreadyDeletedError when pet is already soft-deleted (existsById true, findById null)', async () => {
+    vi.mocked(repository.existsById).mockResolvedValue(true);
+    vi.mocked(repository.findById).mockResolvedValue(null); // deletedAt filter hides it
 
     await expect(useCase.execute(8)).rejects.toThrow(PetAlreadyDeletedError);
     expect(repository.softDelete).not.toHaveBeenCalled();
