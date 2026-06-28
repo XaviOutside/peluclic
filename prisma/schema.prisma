@@ -43,3 +43,18 @@ model Pet {
   @@fulltext([name, breed, notes])
   @@map("pets")
 }
+
+model Service {
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(255)
+  description     String?   @db.Text
+  durationMinutes Int?      @map("duration_minutes")
+  price           Int       // cents (e.g. 2500 = $25.00)
+  status          Int       @db.TinyInt @default(1) // 0=inactive, 1=active
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+
+  @@fulltext([name, description])
+  @@map("services")
+}
