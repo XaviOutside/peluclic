@@ -14,4 +14,6 @@ export interface UpdateServiceDto {
   durationMinutes?: number | null;
   /** Updated price in dollars — optional, non-negative */
   price?: number;
+  /** Link service to a pet (set to null to unlink) */
+  petId?: number | null;
 }

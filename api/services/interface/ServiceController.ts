@@ -74,6 +74,7 @@ export class ServiceController {
         description: body.description,
         durationMinutes: body.durationMinutes,
         price: Math.round(body.price * 100), // dollars → cents
+        petId: body.petId,
       });
       res.status(201).json(toServiceResponseDto(service));
     } catch (err) {
@@ -103,8 +104,9 @@ export class ServiceController {
     try {
       const page = req.query['page'] ? parseInt(req.query['page'] as string, 10) : undefined;
       const limit = req.query['limit'] ? parseInt(req.query['limit'] as string, 10) : undefined;
+      const petId = req.query['petId'] ? parseInt(req.query['petId'] as string, 10) : undefined;
 
-      const services = await this.listServicesUseCase.execute({ page, limit });
+      const services = await this.listServicesUseCase.execute({ page, limit, petId });
       res.status(200).json(services.map(toServiceResponseDto));
     } catch (err) {
       handleError(err, res);
@@ -136,6 +138,7 @@ export class ServiceController {
         description: body.description,
         durationMinutes: body.durationMinutes,
         price: body.price !== undefined ? Math.round(body.price * 100) : undefined, // dollars → cents
+        petId: body.petId,
       });
       res.status(200).json(toServiceResponseDto(service));
     } catch (err) {

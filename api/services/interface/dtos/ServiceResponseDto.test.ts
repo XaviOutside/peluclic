@@ -18,6 +18,7 @@ const makeService = (overrides: Partial<Service> = {}): Service => ({
   description: 'Complete grooming',
   durationMinutes: 60,
   price: 5000,
+  petId: null,
   status: SERVICE_STATUS.ACTIVE as ServiceStatus,
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
   updatedAt: new Date('2026-06-01T12:00:00.000Z'),
@@ -75,5 +76,15 @@ describe('toServiceResponseDto', () => {
 
     expect(dto.createdAt).toBe('2025-12-25T10:30:00.000Z');
     expect(dto.updatedAt).toBe('2026-01-15T14:45:00.000Z');
+  });
+
+  it('maps petId: null to null in DTO', () => {
+    const dto = toServiceResponseDto(makeService({ petId: null }));
+    expect(dto.petId).toBeNull();
+  });
+
+  it('maps petId: 5 to 5 in DTO', () => {
+    const dto = toServiceResponseDto(makeService({ petId: 5 }));
+    expect(dto.petId).toBe(5);
   });
 });

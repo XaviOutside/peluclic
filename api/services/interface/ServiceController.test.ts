@@ -25,6 +25,7 @@ const domainService = {
   description: 'Complete grooming package',
   durationMinutes: 60,
   price: 5000,
+  petId: null,
   status: 1 as ServiceStatus,
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
   updatedAt: new Date('2026-01-01T00:00:00.000Z'),
@@ -38,6 +39,7 @@ const expectedDto = {
   description: 'Complete grooming package',
   durationMinutes: 60,
   price: 50.00,
+  petId: null,
   status: 'active',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
@@ -134,6 +136,23 @@ describe('POST /api/v1/services', () => {
 
     expect(res.status).toBe(422);
   });
+
+  it('passes petId through to use case on create', async () => {
+    const withPet = { ...domainService, petId: 5 };
+    (mockCreate.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce(withPet);
+
+    const res = await request(makeApp())
+      .post('/api/v1/services')
+      .send({ name: 'Pet Groom', price: 50, petId: 5 });
+
+    expect(res.status).toBe(201);
+    expect(res.body.petId).toBe(5);
+    expect(mockCreate.execute).toHaveBeenCalledWith({
+      name: 'Pet Groom',
+      price: 5000,
+      petId: 5,
+    });
+  });
 });
 
 describe('GET /api/v1/services/search', () => {
@@ -180,6 +199,14 @@ describe('GET /api/v1/services', () => {
     await request(makeApp()).get('/api/v1/services?page=2&limit=10');
 
     expect(mockList.execute).toHaveBeenCalledWith({ page: 2, limit: 10 });
+  });
+
+  it('passes petId query param to list use case', async () => {
+    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+
+    await request(makeApp()).get('/api/v1/services?petId=5');
+
+    expect(mockList.execute).toHaveBeenCalledWith({ petId: 5 });
   });
 });
 
@@ -258,6 +285,36 @@ describe('PUT /api/v1/services/:id', () => {
       .send({ name: 'Test' });
 
     expect(res.status).toBe(404);
+  });
+
+  it('passes petId through to update use case for linking', async () => {
+    const linked = { ...domainService, petId: 5 };
+    (mockUpdate.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce(linked);
+
+    const res = await request(makeApp())
+      .put('/api/v1/services/1')
+      .send({ petId: 5 });
+
+    expect(res.status).toBe(200);
+    expect(res.body.petId).toBe(5);
+    expect(mockUpdate.execute).toHaveBeenCalledWith(1, {
+      petId: 5,
+    });
+  });
+
+  it('passes petId: null through to update use case for unlinking', async () => {
+    const unlinked = { ...domainService, petId: null };
+    (mockUpdate.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce(unlinked);
+
+    const res = await request(makeApp())
+      .put('/api/v1/services/1')
+      .send({ petId: null });
+
+    expect(res.status).toBe(200);
+    expect(res.body.petId).toBeNull();
+    expect(mockUpdate.execute).toHaveBeenCalledWith(1, {
+      petId: null,
+    });
   });
 });
 

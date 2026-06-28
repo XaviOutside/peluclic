@@ -14,4 +14,6 @@ export interface CreateServiceDto {
   durationMinutes?: number;
   /** Price in dollars — required, non-negative; controller converts to cents */
   price: number;
+  /** Optional pet to link this service to */
+  petId?: number;
 }
