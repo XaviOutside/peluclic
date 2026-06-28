@@ -5,13 +5,15 @@ export class SoftDeletePetUseCase {
   constructor(private readonly repository: IPetRepository) {}
 
   async execute(id: number): Promise<void> {
-    const pet = await this.repository.findById(id);
+    const exists = await this.repository.existsById(id);
 
-    if (!pet) {
+    if (!exists) {
       throw new PetNotFoundError(id);
     }
 
-    if (pet.deletedAt !== null) {
+    const pet = await this.repository.findById(id);
+
+    if (!pet) {
       throw new PetAlreadyDeletedError(id);
     }
 

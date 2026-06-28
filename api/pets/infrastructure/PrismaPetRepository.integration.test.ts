@@ -241,6 +241,40 @@ describe('PrismaPetRepository', () => {
     });
   });
 
+  describe('existsById', () => {
+    it('returns true for an active, non-deleted pet', async () => {
+      const client = await seedClient({ name: 'ExistsOwner', email: 'existso@example.com' });
+      clientIds.push(client.id);
+
+      const seeded = await seedPet({ client_id: client.id, name: 'Exists', species: 'Dog' });
+      petIds.push(seeded.id);
+
+      const exists = await repo.existsById(seeded.id);
+      expect(exists).toBe(true);
+    });
+
+    it('returns true for a soft-deleted pet (row still exists)', async () => {
+      const client = await seedClient({ name: 'DelExistsOwner', email: 'delexistso@example.com' });
+      clientIds.push(client.id);
+
+      const seeded = await seedPet({
+        client_id: client.id,
+        name: 'DelExists',
+        species: 'Cat',
+        deletedAt: new Date(),
+      });
+      petIds.push(seeded.id);
+
+      const exists = await repo.existsById(seeded.id);
+      expect(exists).toBe(true);
+    });
+
+    it('returns false when pet does not exist at all', async () => {
+      const exists = await repo.existsById(9999999);
+      expect(exists).toBe(false);
+    });
+  });
+
   describe('update', () => {
     it('modifies fields and returns the updated pet', async () => {
       const client = await seedClient({ name: 'UpdOwner', email: 'upd@example.com' });
