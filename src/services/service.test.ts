@@ -66,6 +66,28 @@ describe('listServices', () => {
       expect.anything(),
     );
   });
+
+  it('appends petId to URL when provided', async () => {
+    mockFetch(200, [mockService]);
+
+    await listServices(1, 20, 5);
+
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/v1/services?page=1&limit=20&petId=5',
+      expect.anything(),
+    );
+  });
+
+  it('does not include petId in URL when omitted', async () => {
+    mockFetch(200, []);
+
+    await listServices(1, 20);
+
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/v1/services?page=1&limit=20',
+      expect.anything(),
+    );
+  });
 });
 
 describe('getService', () => {

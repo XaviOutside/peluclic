@@ -1,14 +1,65 @@
 import { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { Pet } from '@/types/pet';
+import type { Service } from '@/types/service';
 import { useClient } from '@/hooks/useClient';
 import { useDeactivateClient, useReactivateClient } from '@/hooks/useClientMutations';
 import { usePets } from '@/hooks/usePets';
+import { useServices } from '@/hooks/useServices';
 import ClientDetailCard from '@/components/organisms/ClientDetailCard';
 import PetTable from '@/components/organisms/PetTable';
+import ServiceTable from '@/components/organisms/ServiceTable';
 import ConfirmDialog from '@/components/molecules/ConfirmDialog';
 import Spinner from '@/components/atoms/Spinner';
 import Button from '@/components/atoms/Button';
+
+function PetServiceCard({ pet }: { pet: Pet }) {
+  const {
+    services,
+    isLoading,
+    error,
+    refresh,
+  } = useServices({ petId: pet.id });
+
+  // Only render if there are linked services or still loading
+  if (isLoading) {
+    return (
+      <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
+        <p className="text-sm font-medium text-gray-700">{pet.name}</p>
+        <div className="flex justify-center py-2">
+          <Spinner size="sm" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
+        <p className="text-sm font-medium text-gray-700">{pet.name}</p>
+        <p className="text-xs text-red-600 mt-1">{error}</p>
+      </div>
+    );
+  }
+
+  if (services.length === 0) {
+    return null; // Hidden when no linked services
+  }
+
+  return (
+    <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
+      <p className="text-sm font-medium text-gray-700 mb-2">{pet.name}</p>
+      <div className="text-xs text-gray-600 space-y-1">
+        {services.map((svc: Service) => (
+          <div key={svc.id} className="flex justify-between items-center">
+            <span>{svc.name}</span>
+            <span className="text-gray-400">${svc.price.toFixed(2)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function ClientDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -196,6 +247,20 @@ export default function ClientDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Services by Pet — per-pet linked services */}
+      {!petsLoading && !petsError && pets.length > 0 && (
+        <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+            <h2 className="text-lg font-semibold text-gray-900">Services by Pet</h2>
+          </div>
+          <div className="px-6 py-4 space-y-3">
+            {pets.map((pet) => (
+              <PetServiceCard key={pet.id} pet={pet} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -210,3 +210,167 @@ describe('PetDetailPage', () => {
     expect(screen.getByText('Client #10')).toBeInTheDocument();
   });
 });
+
+describe('PetDetailPage — linked services', () => {
+  const linkedServices = [
+    {
+      id: 101,
+      name: 'Bath & Brush',
+      description: 'Full bath and brushing',
+      durationMinutes: 30,
+      price: 45.0,
+      petId: 1,
+      status: 'active' as const,
+      createdAt: '2025-01-01T00:00:00.000Z',
+      updatedAt: '2025-01-01T00:00:00.000Z',
+    },
+    {
+      id: 102,
+      name: 'Nail Trim',
+      description: 'Nail clipping',
+      durationMinutes: 15,
+      price: 20.0,
+      petId: 1,
+      status: 'active' as const,
+      createdAt: '2025-01-01T00:00:00.000Z',
+      updatedAt: '2025-01-01T00:00:00.000Z',
+    },
+  ];
+
+  const unlinkedServices = [
+    {
+      id: 201,
+      name: 'Dental Cleaning',
+      description: 'Teeth cleaning',
+      durationMinutes: 45,
+      price: 75.0,
+      petId: null,
+      status: 'active' as const,
+      createdAt: '2025-01-01T00:00:00.000Z',
+      updatedAt: '2025-01-01T00:00:00.000Z',
+    },
+  ];
+
+  it('shows loading spinner while linked services are fetching', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(activePet),
+    });
+    // Services fetch never resolves — stays loading
+    mockFetch.mockReturnValueOnce(new Promise(() => {}));
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Max')).toBeInTheDocument();
+    });
+
+    // Linked Services heading visible, spinner inside the section
+    expect(screen.getByText('Linked Services')).toBeInTheDocument();
+    const spinners = screen.getAllByRole('status', { name: /loading/i });
+    expect(spinners.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('renders linked services in ServiceTable', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(activePet),
+    });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(linkedServices),
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Linked Services')).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Bath & Brush')).toBeInTheDocument();
+    expect(screen.getByText('Nail Trim')).toBeInTheDocument();
+    expect(screen.getByText('$45.00')).toBeInTheDocument();
+    expect(screen.getByText('$20.00')).toBeInTheDocument();
+    expect(screen.queryByText('No linked services')).not.toBeInTheDocument();
+  });
+
+  it('shows empty state with Link Service button when no linked services', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(activePet),
+    });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve([]),
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('No linked services')).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('button', { name: /link a service/i })).toBeInTheDocument();
+  });
+
+  it('shows error state with retry button when services fail', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(activePet),
+    });
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: () => Promise.resolve({ error: 'Failed to load services' }),
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText(/failed to load services/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
+  });
+
+  it('Link Service button opens modal with unlinked services', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(activePet),
+    });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve([]),
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('No linked services')).toBeInTheDocument();
+    });
+
+    const user = userEvent.setup();
+
+    // Click "Link a Service" button
+    await user.click(screen.getByRole('button', { name: /link a service/i }));
+
+    // Modal appears and triggers fetch for unlinked services
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(unlinkedServices),
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: /link a service/i })).toBeInTheDocument();
+    });
+  });
+});

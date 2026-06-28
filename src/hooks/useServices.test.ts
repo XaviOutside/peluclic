@@ -10,6 +10,7 @@ const mockService: Service = {
   description: 'Complete grooming',
   durationMinutes: 60,
   price: 50.00,
+  petId: null,
   status: 'active',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
@@ -153,6 +154,48 @@ describe('useServices', () => {
     });
   });
 
+  describe('petId filtering', () => {
+    it('passes petId to listServices when provided', async () => {
+      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([mockService]);
+
+      const { result } = renderHook(() => useServices({ petId: 5 }));
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      expect(mockedApi.listServices).toHaveBeenCalledWith(1, 20, 5);
+    });
+
+    it('calls listServices without petId when not provided', async () => {
+      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([mockService, mockService2]);
+
+      const { result } = renderHook(() => useServices());
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      expect(mockedApi.listServices).toHaveBeenCalledWith(1, 20, undefined);
+    });
+
+    it('re-fetches when petId changes', async () => {
+      (mockedApi.listServices as ReturnType<typeof vi.fn>)
+        .mockResolvedValueOnce([mockService])
+        .mockResolvedValueOnce([mockService2]);
+
+      const { result, rerender } = renderHook(
+        ({ petId }) => useServices({ petId }),
+        { initialProps: { petId: 5 as number | undefined } },
+      );
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+      expect(mockedApi.listServices).toHaveBeenCalledWith(1, 20, 5);
+
+      // Change petId
+      rerender({ petId: 7 });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+      expect(mockedApi.listServices).toHaveBeenCalledWith(1, 20, 7);
+    });
+  });
+
   describe('search / refresh / pagination', () => {
     it('exposes refresh function', async () => {
       const { result } = renderHook(() => useServices());
@@ -167,7 +210,7 @@ describe('useServices', () => {
       });
 
       await waitFor(() => {
-        expect(mockedApi.listServices).toHaveBeenCalledWith(1, 20);
+        expect(mockedApi.listServices).toHaveBeenCalledWith(1, 20, undefined);
       });
     });
 
@@ -185,7 +228,7 @@ describe('useServices', () => {
       });
 
       await waitFor(() => {
-        expect(mockedApi.listServices).toHaveBeenCalledWith(2, 20);
+        expect(mockedApi.listServices).toHaveBeenCalledWith(2, 20, undefined);
       });
     });
   });

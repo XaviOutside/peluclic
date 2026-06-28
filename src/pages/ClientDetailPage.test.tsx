@@ -77,6 +77,17 @@ describe('ClientDetailPage — embedded pet list', () => {
       status: 200,
       json: () => Promise.resolve(mockPets),
     });
+    // Per-pet service list calls (PetServiceCard fetches services for each pet)
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve([]),
+    });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve([]),
+    });
 
     renderPage();
 

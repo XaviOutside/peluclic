@@ -10,8 +10,12 @@ import type { Service, CreateServiceInput, UpdateServiceInput } from '@/types/se
 export function listServices(
   page = 1,
   limit = 20,
+  petId?: number,
 ): Promise<Service[]> {
-  const url = `/services?page=${page}&limit=${limit}`;
+  let url = `/services?page=${page}&limit=${limit}`;
+  if (petId !== undefined) {
+    url += `&petId=${petId}`;
+  }
   return http<Service[]>(url);
 }
 

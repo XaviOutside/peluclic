@@ -22,7 +22,14 @@ interface UseServicesState {
 const DEFAULT_PAGE = 1;
 const DEBOUNCE_MS = 300;
 
-export function useServices() {
+export interface UseServicesOptions {
+  /** Filter services linked to this pet */
+  petId?: number;
+}
+
+export function useServices(options: UseServicesOptions = {}) {
+  const { petId } = options;
+
   const [state, setState] = useState<UseServicesState>({
     services: [],
     service: null,
@@ -39,7 +46,7 @@ export function useServices() {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const data = await listServices(page, limit);
+      const data = await listServices(page, limit, petId);
       if (id === fetchIdRef.current) {
         setState((prev) => ({
           ...prev,
@@ -59,7 +66,7 @@ export function useServices() {
         }));
       }
     }
-  }, []);
+  }, [petId]);
 
   const refresh = useCallback(() => {
     fetchList(state.page, state.limit);

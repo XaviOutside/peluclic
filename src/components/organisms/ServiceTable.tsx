@@ -7,6 +7,8 @@ export interface ServiceTableProps {
   services: Service[];
   onEdit: (service: Service) => void;
   onDelete: (service: Service) => void;
+  /** When provided, renders an "Unlink" action instead of/in addition to Delete for linked services */
+  onUnlink?: (service: Service) => void;
 }
 
 function Td({ children, label }: { children: ReactNode; label: string }) {
@@ -31,10 +33,12 @@ function ActionsDropdown({
   service,
   onEdit,
   onDelete,
+  onUnlink,
 }: {
   service: Service;
   onEdit: (s: Service) => void;
   onDelete: (s: Service) => void;
+  onUnlink?: (s: Service) => void;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -79,13 +83,23 @@ function ActionsDropdown({
             >
               Edit
             </button>
-            <button
-              type="button"
-              onClick={handleAction(onDelete)}
-              className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
-            >
-              Delete
-            </button>
+            {onUnlink ? (
+              <button
+                type="button"
+                onClick={handleAction(onUnlink)}
+                className="block w-full px-4 py-2 text-left text-sm text-orange-600 hover:bg-orange-50"
+              >
+                Unlink
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleAction(onDelete)}
+                className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+              >
+                Delete
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -97,6 +111,7 @@ export default function ServiceTable({
   services,
   onEdit,
   onDelete,
+  onUnlink,
 }: ServiceTableProps) {
   if (services.length === 0) {
     return (
@@ -145,6 +160,7 @@ export default function ServiceTable({
                     service={service}
                     onEdit={onEdit}
                     onDelete={onDelete}
+                    onUnlink={onUnlink}
                   />
                 </div>
               </td>

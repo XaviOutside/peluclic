@@ -12,6 +12,7 @@ export type ServiceStatus = 'active' | 'inactive';
  * Service entity as returned by the API.
  * - price is in dollars (e.g. 50.00)
  * - durationMinutes is nullable
+ * - petId is the linked pet or null if unlinked
  * - deletedAt is never exposed by the DTO
  */
 export interface Service {
@@ -20,6 +21,7 @@ export interface Service {
   description: string | null;
   durationMinutes: number | null;
   price: number;
+  petId: number | null;
   status: ServiceStatus;
   createdAt: string;
   updatedAt: string;
@@ -31,6 +33,8 @@ export interface CreateServiceInput {
   description?: string;
   durationMinutes?: number;
   price: number;
+  /** Optional pet to link the service to */
+  petId?: number;
 }
 
 /** Payload for updating an existing service via PUT /api/v1/services/:id. */
@@ -39,4 +43,6 @@ export interface UpdateServiceInput {
   description?: string | null;
   durationMinutes?: number | null;
   price?: number;
+  /** Link service to pet (null to unlink) */
+  petId?: number | null;
 }
