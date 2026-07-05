@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useServices } from '@/hooks/useServices';
 import ServiceDetailCard from '@/components/organisms/ServiceDetailCard';
@@ -115,6 +115,12 @@ export default function ServiceDetailPage() {
     );
   }
 
+  // Pre-compute confirm message to avoid nested ternary
+  const actionVerb = confirmAction === 'deactivate' ? 'deactivate' : 'delete';
+  const confirmMessage = service
+    ? `Are you sure you want to ${actionVerb} ${service.name}?`
+    : '';
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <ServiceDetailCard
@@ -140,13 +146,7 @@ export default function ServiceDetailPage() {
         }}
         onConfirm={handleConfirm}
         title={confirmAction === 'deactivate' ? 'Deactivate Service' : 'Delete Service'}
-        message={
-          service
-            ? confirmAction === 'deactivate'
-              ? `Are you sure you want to deactivate ${service.name}?`
-              : `Are you sure you want to delete ${service.name}?`
-            : ''
-        }
+        message={confirmMessage}
         confirmLabel={confirmAction === 'deactivate' ? 'Deactivate' : 'Delete'}
         destructive
         isLoading={actionLoading}

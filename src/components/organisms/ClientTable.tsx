@@ -11,10 +11,6 @@ export interface ClientTableProps {
   onReactivate: (client: Client) => void;
 }
 
-interface DropdownState {
-  clientId: number | null;
-}
-
 function ActionsDropdown({
   client,
   onView,

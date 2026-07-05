@@ -18,7 +18,7 @@ export default function PetDetailPage() {
   const navigate = useNavigate();
   const petId = id ? Number(id) : undefined;
 
-  const { pet, isLoading, error, refresh } = usePet(petId);
+  const { pet, isLoading, error } = usePet(petId);
   const deactivateMutation = useDeactivatePet();
 
   // Linked services
@@ -42,11 +42,6 @@ export default function PetDetailPage() {
 
   function handleDeactivate() {
     setConfirmAction('deactivate');
-    setShowConfirm(true);
-  }
-
-  function handleDelete() {
-    setConfirmAction('delete');
     setShowConfirm(true);
   }
 
@@ -212,11 +207,12 @@ export default function PetDetailPage() {
           <h2 className="text-lg font-semibold text-gray-900">Linked Services</h2>
         </div>
         <div className="px-6 py-4">
-          {servicesLoading ? (
+          {servicesLoading && (
             <div className="flex justify-center py-4">
               <Spinner size="sm" />
             </div>
-          ) : servicesError ? (
+          )}
+          {servicesError && (
             <div className="text-center py-4">
               <p className="text-sm text-red-600">{servicesError}</p>
               <Button
@@ -228,7 +224,8 @@ export default function PetDetailPage() {
                 Retry
               </Button>
             </div>
-          ) : linkedServices.length === 0 ? (
+          )}
+          {!servicesLoading && !servicesError && linkedServices.length === 0 && (
             <div className="text-center py-6">
               <p className="text-sm text-gray-500">No linked services</p>
               <Button
@@ -240,7 +237,8 @@ export default function PetDetailPage() {
                 Link a Service
               </Button>
             </div>
-          ) : (
+          )}
+          {!servicesLoading && !servicesError && linkedServices.length > 0 && (
             <ServiceTable
               services={linkedServices}
               onEdit={() => navigate('/services')}
@@ -260,13 +258,15 @@ export default function PetDetailPage() {
         }}
         title="Link a Service"
       >
-        {linkModalLoading ? (
+        {linkModalLoading && (
           <div className="flex justify-center py-4">
             <Spinner size="sm" />
           </div>
-        ) : unlinkedServices.length === 0 ? (
+        )}
+        {!linkModalLoading && unlinkedServices.length === 0 && (
           <p className="text-sm text-gray-500 py-4">No available services to link.</p>
-        ) : (
+        )}
+        {!linkModalLoading && unlinkedServices.length > 0 && (
           <>
             <Select
               label="Select a service"

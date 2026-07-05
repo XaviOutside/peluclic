@@ -21,12 +21,6 @@ const activePet: Pet = {
   deletedAt: null,
 };
 
-const deletedPet: Pet = {
-  ...activePet,
-  id: 8,
-  deletedAt: new Date('2026-06-01T00:00:00Z'),
-};
-
 function makeRepository(): IPetRepository {
   return {
     create: vi.fn(),

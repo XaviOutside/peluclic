@@ -8,7 +8,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { prisma } from '@api/shared/infrastructure/prisma';
 import { PrismaPetRepository } from './PrismaPetRepository';
-import { Pet, PET_STATUS } from '../domain/Pet';
+import { PET_STATUS } from '../domain/Pet';
 
 const repo = new PrismaPetRepository();
 

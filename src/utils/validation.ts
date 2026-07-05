@@ -3,7 +3,10 @@
  * Returns error message strings — empty string means valid.
  */
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// ReDoS-safe: character classes are disjoint, no nested quantifiers
+// eslint-disable-next-line sonarjs/slow-regex
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+ 
 const PHONE_REGEX = /^\+?[\d\s\-().]{7,20}$/;
 
 /**

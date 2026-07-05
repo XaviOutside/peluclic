@@ -1,4 +1,4 @@
-import { Pet, CreatePetInput, PET_STATUS } from '../domain/Pet';
+import { Pet, CreatePetInput } from '../domain/Pet';
 import { IPetRepository } from '../domain/IPetRepository';
 import { PetValidationError } from '../domain/PetErrors';
 

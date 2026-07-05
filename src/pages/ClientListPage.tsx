@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import type { Client } from '@/types/client';
 import { useClients } from '@/hooks/useClients';
 import { useDeactivateClient, useReactivateClient } from '@/hooks/useClientMutations';
-import type { HttpError } from '@/services/http';
 import ClientTable from '@/components/organisms/ClientTable';
 import SearchBar from '@/components/molecules/SearchBar';
 import Pagination from '@/components/molecules/Pagination';
@@ -198,9 +197,7 @@ export default function ClientListPage() {
         }
         message={
           actionTarget
-            ? `Are you sure you want to ${
-                actionTarget.action === 'deactivate' ? 'deactivate' : 'reactivate'
-              } ${actionTarget.client.name}?`
+            ? `Are you sure you want to ${actionTarget.action} ${actionTarget.client.name}?`
             : ''
         }
         confirmLabel={

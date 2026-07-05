@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Client } from '@/types/client';
 import { listClients, searchClients } from '@/services/client';
-import type { HttpError } from '@/services/http';
 
 interface UseClientsState {
   clients: Client[];

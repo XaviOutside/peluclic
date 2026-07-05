@@ -8,7 +8,6 @@ import { usePets } from '@/hooks/usePets';
 import { useServices } from '@/hooks/useServices';
 import ClientDetailCard from '@/components/organisms/ClientDetailCard';
 import PetTable from '@/components/organisms/PetTable';
-import ServiceTable from '@/components/organisms/ServiceTable';
 import ConfirmDialog from '@/components/molecules/ConfirmDialog';
 import Spinner from '@/components/atoms/Spinner';
 import Button from '@/components/atoms/Button';
@@ -18,7 +17,6 @@ function PetServiceCard({ pet }: { pet: Pet }) {
     services,
     isLoading,
     error,
-    refresh,
   } = useServices({ petId: pet.id });
 
   // Only render if there are linked services or still loading
@@ -230,13 +228,15 @@ export default function ClientDetailPage() {
           </Button>
         </div>
         <div className="px-6 py-4">
-          {petsLoading ? (
+          {petsLoading && (
             <div className="flex justify-center py-4">
               <Spinner size="sm" />
             </div>
-          ) : petsError ? (
+          )}
+          {petsError && (
             <p className="text-sm text-red-600">{petsError}</p>
-          ) : (
+          )}
+          {!petsLoading && !petsError && (
             <PetTable
               pets={pets}
               onView={handleViewPet}

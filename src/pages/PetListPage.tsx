@@ -4,7 +4,6 @@ import type { Pet } from '@/types/pet';
 import { usePets } from '@/hooks/usePets';
 import { useDeactivatePet } from '@/hooks/usePetMutations';
 import { searchPets } from '@/services/pet';
-import type { HttpError } from '@/services/http';
 import PetTable from '@/components/organisms/PetTable';
 import SearchBar from '@/components/molecules/SearchBar';
 import Pagination from '@/components/molecules/Pagination';

@@ -1,10 +1,8 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import supertest from 'supertest';
-import type { Server } from 'http';
 
 // We import app before the module exists — this will be RED until T14 creates it
 let app: Express.Application;
-let server: Server;
 
 describe('Health endpoint', () => {
   beforeAll(async () => {

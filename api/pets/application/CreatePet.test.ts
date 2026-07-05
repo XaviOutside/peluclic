@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CreatePetUseCase } from './CreatePet';
 import { IPetRepository } from '../domain/IPetRepository';
-import { Pet, CreatePetInput, PetSex, PET_SEX, PET_STATUS } from '../domain/Pet';
+import { Pet, CreatePetInput, PET_SEX, PET_STATUS } from '../domain/Pet';
 import { PetValidationError } from '../domain/PetErrors';
 
 const mockPet: Pet = {

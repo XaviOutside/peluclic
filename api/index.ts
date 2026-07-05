@@ -41,6 +41,9 @@ if (process.env['NODE_ENV'] !== 'test' && !process.env['DATABASE_URL']) {
 
 const app = express();
 
+// Security: don't disclose framework version
+app.disable('x-powered-by');
+
 // Middleware
 app.use(express.json());
 

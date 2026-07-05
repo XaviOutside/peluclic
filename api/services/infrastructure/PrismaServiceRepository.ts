@@ -1,5 +1,5 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
-import { Service, CreateServiceInput, UpdateServiceInput, SERVICE_STATUS } from '../domain/Service';
+import { Service, CreateServiceInput, UpdateServiceInput } from '../domain/Service';
 import { IServiceRepository, FindAllParams } from '../domain/IServiceRepository';
 
 /**

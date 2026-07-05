@@ -1,4 +1,4 @@
-import { Pet, UpdatePetInput, PetSex } from '../domain/Pet';
+import { Pet, UpdatePetInput } from '../domain/Pet';
 import { IPetRepository } from '../domain/IPetRepository';
 import { PetNotFoundError, PetValidationError } from '../domain/PetErrors';
 

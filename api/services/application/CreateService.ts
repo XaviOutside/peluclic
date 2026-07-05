@@ -1,4 +1,4 @@
-import { Service, CreateServiceInput, SERVICE_STATUS } from '../domain/Service';
+import { Service, CreateServiceInput } from '../domain/Service';
 import { IServiceRepository } from '../domain/IServiceRepository';
 import { ValidationError } from '@api/shared/domain/errors';
 

@@ -31,13 +31,6 @@ const activePet = {
   updatedAt: '2025-01-01T00:00:00.000Z',
 };
 
-const inactivePet = {
-  ...activePet,
-  id: 2,
-  name: 'Bella',
-  status: 'inactive' as const,
-};
-
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
 

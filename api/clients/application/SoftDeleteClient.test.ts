@@ -18,12 +18,6 @@ const mockClient: Client = {
   deletedAt: null,
 };
 
-const mockDeletedClient: Client = {
-  ...mockClient,
-  id: 2,
-  deletedAt: new Date('2026-06-01T00:00:00Z'),
-};
-
 function makeClientRepository(): IClientRepository {
   return {
     create: vi.fn(),
