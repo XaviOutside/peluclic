@@ -17,10 +17,10 @@ export default function Pagination({
 
   return (
     <nav
-      className="flex items-center justify-between border-t border-gray-200 pt-4"
+      className="flex items-center justify-between border-t border-outline-variant pt-4"
       aria-label="Pagination"
     >
-      <p className="text-sm text-gray-600">
+      <p className="text-body-md text-on-surface-variant">
         Showing page {page} of {totalPages} ({total} total)
       </p>
       <div className="flex gap-2">

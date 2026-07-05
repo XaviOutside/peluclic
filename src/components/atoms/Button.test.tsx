@@ -33,13 +33,13 @@ describe('Button', () => {
 
   it('applies variant classes', () => {
     const { rerender } = render(<Button variant="primary">Primary</Button>);
-    expect(screen.getByRole('button', { name: /primary/i })).toHaveClass('bg-blue-600');
+    expect(screen.getByRole('button', { name: /primary/i })).toHaveClass('bg-primary');
 
     rerender(<Button variant="danger">Danger</Button>);
-    expect(screen.getByRole('button', { name: /danger/i })).toHaveClass('bg-red-600');
+    expect(screen.getByRole('button', { name: /danger/i })).toHaveClass('bg-error');
 
     rerender(<Button variant="secondary">Secondary</Button>);
-    expect(screen.getByRole('button', { name: /secondary/i })).toHaveClass('bg-white');
+    expect(screen.getByRole('button', { name: /secondary/i })).toHaveClass('bg-surface-container-high');
 
     rerender(<Button variant="ghost">Ghost</Button>);
     expect(screen.getByRole('button', { name: /ghost/i })).toHaveClass('bg-transparent');

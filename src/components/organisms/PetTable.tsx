@@ -59,19 +59,19 @@ function ActionsDropdown({
         </svg>
       </Button>
       {open && (
-        <div className="absolute right-0 z-10 mt-1 w-44 rounded-md border border-gray-200 bg-white shadow-lg">
+        <div className="absolute right-0 z-10 mt-1 w-44 rounded-lg border border-outline-variant bg-surface-container-lowest shadow-modal">
           <div className="py-1">
             <button
               type="button"
               onClick={handleAction(onView)}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-left text-body-md text-on-surface hover:bg-surface-container transition-colors"
             >
               View
             </button>
             <button
               type="button"
               onClick={handleAction(onEdit)}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-left text-body-md text-on-surface hover:bg-surface-container transition-colors"
             >
               Edit
             </button>
@@ -79,7 +79,7 @@ function ActionsDropdown({
               <button
                 type="button"
                 onClick={handleAction(onDeactivate)}
-                className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                className="block w-full px-4 py-2 text-left text-body-md text-error hover:bg-error-container/30 transition-colors"
               >
                 Deactivate
               </button>
@@ -87,7 +87,7 @@ function ActionsDropdown({
               <button
                 type="button"
                 onClick={handleAction(onReactivate)}
-                className="block w-full px-4 py-2 text-left text-sm text-green-600 hover:bg-green-50"
+                className="block w-full px-4 py-2 text-left text-body-md text-primary hover:bg-primary-container/20 transition-colors"
               >
                 Reactivate
               </button>
@@ -101,8 +101,8 @@ function ActionsDropdown({
 
 function Td({ children, label }: { children: ReactNode; label: string }) {
   return (
-    <td className="px-4 py-3 text-sm text-gray-700 md:table-cell">
-      <span className="font-medium text-gray-500 md:hidden">{label}: </span>
+    <td className="px-4 py-3 text-body-md text-on-surface md:table-cell">
+      <span className="font-headline font-medium text-on-surface-variant md:hidden">{label}: </span>
       {children}
     </td>
   );
@@ -122,42 +122,52 @@ export default function PetTable({
 }: PetTableProps) {
   if (pets.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 p-8 text-center">
-        <p className="text-sm text-gray-500">No pets found.</p>
+      <div className="rounded-xl border border-dashed border-outline-variant bg-surface-container-lowest p-12 text-center">
+        <svg className="mx-auto h-12 w-12 text-outline" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+        <p className="mt-4 text-body-md text-on-surface-variant">No pets found.</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="hidden bg-gray-50 md:table-header-group">
-          <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+    <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest shadow-card">
+      <table className="min-w-full divide-y divide-outline-variant">
+        <thead className="hidden md:table-header-group">
+          <tr className="bg-surface-container">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Name
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Species
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Breed
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Client
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Status
             </th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-right text-label-md text-on-surface-variant">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="divide-y divide-outline-variant">
           {pets.map((pet) => (
-            <tr key={pet.id} className="flex flex-col border-b border-gray-100 last:border-b-0 md:table-row md:border-b-0">
+            <tr key={pet.id} className="flex flex-col border-b border-outline-variant last:border-b-0 md:table-row md:border-b-0 hover:bg-surface-container transition-colors">
               <Td label="Name">
-                <span className="font-medium text-gray-900">{pet.name}</span>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary/15 text-label-md text-secondary-container">
+                    <svg className="h-4 w-4" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+                      <path d="M16 2c-2.5 0-4.5 1.2-5.8 3C8.8 3.2 6.8 2 4 2 2 2 0 4 0 6.5 0 13 6 22 16 30 26 22 32 13 32 6.5 32 4 30 2 28 2c-2.8 0-4.8 1.2-6.2 3C20.5 3.2 18.5 2 16 2z" />
+                    </svg>
+                  </span>
+                  <span className="font-headline font-medium text-on-surface">{pet.name}</span>
+                </div>
               </Td>
               <Td label="Species">{pet.species}</Td>
               <Td label="Breed">{pet.breed}</Td>

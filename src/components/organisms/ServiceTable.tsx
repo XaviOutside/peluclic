@@ -13,8 +13,8 @@ export interface ServiceTableProps {
 
 function Td({ children, label }: { children: ReactNode; label: string }) {
   return (
-    <td className="px-4 py-3 text-sm text-gray-700 md:table-cell">
-      <span className="font-medium text-gray-500 md:hidden">{label}: </span>
+    <td className="px-4 py-3 text-body-md text-on-surface md:table-cell">
+      <span className="font-headline font-medium text-on-surface-variant md:hidden">{label}: </span>
       {children}
     </td>
   );
@@ -74,12 +74,12 @@ function ActionsDropdown({
         </svg>
       </Button>
       {open && (
-        <div className="absolute right-0 z-10 mt-1 w-44 rounded-md border border-gray-200 bg-white shadow-lg">
+        <div className="absolute right-0 z-10 mt-1 w-44 rounded-lg border border-outline-variant bg-surface-container-lowest shadow-modal">
           <div className="py-1">
             <button
               type="button"
               onClick={handleAction(onEdit)}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full px-4 py-2 text-left text-body-md text-on-surface hover:bg-surface-container transition-colors"
             >
               Edit
             </button>
@@ -87,7 +87,7 @@ function ActionsDropdown({
               <button
                 type="button"
                 onClick={handleAction(onUnlink)}
-                className="block w-full px-4 py-2 text-left text-sm text-orange-600 hover:bg-orange-50"
+                className="block w-full px-4 py-2 text-left text-body-md text-secondary-container hover:bg-secondary-container/30 transition-colors"
               >
                 Unlink
               </button>
@@ -95,7 +95,7 @@ function ActionsDropdown({
               <button
                 type="button"
                 onClick={handleAction(onDelete)}
-                className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                className="block w-full px-4 py-2 text-left text-body-md text-error hover:bg-error-container/30 transition-colors"
               >
                 Delete
               </button>
@@ -115,39 +115,42 @@ export default function ServiceTable({
 }: ServiceTableProps) {
   if (services.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-gray-300 p-8 text-center">
-        <p className="text-sm text-gray-500">No services found.</p>
+      <div className="rounded-xl border border-dashed border-outline-variant bg-surface-container-lowest p-12 text-center">
+        <svg className="mx-auto h-12 w-12 text-outline" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+        </svg>
+        <p className="mt-4 text-body-md text-on-surface-variant">No services found.</p>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="hidden bg-gray-50 md:table-header-group">
-          <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+    <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest shadow-card">
+      <table className="min-w-full divide-y divide-outline-variant">
+        <thead className="hidden md:table-header-group">
+          <tr className="bg-surface-container">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Name
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Duration
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Price
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
               Status
             </th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+            <th className="px-4 py-3 text-right text-label-md text-on-surface-variant">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        <tbody className="divide-y divide-outline-variant">
           {services.map((service) => (
-            <tr key={service.id} className="flex flex-col border-b border-gray-100 last:border-b-0 md:table-row md:border-b-0">
+            <tr key={service.id} className="flex flex-col border-b border-outline-variant last:border-b-0 md:table-row md:border-b-0 hover:bg-surface-container transition-colors">
               <Td label="Name">
-                <span className="font-medium text-gray-900">{service.name}</span>
+                <span className="font-headline font-medium text-on-surface">{service.name}</span>
               </Td>
               <Td label="Duration">{formatDuration(service.durationMinutes)}</Td>
               <Td label="Price">{formatPrice(service.price)}</Td>

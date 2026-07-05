@@ -12,13 +12,13 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 disabled:bg-blue-300',
+    'bg-primary text-on-primary hover:brightness-110 focus:ring-primary disabled:opacity-50 disabled:hover:brightness-100',
   secondary:
-    'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-blue-500 disabled:bg-gray-100 disabled:text-gray-400',
+    'bg-surface-container-high text-on-surface border border-outline-variant hover:bg-surface-container-highest focus:ring-primary disabled:opacity-40',
   danger:
-    'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-red-300',
+    'bg-error text-on-error hover:brightness-110 focus:ring-error disabled:opacity-50',
   ghost:
-    'bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-400 disabled:text-gray-300',
+    'bg-transparent text-on-surface-variant hover:bg-surface-container focus:ring-outline disabled:opacity-30',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -40,7 +40,7 @@ export default function Button({
     <button
       type="button"
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center justify-center rounded-md font-headline font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
       {loading && (
