@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { logger } from './observability/logger';
 import { PrismaClientRepository } from './clients/infrastructure/PrismaClientRepository';
 import { CreateClientUseCase } from './clients/application/CreateClient';
@@ -43,6 +46,26 @@ const app = express();
 
 // Security: don't disclose framework version
 app.disable('x-powered-by');
+
+// Security headers (CSP, X-Frame-Options, X-Content-Type-Options, etc.)
+app.use(helmet());
+
+// CORS — allow frontend dev server and same-origin requests
+app.use(cors({
+  origin: process.env['CORS_ORIGIN'] ?? 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type'],
+}));
+
+// Rate limiting — 100 requests per 15 minutes per IP
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+});
+app.use('/api/', limiter);
 
 // Middleware
 app.use(express.json());
@@ -102,6 +125,12 @@ app.use('/api/v1/services', createServiceRouter(serviceController));
 // 404 handler — must be last route
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: 'Not found' });
+});
+
+// Global error handler — never leak internal details on 500
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  logger.error({ err }, 'Unhandled server error');
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 export { app };

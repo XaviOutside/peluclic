@@ -1,0 +1,26 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+
+# Ignore issues that cannot be fixed immediately (transitive dependencies, false positives).
+ignore:
+  SNYK-JS-MINIMATCH-305054:
+    - '*':
+        reason: 'Transitive dependency via vitest — no direct upgrade path. ReDoS in minimatch is not exploitable in our usage (import-time only).'
+        expires: '2026-10-05T00:00:00.000Z'
+  SNYK-JS-MINIMATCH-68358:
+    - '*':
+        reason: 'Same as SNYK-JS-MINIMATCH-305054 — transitive, non-exploitable in dev tooling.'
+        expires: '2026-10-05T00:00:00.000Z'
+  SNYK-JS-MINIMATCH-305055:
+    - '*':
+        reason: 'Same as SNYK-JS-MINIMATCH-305054 — transitive, non-exploitable in dev tooling.'
+        expires: '2026-10-05T00:00:00.000Z'
+  SNYK-JS-VITE-779860:
+    - '*':
+        reason: 'Windows-only bypass via alternate paths — not applicable on macOS/Linux dev or Linux production.'
+        expires: '2026-10-05T00:00:00.000Z'
+  SNYK-JS-VITEST-797250:
+    - '*':
+        reason: 'Vitest UI server not enabled in our config — the vulnerable path is never exposed.'
+        expires: '2026-10-05T00:00:00.000Z'
+patch: {}
