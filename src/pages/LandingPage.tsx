@@ -24,22 +24,6 @@ const CutIcon = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
   return <svg className={c} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" /></svg>;
 };
 
-const HomeIcon = () => (
-  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-);
-
-const EventIcon = () => (
-  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-);
-
-const PersonIcon = () => (
-  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-);
-
-const MenuIcon = () => (
-  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
-);
-
 const HERO_IMAGE = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCP-2mYS7jEBiaj96KxUzIEoVrDgBH7ztDf1MC8dzTuE96cNVVrENH_iCSrjDJpKi1jGO4opzISofyKXyV7ugm0S7ubPvbRPBx_ZZK_NT1B03uV1UwH56LafVJD9CL4unewK9c0nuSe6B1dQYpsEBy9B5SArfRvP-65qp6hsrk0WSzbKCQ_NlU7msqVJsuKrVeqvPNm8e6jB4cqnSpWaE1dTtc1mnFL3STBfxW7uCCfAa6UtoBT36ame0NharO-z7K24ibIeOPxYu8';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -59,7 +43,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col gap-4 pt-4 sm:flex-row">
             <NavLink
-              to="/clients/new"
+              to="/register"
               className="inline-flex w-full items-center justify-center rounded-full bg-primary-container px-8 py-3 text-label-md font-semibold text-on-primary-container transition-colors hover:bg-surface-tint sm:w-auto"
             >
               Prueba gratis
@@ -119,26 +103,6 @@ export default function LandingPage() {
 
         </div>
       </section>
-
-      {/* ── Bottom Nav (Mobile Only) ── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around rounded-t-xl bg-surface-container-highest px-4 py-2 shadow-lg md:hidden">
-        <a href="#" className="flex scale-110 flex-col items-center justify-center rounded-full bg-primary-container px-4 py-1 text-on-primary-container duration-150 active:bg-surface-variant">
-          <HomeIcon />
-          <span className="mt-1 text-label-sm text-primary-container font-semibold">Home</span>
-        </a>
-        <a href="#" className="flex flex-col items-center justify-center text-on-surface-variant duration-150 active:scale-95 active:bg-surface-variant">
-          <EventIcon />
-          <span className="mt-1 text-label-sm text-primary-container">Calendar</span>
-        </a>
-        <a href="#" className="flex flex-col items-center justify-center text-on-surface-variant duration-150 active:scale-95 active:bg-surface-variant">
-          <PersonIcon />
-          <span className="mt-1 text-label-sm text-primary-container">Clients</span>
-        </a>
-        <a href="#" className="flex flex-col items-center justify-center text-on-surface-variant duration-150 active:scale-95 active:bg-surface-variant">
-          <MenuIcon />
-          <span className="mt-1 text-label-sm text-primary-container">More</span>
-        </a>
-      </nav>
 
       {/* ── Footer ── */}
       <footer className="mx-auto mb-16 flex max-w-[--container-max] flex-col items-center justify-between px-[--spacing-margin-desktop] py-10 md:mb-0 md:flex-row">

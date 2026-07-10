@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import Sidebar from '@/components/organisms/Sidebar';
-import MobileNav from '@/components/organisms/MobileNav';
+import { Routes, Route, NavLink } from 'react-router-dom';
+import PublicLayout from '@/components/templates/PublicLayout';
+import DashboardLayout from '@/components/templates/DashboardLayout';
 import LandingPage from '@/pages/LandingPage';
 import ClientsPage from '@/pages/ClientsPage';
 import ClientCreatePage from '@/pages/ClientCreatePage';
@@ -10,6 +10,7 @@ import PetsPage from '@/pages/PetsPage';
 import PetCreatePage from '@/pages/PetCreatePage';
 import PetDetailPage from '@/pages/PetDetailPage';
 import PetEditPage from '@/pages/PetEditPage';
+import RegisterPage from '@/pages/RegisterPage';
 import ServicesPage from '@/pages/ServicesPage';
 import ServiceCreatePage from '@/pages/ServiceCreatePage';
 import ServiceDetailPage from '@/pages/ServiceDetailPage';
@@ -34,34 +35,31 @@ function NotFoundPage() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="flex min-h-screen flex-col bg-background text-on-surface antialiased md:flex-row">
-        <Sidebar />
+    <Routes>
+      {/* Public routes — full-width, no sidebar/mobile nav */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Route>
 
-        {/* Main content — offset by sidebar width on desktop */}
-        <main className="flex-1 pb-24 md:ml-64 md:pb-8">
-          <div className="mx-auto w-full max-w-[--container-max] px-4 py-4 md:px-gutter md:py-8">
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/clients" element={<ClientsPage />} />
-              <Route path="/clients/new" element={<ClientCreatePage />} />
-              <Route path="/clients/:id" element={<ClientDetailPage />} />
-              <Route path="/clients/:id/edit" element={<ClientEditPage />} />
-              <Route path="/pets" element={<PetsPage />} />
-              <Route path="/pets/new" element={<PetCreatePage />} />
-              <Route path="/pets/:id" element={<PetDetailPage />} />
-              <Route path="/pets/:id/edit" element={<PetEditPage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/services/new" element={<ServiceCreatePage />} />
-              <Route path="/services/:id" element={<ServiceDetailPage />} />
-              <Route path="/services/:id/edit" element={<ServiceEditPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </div>
-        </main>
+      {/* Dashboard routes — sidebar + mobile nav chrome */}
+      <Route element={<DashboardLayout />}>
+        <Route path="/clients" element={<ClientsPage />} />
+        <Route path="/clients/new" element={<ClientCreatePage />} />
+        <Route path="/clients/:id" element={<ClientDetailPage />} />
+        <Route path="/clients/:id/edit" element={<ClientEditPage />} />
+        <Route path="/pets" element={<PetsPage />} />
+        <Route path="/pets/new" element={<PetCreatePage />} />
+        <Route path="/pets/:id" element={<PetDetailPage />} />
+        <Route path="/pets/:id/edit" element={<PetEditPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/services/new" element={<ServiceCreatePage />} />
+        <Route path="/services/:id" element={<ServiceDetailPage />} />
+        <Route path="/services/:id/edit" element={<ServiceEditPage />} />
+      </Route>
 
-        <MobileNav />
-      </div>
-    </BrowserRouter>
+      {/* Catch-all 404 */}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
