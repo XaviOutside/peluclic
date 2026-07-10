@@ -33,7 +33,7 @@ describe('Button', () => {
 
   it('applies variant classes', () => {
     const { rerender } = render(<Button variant="primary">Primary</Button>);
-    expect(screen.getByRole('button', { name: /primary/i })).toHaveClass('bg-primary');
+    expect(screen.getByRole('button', { name: /primary/i })).toHaveClass('bg-primary-container');
 
     rerender(<Button variant="danger">Danger</Button>);
     expect(screen.getByRole('button', { name: /danger/i })).toHaveClass('bg-error');

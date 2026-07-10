@@ -46,7 +46,7 @@ export default function Select({
         ))}
       </select>
       {error && (
-        <p className="text-caption text-error" role="alert">
+        <p className="text-label-sm text-error" role="alert">
           {error}
         </p>
       )}

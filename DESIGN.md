@@ -1,82 +1,87 @@
 ---
-name: PetCare Management System
+name: Canine Concierge
 colors:
-  surface: '#fdfae7'
-  surface-dim: '#dddbc8'
-  surface-bright: '#fdfae7'
+  surface: '#f9f9ff'
+  surface-dim: '#cfdaf1'
+  surface-bright: '#f9f9ff'
   surface-container-lowest: '#ffffff'
-  surface-container-low: '#f7f4e1'
-  surface-container: '#f1eedb'
-  surface-container-high: '#ece9d6'
-  surface-container-highest: '#e6e3d0'
-  on-surface: '#1c1c11'
-  on-surface-variant: '#3d4947'
-  inverse-surface: '#313124'
-  inverse-on-surface: '#f4f1de'
-  outline: '#6d7a77'
-  outline-variant: '#bcc9c6'
-  surface-tint: '#006a60'
-  primary: '#00685d'
+  surface-container-low: '#f0f3ff'
+  surface-container: '#e7eeff'
+  surface-container-high: '#dee8ff'
+  surface-container-highest: '#d8e3fa'
+  on-surface: '#111c2c'
+  on-surface-variant: '#3f484a'
+  inverse-surface: '#263142'
+  inverse-on-surface: '#ebf1ff'
+  outline: '#6f797b'
+  outline-variant: '#bfc8cb'
+  surface-tint: '#1a6774'
+  primary: '#005460'
   on-primary: '#ffffff'
-  primary-container: '#008376'
-  on-primary-container: '#f4fffb'
-  inverse-primary: '#6fd8c8'
-  secondary: '#765a05'
+  primary-container: '#226d7a'
+  on-primary-container: '#a8ecfb'
+  inverse-primary: '#8dd1e0'
+  secondary: '#36656d'
   on-secondary: '#ffffff'
-  secondary-container: '#ffd87c'
-  on-secondary-container: '#795d08'
-  tertiary: '#286182'
+  secondary-container: '#b8e8f1'
+  on-secondary-container: '#3b6a71'
+  tertiary: '#6e4212'
   on-tertiary: '#ffffff'
-  tertiary-container: '#447a9c'
-  on-tertiary-container: '#fcfcff'
+  tertiary-container: '#8a5928'
+  on-tertiary-container: '#ffdbbd'
   error: '#ba1a1a'
   on-error: '#ffffff'
   error-container: '#ffdad6'
   on-error-container: '#93000a'
-  primary-fixed: '#8cf5e4'
-  primary-fixed-dim: '#6fd8c8'
-  on-primary-fixed: '#00201c'
-  on-primary-fixed-variant: '#005048'
-  secondary-fixed: '#ffdf96'
-  secondary-fixed-dim: '#e7c268'
-  on-secondary-fixed: '#251a00'
-  on-secondary-fixed-variant: '#5a4400'
-  tertiary-fixed: '#c7e7ff'
-  tertiary-fixed-dim: '#98cdf2'
-  on-tertiary-fixed: '#001e2e'
-  on-tertiary-fixed-variant: '#064c6b'
-  background: '#fdfae7'
-  on-background: '#1c1c11'
-  surface-variant: '#e6e3d0'
+  primary-fixed: '#a9edfc'
+  primary-fixed-dim: '#8dd1e0'
+  on-primary-fixed: '#001f25'
+  on-primary-fixed-variant: '#004e5a'
+  secondary-fixed: '#bbebf4'
+  secondary-fixed-dim: '#9fcfd7'
+  on-secondary-fixed: '#001f24'
+  on-secondary-fixed-variant: '#1c4d55'
+  tertiary-fixed: '#ffdcc0'
+  tertiary-fixed-dim: '#f9ba80'
+  on-tertiary-fixed: '#2d1600'
+  on-tertiary-fixed-variant: '#683c0d'
+  background: '#f9f9ff'
+  on-background: '#111c2c'
+  surface-variant: '#d8e3fa'
+  surface-cream: '#F9FCFD'
+  status-success: '#4CAF50'
+  status-warning: '#FFB300'
+  status-error: '#E53935'
 typography:
-  display-lg:
-    fontFamily: Montserrat
-    fontSize: 48px
+  headline-xl:
+    fontFamily: Open Sans
+    fontSize: 40px
     fontWeight: '700'
-    lineHeight: 56px
+    lineHeight: 48px
+    letterSpacing: -0.02em
+  headline-xl-mobile:
+    fontFamily: Open Sans
+    fontSize: 30px
+    fontWeight: '700'
+    lineHeight: 36px
     letterSpacing: -0.02em
   headline-lg:
-    fontFamily: Montserrat
+    fontFamily: Open Sans
     fontSize: 32px
     fontWeight: '600'
     lineHeight: 40px
-  headline-lg-mobile:
-    fontFamily: Montserrat
-    fontSize: 24px
-    fontWeight: '600'
-    lineHeight: 32px
   headline-md:
-    fontFamily: Montserrat
+    fontFamily: Open Sans
     fontSize: 24px
     fontWeight: '600'
     lineHeight: 32px
   body-lg:
-    fontFamily: Inter
+    fontFamily: Open Sans
     fontSize: 18px
     fontWeight: '400'
     lineHeight: 28px
   body-md:
-    fontFamily: Inter
+    fontFamily: Open Sans
     fontSize: 16px
     fontWeight: '400'
     lineHeight: 24px
@@ -85,12 +90,12 @@ typography:
     fontSize: 14px
     fontWeight: '500'
     lineHeight: 20px
-    letterSpacing: 0.05em
-  caption:
+  label-sm:
     fontFamily: Inter
     fontSize: 12px
-    fontWeight: '400'
+    fontWeight: '600'
     lineHeight: 16px
+    letterSpacing: 0.05em
 rounded:
   sm: 0.25rem
   DEFAULT: 0.5rem
@@ -99,256 +104,51 @@ rounded:
   xl: 1.5rem
   full: 9999px
 spacing:
-  unit: 8px
-  container-max: 1280px
+  base: 8px
+  container-max: 1440px
   gutter: 24px
-  margin-desktop: 40px
   margin-mobile: 16px
-  card-padding: 24px
----
-
-# PawManage — Design System
-
-> **Source**: Stitch project "Dog Grooming Manager"
-> **Imported**: 2026-07-05
-> **Tailwind implementation**: `src/index.css` (`@theme` block)
-> **Design tokens**: Material 3 tonal palette (Fidelity variant)
-
+  margin-desktop: 40px
 ---
 
 ## Brand & Style
+The design system is built for a professional dog grooming management platform that balances operational efficiency with a warm, welcoming atmosphere. The brand personality is "The Trusted Expert"—someone who is highly organized and technically proficient but deeply cares about animal welfare.
 
-The brand personality is dependable yet warm, striking a balance between a professional business tool and the nurturing environment of a pet grooming salon. It aims to evoke feelings of trust, cleanliness, and approachability for both salon owners and pet parents.
-
-The design system utilizes a **Modern Corporate** style with a soft, consumer-facing edge. It leverages heavy whitespace, a refined card-based architecture, and gentle depth to create a focused, stress-free user experience. The aesthetic avoids clinical coldness by using organic curves and a palette inspired by natural elements like water and sand.
+The aesthetic follows a **Modern Corporate** style with a **Tactile** twist. It utilizes the spaciousness and clarity of a SaaS platform but incorporates soft, rounded elements and warm tones from the reference site to avoid feeling clinical. The target audience includes busy salon owners and groomers who require a tool that feels like an extension of their caring environment rather than just a cold database.
 
 ## Colors
+The color palette is anchored by a deep teal-cyan (`#226D7A`), which provides the necessary professional weight and legibility for a management tool. This is complemented by a soft sky blue (`#B0E0E9`) used for secondary actions and high-surface area backgrounds to maintain a "friendly" and "clean" feel.
 
-This design system uses a palette that balances hygiene with warmth.
-
-| Role | Token | Hex | Usage |
-|---|---|---|---|
-| **Primary** | `primary` | `#2a9d8f` | Main actions, brand presence, CTA buttons |
-| **Secondary** | `secondary` | `#e9c46a` | Accents, highlights, friendly contrast |
-| **Tertiary** | `tertiary` | `#457b9d` | Information, status updates, links |
-| **Neutral** | `surface` | `#fdfae7` | Background, soft warmth |
-| **Error** | `error` | `#ba1a1a` | Destructive actions, validation errors |
-
-### Override colors (active in implementation)
-
-| Token | Stitch override | Replaces |
-|---|---|---|
-| Primary | `#2a9d8f` | `#00685d` |
-| Secondary | `#e9c46a` | `#765a05` |
-| Tertiary | `#457b9d` | `#286182` |
-| Neutral | `#f4f1de` | — |
-
-### Surface hierarchy
-
-```
-background          #fdfae7  — page background
-surface             #fdfae7  — main surface
-surface-dim         #dddbc8  — inactive/dimmed surface
-surface-bright      #fdfae7  — elevated bright surface
-surface-container-lowest   #ffffff  — cards, highest contrast
-surface-container-low      #f7f4e1  — secondary containers
-surface-container          #f1eedb  — standard containers
-surface-container-high     #ece9d6  — prominent containers
-surface-container-highest  #e6e3d0  — most prominent containers
-```
+White is the primary canvas, but a "surface-cream" (`#F9FCFD`) is introduced for card backgrounds to reduce eye strain during long working hours. Functional colors for booking statuses (Confirmed, Pending, Cancelled) should remain vibrant but secondary to the brand teal.
 
 ## Typography
+The typography leverages **Open Sans** for its humanist qualities—it feels approachable yet remains highly legible in data-heavy management interfaces. Headings are bold and weighted to provide a clear hierarchy in scheduling views. 
 
-The system uses **Montserrat** for headlines to provide a bold, geometric, and confident personality. **Inter** is used for all body text and UI labels to ensure maximum legibility and a systematic, modern feel.
-
-Hierarchies are established primarily through weight and size. Headlines should remain concise. For mobile views, large display type scales down significantly to maintain readability without excessive scrolling.
-
-### Scale
-
-| Token | Family | Size | Weight | Line height | Letter spacing |
-|---|---|---|---|---|---|
-| `display-lg` | Montserrat | 48px / 3rem | 700 | 56px / 3.5rem | -0.02em |
-| `headline-lg` | Montserrat | 32px / 2rem | 600 | 40px / 2.5rem | — |
-| `headline-md` | Montserrat | 24px / 1.5rem | 600 | 32px / 2rem | — |
-| `body-lg` | Inter | 18px / 1.125rem | 400 | 28px / 1.75rem | — |
-| `body-md` | Inter | 16px / 1rem | 400 | 24px / 1.5rem | — |
-| `label-md` | Inter | 14px / 0.875rem | 500 | 20px / 1.25rem | 0.05em |
-| `caption` | Inter | 12px / 0.75rem | 400 | 16px / 1rem | — |
-
-### Usage guidelines
-
-- **display-lg**: Hero titles, landing page main heading
-- **headline-lg**: Section headings on landing pages
-- **headline-md**: Page titles, card headers, modal titles
-- **body-lg**: Lead paragraphs, introductory text
-- **body-md**: Body text, table content, form labels
-- **label-md**: Navigation items, button text, field labels, table headers
-- **caption**: Helper text, timestamps, meta info, footer text
-
-### Tailwind class mapping
-
-| Token | Tailwind v4 class |
-|---|---|
-| `display-lg` | `text-display-lg` |
-| `headline-lg` | `text-headline-lg` |
-| `headline-md` | `text-headline-md` |
-| `body-lg` | `text-body-lg` |
-| `body-md` | `text-body-md` |
-| `label-md` | `text-label-md` |
-| `caption` | `text-caption` |
-
-Font family classes: `font-headline` (Montserrat), `font-body` (Inter).
+**Inter** is introduced for labels, navigation items, and data tables. Its systematic, utilitarian nature ensures that dense information (like client lists or inventory counts) remains easy to scan. All labels should be crisp, with small labels utilizing slightly increased letter spacing for maximum clarity.
 
 ## Layout & Spacing
+The layout follows a **Fluid Grid** model with a maximum container width of 1440px. The design utilizes an 8px base unit for all spacing increments to ensure a consistent rhythm.
 
-The design system employs a **Fluid Grid** model based on an 8px base unit.
-
-| Breakpoint | Columns | Gutter | Margin |
-|---|---|---|---|
-| Desktop | 12 | 24px | 40px |
-| Tablet | 8 | 16px | 24px |
-| Mobile | 4 | 16px | 16px |
-
-Spacing should be generous to maintain a "clean" and "airy" feel, which reduces the cognitive load for busy salon managers.
-
-### Spacing tokens
-
-| Token | Value | Tailwind v4 class |
-|---|---|---|
-| Unit | 8px / 0.5rem | `p-unit`, `m-unit`, `gap-unit` |
-| Gutter | 24px / 1.5rem | `px-gutter`, `gap-gutter` |
-| Card padding | 24px / 1.5rem | `p-card-padding` |
-| Desktop margin | 40px / 2.5rem | `mx-[--spacing-margin-desktop]` |
-| Mobile margin | 16px / 1rem | `mx-[--spacing-margin-mobile]` |
-| Container max | 1280px | `max-w-[--container-max]` |
+- **Desktop:** 12-column grid. Left-hand sidebar navigation (fixed) for quick access to Calendar, Clients, and Settings.
+- **Mobile:** Single-column layout. Bottom navigation bar for core tasks (Home, New Appointment, Search).
+- **White Space:** Generous padding is applied to card containers (minimum 24px) to emphasize the "clean" and "modern" aesthetic, preventing the software from feeling cluttered like traditional legacy systems.
 
 ## Elevation & Depth
+Depth is conveyed through **Tonal Layers** and **Ambient Shadows**. 
 
-Hierarchy is conveyed through **Tonal Layers** and **Ambient Shadows**.
+The main application background uses a very light tint of the primary color. Interactive elements like "Appointment Cards" sit on a white surface with a soft, diffused shadow (12% opacity of the brand teal) to indicate they can be clicked or dragged. 
 
-| Level | Use case | Shadow | Tailwind v4 class |
-|---|---|---|---|
-| 0 | Background (page) | None | `bg-background` |
-| 1 | Cards, surface containers | `0 4px 12px rgba(42,157,143,0.04)` | `shadow-card` |
-| 2 | Modals, popovers, dialogs | `0 8px 24px rgba(42,157,143,0.08)` | `shadow-modal` |
-
-Outlines are avoided unless used for interactive states (e.g., input focus). Depth should feel natural and light, never heavy or distracting.
+Modals and overlays utilize a stronger shadow and a subtle backdrop blur (glassmorphism) to keep the user focused on the task at hand while maintaining context of the dashboard behind it.
 
 ## Shapes
+A "Rounded" shape language is used throughout the design system to evoke friendliness and safety—key emotional drivers for pet owners and groomers.
 
-This design system uses a **Rounded** shape language to reinforce the "friendly" and "safe" brand attributes.
-
-| Token | Value | Use case | Tailwind v4 class |
-|---|---|---|---|
-| `sm` | 4px / 0.25rem | Tight corners, small elements | `rounded-sm` |
-| `md` | 8px / 0.5rem | Buttons, inputs, standard elements | `rounded-md` |
-| `lg` | 12px / 0.75rem | Intermediate containers | `rounded-lg` |
-| `xl` | 16px / 1rem | Cards, modals, large containers | `rounded-xl` |
-| `2xl` | 24px / 1.5rem | Hero/feature containers | `rounded-2xl` |
-| `full` | 9999px | Badges, chips, avatars | `rounded-full` |
+Primary buttons and input fields feature a 0.5rem (8px) corner radius. Elements that feel more "organic" or "human," such as pet profiles or status badges, may use even higher roundedness (up to pill-shaped) to distinguish them from structural layout containers.
 
 ## Components
-
-### Buttons
-
-Primary buttons use the Teal background with white text. Secondary buttons use a Teal outline or a light beige tint. CTAs should have a minimum height of 48px to remain "tap-friendly."
-
-```tsx
-// Primary CTA
-<Button variant="primary">Book Appointment</Button>
-
-// Secondary
-<Button variant="secondary">Cancel</Button>
-
-// Danger / Destructive
-<Button variant="danger">Delete</Button>
-
-// Ghost (invisible background, for toolbars)
-<Button variant="ghost">Back</Button>
-```
-
-### Cards
-
-The primary container for the UI. Cards should have 24px internal padding and use the Level 1 shadow. Group pet information, appointments, and customer details into distinct cards.
-
-```tsx
-<div className="rounded-xl bg-surface-container-lowest p-card-padding shadow-card">
-  <h2 className="font-headline text-headline-md text-on-surface">Title</h2>
-  <p className="text-body-md text-on-surface-variant">Content</p>
-</div>
-```
-
-### Chips / Badges
-
-Small, pill-shaped tags used for status indicators, grooming services, or pet attributes. Use light tints of the primary/secondary colors.
-
-```tsx
-<Badge color="green">Active</Badge>
-<Badge color="gray">Inactive</Badge>
-<Badge color="blue">Info</Badge>
-<Badge color="red">Error</Badge>
-<Badge color="yellow">Warning</Badge>
-```
-
-### Input Fields
-
-Soft grey borders (1px) that transition to a 2px Teal border on focus. Use Inter for input text.
-
-```tsx
-<Input label="Name" required />
-<Select label="Status" options={[...]} />
-```
-
-### Iconography
-
-Use a rounded, medium-stroke icon set. Prefer inline SVGs with `strokeWidth={2}` or `strokeWidth={1.5}` for the friendly aesthetic.
-
-| Context | Icon |
-|---|---|
-| Dogs / Pets | Paw print, heart |
-| Customers | Person silhouette |
-| Services | Scissors, bathtub, brush |
-| Actions | Plus (+), search magnifying glass, calendar |
-
-### Lists / Tables
-
-Clean rows with 1px light divider lines. Ensure high contrast for pet names and appointment times.
-
-```tsx
-<div className="rounded-xl border border-outline-variant bg-surface-container-lowest shadow-card">
-  <table className="min-w-full divide-y divide-outline-variant">
-    {/* rows */}
-  </table>
-</div>
-```
-
-### Navigation
-
-Top header uses sticky positioning with backdrop blur. Active nav links use `text-primary`, inactive links use `text-on-surface-variant`. The brand logo uses the paw-print heart SVG icon.
-
-```tsx
-<header className="sticky top-0 z-40 border-b border-outline-variant bg-surface/95 backdrop-blur-sm">
-  <nav>...</nav>
-</header>
-```
-
-## Implementation Checklist
-
-- [x] Color palette imported to `src/index.css` `@theme`
-- [x] Typography scale defined as `--text-*` tokens
-- [x] Font families: Montserrat (headlines), Inter (body)
-- [x] Border radius tokens defined
-- [x] Spacing tokens defined
-- [x] Shadow tokens: `shadow-card`, `shadow-modal`
-- [x] Atoms: Button, Input, Badge, Modal, Select, Spinner
-- [x] Molecules: SearchBar, StatusBadge, Pagination, ConfirmDialog, Forms
-- [x] Organisms: Tables, Detail Cards
-- [x] App shell: Header, navigation, layout
-- [x] Landing page: Hero, services preview, about, CTAs
-- [ ] Appointments UI
-- [ ] Mobile-responsive navigation (bottom nav)
-- [ ] Dark mode support
-
----
-
-*Generated from Stitch — "Dog Grooming Manager" project*
+- **Buttons:** The primary button uses the brand teal (`#226D7A`) with white text. Secondary buttons use the sky blue (`#B0E0E9`) with teal text. Buttons should have a subtle hover transition that deepens the saturation.
+- **Cards:** Appointment cards feature a colored left-border strip that indicates the groomer or the service type.
+- **Input Fields:** Use a light grey border (`#E2E8F0`) that turns to the brand teal on focus. Labels sit above the field in **Inter** for readability.
+- **Chips/Badges:** Used for pet breeds and service tags. These should have a background color that is 10% opacity of the service category color.
+- **Calendar:** The central component of the software. It should use a clean, white background with subtle grey lines, allowing the teal appointment blocks to "pop" visually.
+- **Lists:** Client lists should feature small circular avatars (pet photos) to reinforce the friendly, pet-centric nature of the product.

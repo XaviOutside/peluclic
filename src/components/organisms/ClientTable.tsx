@@ -87,7 +87,7 @@ function ActionsDropdown({
               <button
                 type="button"
                 onClick={handleAction(onReactivate)}
-                className="block w-full px-4 py-2 text-left text-body-md text-primary hover:bg-primary-container/20 transition-colors"
+                className="block w-full px-4 py-2 text-left text-body-md text-primary-container hover:bg-primary-container/20 transition-colors"
               >
                 Reactivate
               </button>
@@ -154,7 +154,7 @@ export default function ClientTable({
             <tr key={client.id} className="flex flex-col border-b border-outline-variant last:border-b-0 md:table-row md:border-b-0 hover:bg-surface-container transition-colors">
               <Td label="Name">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-label-md font-headline font-semibold text-primary">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-container/15 text-label-md font-headline font-semibold text-primary-container">
                     {client.name.charAt(0).toUpperCase()}
                   </span>
                   <span className="font-headline font-medium text-on-surface">{client.name}</span>
@@ -163,7 +163,7 @@ export default function ClientTable({
               <Td label="Email">
                 <a
                   href={`mailto:${client.email}`}
-                  className="text-primary hover:underline"
+                  className="text-primary-container hover:underline"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {client.email}

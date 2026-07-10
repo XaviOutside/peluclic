@@ -87,7 +87,7 @@ function ActionsDropdown({
               <button
                 type="button"
                 onClick={handleAction(onReactivate)}
-                className="block w-full px-4 py-2 text-left text-body-md text-primary hover:bg-primary-container/20 transition-colors"
+                className="block w-full px-4 py-2 text-left text-body-md text-primary-container hover:bg-primary-container/20 transition-colors"
               >
                 Reactivate
               </button>

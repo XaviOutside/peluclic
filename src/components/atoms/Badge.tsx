@@ -9,7 +9,7 @@ export interface BadgeProps {
 }
 
 const colorStyles: Record<BadgeColor, string> = {
-  green: 'bg-primary-container/20 text-primary',
+  green: 'bg-primary-container/20 text-primary-container',
   gray: 'bg-surface-container-high text-on-surface-variant',
   blue: 'bg-tertiary-container/20 text-tertiary',
   red: 'bg-error-container text-on-error-container',

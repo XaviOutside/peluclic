@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   pfmaster Design System — imported from Stitch ("Dog Grooming Manager")
+   pfmaster Design System — PelGat Grooming Manager (Canine Concierge)
    Tailwind CSS v4 @theme — CSS-first configuration
    ========================================================================== */
 
@@ -9,154 +9,154 @@
   /* ------------------------------------------------------------------
      Font Families
      ------------------------------------------------------------------ */
-  --font-headline: "Montserrat", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-headline: "Open Sans", sans-serif;
+  --font-body: "Open Sans", sans-serif;
+  --font-label: "Inter", sans-serif;
 
-  /* Defaults apply project-wide */
-  --default-font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --default-font-family: "Open Sans", ui-sans-serif, system-ui, sans-serif;
   --default-mono-font-family: "JetBrains Mono", ui-monospace, monospace;
 
   /* ------------------------------------------------------------------
      Typography Scale
-     Each --text-* token maps to a `text-{name}` utility.
-     Sub-properties control line-height, font-weight, and letter-spacing.
      ------------------------------------------------------------------ */
 
-  /* Display */
-  --text-display-lg: 3rem;                     /* 48px */
-  --text-display-lg--line-height: 3.5rem;      /* 56px */
-  --text-display-lg--font-weight: 700;
-  --text-display-lg--letter-spacing: -0.02em;
+  --text-headline-xl: 2.5rem;
+  --text-headline-xl--line-height: 3rem;
+  --text-headline-xl--font-weight: 700;
+  --text-headline-xl--letter-spacing: -0.02em;
 
-  /* Headlines */
-  --text-headline-lg: 2rem;                    /* 32px */
-  --text-headline-lg--line-height: 2.5rem;     /* 40px */
+  --text-headline-xl-mobile: 1.875rem;
+  --text-headline-xl-mobile--line-height: 2.25rem;
+  --text-headline-xl-mobile--font-weight: 700;
+  --text-headline-xl-mobile--letter-spacing: -0.02em;
+
+  --text-headline-lg: 2rem;
+  --text-headline-lg--line-height: 2.5rem;
   --text-headline-lg--font-weight: 600;
 
-  --text-headline-md: 1.5rem;                  /* 24px */
-  --text-headline-md--line-height: 2rem;       /* 32px */
+  --text-headline-md: 1.5rem;
+  --text-headline-md--line-height: 2rem;
   --text-headline-md--font-weight: 600;
 
-  /* Body */
-  --text-body-lg: 1.125rem;                    /* 18px */
-  --text-body-lg--line-height: 1.75rem;        /* 28px */
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.75rem;
   --text-body-lg--font-weight: 400;
 
-  --text-body-md: 1rem;                        /* 16px */
-  --text-body-md--line-height: 1.5rem;         /* 24px */
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.5rem;
   --text-body-md--font-weight: 400;
 
-  /* Label */
-  --text-label-md: 0.875rem;                   /* 14px */
-  --text-label-md--line-height: 1.25rem;       /* 20px */
+  --text-label-md: 0.875rem;
+  --text-label-md--line-height: 1.25rem;
   --text-label-md--font-weight: 500;
-  --text-label-md--letter-spacing: 0.05em;
 
-  /* Caption */
-  --text-caption: 0.75rem;                     /* 12px */
-  --text-caption--line-height: 1rem;           /* 16px */
-  --text-caption--font-weight: 400;
+  --text-label-sm: 0.75rem;
+  --text-label-sm--line-height: 1rem;
+  --text-label-sm--font-weight: 600;
+  --text-label-sm--letter-spacing: 0.05em;
 
   /* ------------------------------------------------------------------
-     Color System (Material 3 tonal palette from Stitch)
-     Usage: bg-primary, text-on-primary, border-outline, etc.
+     Color System (Material 3 tonal palette — Fidelity variant)
      ------------------------------------------------------------------ */
 
-  /* ── Surface / Background hierarchy ── */
-  --color-background: #fdfae7;
-  --color-surface: #fdfae7;
-  --color-surface-dim: #dddbc8;
-  --color-surface-bright: #fdfae7;
+  /* Surface hierarchy */
+  --color-background: #f9f9ff;
+  --color-surface: #f9f9ff;
+  --color-surface-dim: #cfdaf1;
+  --color-surface-bright: #f9f9ff;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f7f4e1;
-  --color-surface-container: #f1eedb;
-  --color-surface-container-high: #ece9d6;
-  --color-surface-container-highest: #e6e3d0;
-  --color-on-surface: #1c1c11;
-  --color-on-surface-variant: #3d4947;
-  --color-inverse-surface: #313124;
-  --color-inverse-on-surface: #f4f1de;
-  --color-outline: #6d7a77;
-  --color-outline-variant: #bcc9c6;
-  --color-surface-tint: #006a60;
+  --color-surface-container-low: #f0f3ff;
+  --color-surface-container: #e7eeff;
+  --color-surface-container-high: #dee8ff;
+  --color-surface-container-highest: #d8e3fa;
+  --color-surface-variant: #d8e3fa;
+  --color-surface-cream: #F9FCFD;
+  --color-on-surface: #111c2c;
+  --color-on-surface-variant: #3f484a;
+  --color-inverse-surface: #263142;
+  --color-inverse-on-surface: #ebf1ff;
+  --color-outline: #6f797b;
+  --color-outline-variant: #bfc8cb;
+  --color-surface-tint: #1a6774;
 
-  /* ── Primary (Soft Teal — brand actions, main presence) ── */
-  --color-primary: #2a9d8f;
+  /* Primary — Deep Teal-Cyan */
+  --color-primary: #005460;
   --color-on-primary: #ffffff;
-  --color-primary-container: #008376;
-  --color-on-primary-container: #f4fffb;
-  --color-inverse-primary: #6fd8c8;
-  --color-primary-fixed: #8cf5e4;
-  --color-primary-fixed-dim: #6fd8c8;
-  --color-on-primary-fixed: #00201c;
-  --color-on-primary-fixed-variant: #005048;
+  --color-primary-container: #226d7a;
+  --color-on-primary-container: #a8ecfb;
+  --color-inverse-primary: #8dd1e0;
+  --color-primary-fixed: #a9edfc;
+  --color-primary-fixed-dim: #8dd1e0;
+  --color-on-primary-fixed: #001f25;
+  --color-on-primary-fixed-variant: #004e5a;
 
-  /* ── Secondary (Warm Beige/Gold — accents, highlights) ── */
-  --color-secondary: #e9c46a;
+  /* Secondary — Teal */
+  --color-secondary: #36656d;
   --color-on-secondary: #ffffff;
-  --color-secondary-container: #ffd87c;
-  --color-on-secondary-container: #795d08;
-  --color-secondary-fixed: #ffdf96;
-  --color-secondary-fixed-dim: #e7c268;
-  --color-on-secondary-fixed: #251a00;
-  --color-on-secondary-fixed-variant: #5a4400;
+  --color-secondary-container: #b8e8f1;
+  --color-on-secondary-container: #3b6a71;
+  --color-secondary-fixed: #bbebf4;
+  --color-secondary-fixed-dim: #9fcfd7;
+  --color-on-secondary-fixed: #001f24;
+  --color-on-secondary-fixed-variant: #1c4d55;
 
-  /* ── Tertiary (Friendly Blue — info, links, status) ── */
-  --color-tertiary: #457b9d;
+  /* Tertiary — Warm Brown */
+  --color-tertiary: #6e4212;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #447a9c;
-  --color-on-tertiary-container: #fcfcff;
-  --color-tertiary-fixed: #c7e7ff;
-  --color-tertiary-fixed-dim: #98cdf2;
-  --color-on-tertiary-fixed: #001e2e;
-  --color-on-tertiary-fixed-variant: #064c6b;
+  --color-tertiary-container: #8a5928;
+  --color-on-tertiary-container: #ffdbbd;
+  --color-tertiary-fixed: #ffdcc0;
+  --color-tertiary-fixed-dim: #f9ba80;
+  --color-on-tertiary-fixed: #2d1600;
+  --color-on-tertiary-fixed-variant: #683c0d;
 
-  /* ── Error ── */
+  /* Error */
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
 
-  /* ── Semantic aliases (shorter names for common patterns) ── */
-  --color-brand: #2a9d8f;              /* alias for primary */
-  --color-brand-accent: #e9c46a;        /* alias for secondary */
-  --color-info: #457b9d;                /* alias for tertiary */
-  --color-success: #2a9d8f;             /* reuse primary for success */
-  --color-warning: #e9c46a;             /* reuse secondary for warning */
-  --color-danger: #ba1a1a;              /* alias for error */
+  /* Status */
+  --color-status-success: #4CAF50;
+  --color-status-warning: #FFB300;
+  --color-status-error: #E53935;
+
+  /* Semantic aliases */
+  --color-brand: #226d7a;
+  --color-brand-accent: #b0e0e9;
+  --color-info: #36656d;
+  --color-success: #4CAF50;
+  --color-warning: #FFB300;
+  --color-danger: #E53935;
 
   /* ------------------------------------------------------------------
      Border Radius
      ------------------------------------------------------------------ */
-  --radius-sm: 0.25rem;    /*  4px — tight corners */
-  --radius-md: 0.5rem;     /*  8px — buttons, inputs, standard elements */
-  --radius-lg: 0.75rem;    /* 12px — intermediate */
-  --radius-xl: 1rem;       /* 16px — cards, modals, large containers */
-  --radius-2xl: 1.5rem;    /* 24px — hero/feature containers */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
 
   /* ------------------------------------------------------------------
-     Spacing (8px base unit)
+     Spacing (8px base)
      ------------------------------------------------------------------ */
-  --spacing-unit: 0.5rem;           /* 8px */
-  --spacing-gutter: 1.5rem;         /* 24px */
-  --spacing-card-padding: 1.5rem;   /* 24px */
-  --spacing-margin-desktop: 2.5rem; /* 40px */
-  --spacing-margin-mobile: 1rem;    /* 16px */
+  --spacing-unit: 0.5rem;
+  --spacing-gutter: 1.5rem;
+  --spacing-card-padding: 1.5rem;
+  --spacing-margin-desktop: 2.5rem;
+  --spacing-margin-mobile: 1rem;
 
   /* ------------------------------------------------------------------
-     Shadows (elevation)
+     Shadows
      ------------------------------------------------------------------ */
-
-  /* Level 1 — Cards, surface containers */
-  --shadow-card: 0 4px 12px rgba(42, 157, 143, 0.04);
-
-  /* Level 2 — Modals, popovers, dialogs */
-  --shadow-modal: 0 8px 24px rgba(42, 157, 143, 0.08);
+  --shadow-card: 0 4px 12px rgba(34, 109, 122, 0.12);
+  --shadow-modal: 0 8px 24px rgba(34, 109, 122, 0.16);
 
   /* ------------------------------------------------------------------
      Container
      ------------------------------------------------------------------ */
-  --container-max: 1280px;
+  --container-max: 1440px;
 
   /* ------------------------------------------------------------------
      Easing
@@ -166,19 +166,19 @@
 }
 
 /* ==========================================================================
-   Base layer — global resets and defaults
+   Base layer
    ========================================================================== */
 
 @layer base {
   html {
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-    background-color: #fdfae7;
-    color: #1c1c11;
+    font-family: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+    background-color: #f9f9ff;
+    color: #111c2c;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Montserrat", sans-serif;
+    font-family: "Open Sans", sans-serif;
   }
 }

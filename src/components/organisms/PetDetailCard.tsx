@@ -95,7 +95,7 @@ export default function PetDetailCard({
                   <button
                     type="button"
                     onClick={onViewClient}
-                    className="text-primary hover:underline"
+                    className="text-primary-container hover:underline"
                   >
                     {clientName}
                   </button>
