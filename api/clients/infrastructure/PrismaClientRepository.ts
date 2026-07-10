@@ -98,12 +98,13 @@ export class PrismaClientRepository implements IClientRepository {
       phone2: string | null;
       address: string | null;
       status: number;
+      last_service_date: Date | null;
       created_at: Date;
       updated_at: Date;
       deleted_at: Date | null;
     }>>`
       SELECT id, name, email, phone, phone2, address, status,
-             created_at, updated_at, deleted_at
+             last_service_date, created_at, updated_at, deleted_at
       FROM clients
       WHERE MATCH(name, email) AGAINST(${sanitizedQuery} IN BOOLEAN MODE)
         AND deleted_at IS NULL
@@ -118,6 +119,7 @@ export class PrismaClientRepository implements IClientRepository {
       phone2: row.phone2,
       address: row.address,
       status: row.status as 0 | 1,
+      lastServiceDate: row.last_service_date,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       deletedAt: row.deleted_at,
@@ -136,6 +138,7 @@ export class PrismaClientRepository implements IClientRepository {
     phone2: string | null;
     address: string | null;
     status: number;
+    last_service_date?: Date | null;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
@@ -148,6 +151,7 @@ export class PrismaClientRepository implements IClientRepository {
       phone2: row.phone2,
       address: row.address,
       status: row.status as 0 | 1,
+      lastServiceDate: row.last_service_date ?? null,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       deletedAt: row.deletedAt,

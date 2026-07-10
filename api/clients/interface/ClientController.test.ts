@@ -30,6 +30,7 @@ const domainClient = {
   phone2: null,
   address: null,
   status: 1 as const,
+  lastServiceDate: null,
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
   updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   deletedAt: null,
@@ -44,6 +45,7 @@ const expectedDto = {
   phone2: null,
   address: null,
   status: 'active',
+  lastServiceDate: null,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
 };

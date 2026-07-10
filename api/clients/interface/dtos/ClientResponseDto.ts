@@ -14,6 +14,7 @@ export interface ClientResponseDto {
   phone2: string | null;
   address: string | null;
   status: 'active' | 'inactive';
+  lastServiceDate: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -31,6 +32,9 @@ export function toClientResponseDto(client: Client): ClientResponseDto {
     phone2: client.phone2,
     address: client.address,
     status: client.status === 1 ? 'active' : 'inactive',
+    lastServiceDate: client.lastServiceDate
+      ? client.lastServiceDate.toISOString().slice(0, 10)
+      : null,
     createdAt: client.createdAt.toISOString(),
     updatedAt: client.updatedAt.toISOString(),
   };
