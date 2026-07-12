@@ -1,14 +1,15 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Client } from '@/types/client';
 import { useClients } from '@/hooks/useClients';
+import { useDeactivateClient } from '@/hooks/useClientMutations';
 import DataTable from '@/components/organisms/DataTable';
 import PageHeader from '@/components/organisms/PageHeader';
 import ModuleTabs from '@/components/molecules/ModuleTabs';
-import StatusBadge from '@/components/molecules/StatusBadge';
+import ConfirmDialog from '@/components/molecules/ConfirmDialog';
 import Button from '@/components/atoms/Button';
 import { formatServiceDate } from '@/utils/format';
-import type { ColumnConfig, RowAction } from '@/components/organisms/DataTable';
+import type { ColumnConfig, RowAction, CrossRefAction } from '@/components/organisms/DataTable';
 
 const MODULE_TABS = [
   { id: 'clients', label: 'Clientes', icon: 'group' },
@@ -27,6 +28,19 @@ export default function ClientsPage() {
     search,
     setSearchQuery,
   } = useClients();
+  const deactivateMutation = useDeactivateClient();
+
+  const [confirmTarget, setConfirmTarget] = useState<Client | null>(null);
+
+  const [feedback, setFeedback] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
+
+  function showFeedback(type: 'success' | 'error', message: string) {
+    setFeedback({ type, message });
+    setTimeout(() => setFeedback(null), 4000);
+  }
 
   /* ── Search ── */
   const handleSearchChange = useCallback(
@@ -54,7 +68,7 @@ export default function ClientsPage() {
           <span className="text-sm text-on-surface-variant">{formatServiceDate(c.lastServiceDate)}</span>
         </>
       ),
-      span: 'sm:col-span-4',
+      span: 'sm:col-span-3',
     },
     {
       header: 'Contacto',
@@ -82,7 +96,7 @@ export default function ClientsPage() {
           )}
         </div>
       ),
-      span: 'sm:col-span-5',
+      span: 'sm:col-span-3',
     },
     {
       header: 'Notas',
@@ -91,6 +105,22 @@ export default function ClientsPage() {
       ),
       span: 'sm:col-span-2',
       mobileVisible: false,
+    },
+  ];
+
+  /* ── Cross-reference actions ── */
+  const crossRefActions: CrossRefAction<Client>[] = [
+    {
+      key: 'clients-pets',
+      label: 'Ver Mascotas',
+      icon: 'pets',
+      onClick: (c) => navigate(`/pets?clientId=${c.id}`),
+    },
+    {
+      key: 'clients-services',
+      label: 'Ver Servicios',
+      icon: 'receipt_long',
+      onClick: () => navigate('/services'),
     },
   ];
 
@@ -108,7 +138,29 @@ export default function ClientsPage() {
       icon: 'edit',
       onAction: (c) => navigate(`/clients/${c.id}/edit`),
     },
+    {
+      key: 'delete',
+      label: 'Desactivar',
+      icon: 'delete',
+      destructive: true,
+      onAction: (c) => setConfirmTarget(c),
+    },
   ];
+
+  /* ── Confirm handler ── */
+  async function handleConfirmDeactivate() {
+    if (!confirmTarget) return;
+    try {
+      await deactivateMutation.mutate(confirmTarget.id);
+      showFeedback('success', `${confirmTarget.name} desactivado.`);
+      setConfirmTarget(null);
+      fetchClients();
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Error al desactivar.';
+      showFeedback('error', message);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6" data-testid="clients-page">
@@ -140,6 +192,21 @@ export default function ClientsPage() {
         }
       />
 
+      {/* ── Feedback toast ── */}
+      {feedback && (
+        <div
+          className={`rounded-lg px-4 py-3 text-label-md ${
+            feedback.type === 'success'
+              ? 'bg-status-success/15 text-status-success'
+              : 'bg-error-container text-on-error-container'
+          }`}
+          role="alert"
+          data-testid="feedback-toast"
+        >
+          {feedback.message}
+        </div>
+      )}
+
       {/* ── Data Table ── */}
       <DataTable
         data={clients}
@@ -147,10 +214,28 @@ export default function ClientsPage() {
         rowKey={(c) => c.id}
         avatarName={(c) => c.name}
         rowActions={rowActions}
+        crossRefActions={crossRefActions}
+        actionSpan="sm:col-span-4"
         loading={isLoading}
         error={error}
         onRetry={fetchClients}
         emptyMessage="No hay clientes registrados."
+      />
+
+      {/* ── Confirm dialog ── */}
+      <ConfirmDialog
+        isOpen={confirmTarget !== null}
+        onClose={() => setConfirmTarget(null)}
+        onConfirm={handleConfirmDeactivate}
+        title="Desactivar cliente"
+        message={
+          confirmTarget
+            ? `¿Estás seguro de que deseas desactivar a ${confirmTarget.name}?`
+            : ''
+        }
+        confirmLabel="Desactivar"
+        destructive
+        isLoading={deactivateMutation.isLoading}
       />
     </div>
   );

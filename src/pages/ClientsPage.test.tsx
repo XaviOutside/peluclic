@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import type { Client } from '@/types/client';
 import ClientsPage from './ClientsPage';
 
@@ -35,6 +35,19 @@ const mockClientMinimal: Client = {
   updatedAt: '2026-01-01T00:00:00.000Z',
 };
 
+// Use vi.hoisted to guarantee mockNavigate is available before any imports
+const { mockNavigate } = vi.hoisted(() => ({
+  mockNavigate: vi.fn(),
+}));
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 // Mock useClients hook
 vi.mock('@/hooks/useClients', () => ({
   useClients: () => ({
@@ -48,11 +61,24 @@ vi.mock('@/hooks/useClients', () => ({
   }),
 }));
 
+// Mock useClientMutations
+const { mockMutate } = vi.hoisted(() => ({
+  mockMutate: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('@/hooks/useClientMutations', () => ({
+  useDeactivateClient: () => ({
+    mutate: mockMutate,
+    isLoading: false,
+    error: null,
+  }),
+}));
+
 function renderPage() {
   return render(
-    <BrowserRouter>
+    <MemoryRouter>
       <ClientsPage />
-    </BrowserRouter>,
+    </MemoryRouter>,
   );
 }
 
@@ -64,7 +90,6 @@ describe('ClientsPage', () => {
     expect(screen.getByText('Cliente')).toBeInTheDocument();
     expect(screen.getAllByText('Contacto').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Notas').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Estado').length).toBeGreaterThan(0);
 
     // "Último servicio" column no longer exists — date moved inside Cliente column
     expect(screen.queryAllByText('Último servicio')).toHaveLength(0);
@@ -112,5 +137,66 @@ describe('ClientsPage', () => {
     // The text should appear exactly once (belongs to María García)
     expect(screen.getByText('555-1002')).toBeInTheDocument();
     expect(screen.getByText('Calle Mayor 12')).toBeInTheDocument();
+  });
+
+  /* ── Cross-reference buttons ── */
+
+  it('renders "Ver Mascotas" cross-ref button per row', () => {
+    renderPage();
+
+    const buttons = screen.getAllByTestId('crossref-action-clients-pets');
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]).toHaveTextContent('Ver Mascotas');
+  });
+
+  it('"Ver Mascotas" navigates to /pets?clientId=X', () => {
+    mockNavigate.mockClear();
+    renderPage();
+
+    const buttons = screen.getAllByTestId('crossref-action-clients-pets');
+    fireEvent.click(buttons[0]);
+    expect(mockNavigate).toHaveBeenCalledWith('/pets?clientId=42');
+  });
+
+  it('renders "Ver Servicios" cross-ref button per row', () => {
+    renderPage();
+
+    const buttons = screen.getAllByTestId('crossref-action-clients-services');
+    expect(buttons).toHaveLength(2);
+    expect(buttons[0]).toHaveTextContent('Ver Servicios');
+  });
+
+  it('"Ver Servicios" navigates to /services', () => {
+    mockNavigate.mockClear();
+    renderPage();
+
+    const buttons = screen.getAllByTestId('crossref-action-clients-services');
+    fireEvent.click(buttons[0]);
+    expect(mockNavigate).toHaveBeenCalledWith('/services');
+  });
+
+  /* ── Delete action ── */
+
+  it('renders delete row action button', () => {
+    renderPage();
+
+    const deleteButtons = screen.getAllByTestId('row-action-delete');
+    expect(deleteButtons).toHaveLength(2);
+  });
+
+  it('clicking delete opens ConfirmDialog', () => {
+    renderPage();
+
+    // ConfirmDialog should not be visible initially
+    expect(screen.queryByText('Desactivar cliente')).not.toBeInTheDocument();
+
+    // Click delete on first row
+    const deleteButtons = screen.getAllByTestId('row-action-delete');
+    fireEvent.click(deleteButtons[0]);
+
+    // ConfirmDialog should now be visible with title and client name in message
+    expect(screen.getByText('Desactivar cliente')).toBeInTheDocument();
+    // María García appears both in the row and in the confirm dialog message
+    expect(screen.getAllByText(/María García/).length).toBeGreaterThanOrEqual(2);
   });
 });

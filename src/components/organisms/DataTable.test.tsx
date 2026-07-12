@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import DataTable, { type ColumnConfig, type RowAction } from '@/components/organisms/DataTable';
+import DataTable, { type ColumnConfig, type RowAction, type CrossRefAction } from '@/components/organisms/DataTable';
 
 /* ── Test helpers ── */
 
@@ -217,5 +217,98 @@ describe('DataTable', () => {
     const mobileLabels = document.querySelectorAll('.sm\\:hidden');
     // Each row has at least one mobile label (Name and Email)
     expect(mobileLabels.length).toBeGreaterThanOrEqual(2);
+  });
+
+  /* ── CrossRefActions ── */
+  it('renders crossRefActions as labeled bordered buttons with icon', () => {
+    const crossRefActions: CrossRefAction<TestItem>[] = [
+      {
+        key: 'view-pets',
+        label: 'Ver Mascotas',
+        icon: 'pets',
+        onClick: vi.fn(),
+      },
+    ];
+
+    render(
+      <DataTable
+        data={sampleData}
+        columns={columns}
+        rowKey={(r) => r.id}
+        crossRefActions={crossRefActions}
+      />,
+    );
+
+    const buttons = screen.getAllByTestId('crossref-action-view-pets');
+    expect(buttons).toHaveLength(2); // one per row
+
+    const firstBtn = buttons[0];
+    expect(firstBtn).toHaveTextContent('Ver Mascotas');
+    // Icon is inside a span with material-symbols-outlined class
+    const icon = firstBtn.querySelector('.material-symbols-outlined');
+    expect(icon).toBeInTheDocument();
+    expect(icon?.textContent).toBe('pets');
+  });
+
+  it('sets disabled attribute when disabled predicate returns true', () => {
+    const crossRefActions: CrossRefAction<TestItem>[] = [
+      {
+        key: 'view-client',
+        label: 'Ver Cliente',
+        icon: 'person',
+        onClick: vi.fn(),
+        disabled: (item) => item.id === 1, // Alice disabled, Bob enabled
+      },
+    ];
+
+    render(
+      <DataTable
+        data={sampleData}
+        columns={columns}
+        rowKey={(r) => r.id}
+        crossRefActions={crossRefActions}
+      />,
+    );
+
+    const buttons = screen.getAllByTestId('crossref-action-view-client');
+    expect(buttons).toHaveLength(2);
+
+    // Alice (id=1) should be disabled
+    expect(buttons[0]).toBeDisabled();
+
+    // Bob (id=2) should be enabled
+    expect(buttons[1]).not.toBeDisabled();
+  });
+
+  it('applies actionSpan class to actions cell and header', () => {
+    const crossRefActions: CrossRefAction<TestItem>[] = [
+      {
+        key: 'view-pets',
+        label: 'Ver Mascotas',
+        icon: 'pets',
+        onClick: vi.fn(),
+      },
+    ];
+
+    render(
+      <DataTable
+        data={sampleData}
+        columns={columns}
+        rowKey={(r) => r.id}
+        crossRefActions={crossRefActions}
+        actionSpan="sm:col-span-4"
+      />,
+    );
+
+    // Find the actions header cell
+    const actionHeader = screen.getByText('Actions');
+    expect(actionHeader.className).toContain('sm:col-span-4');
+
+    // Each row's actions cell should have the span class
+    const actionCells = document.querySelectorAll('[data-testid="datatable-actions-cell"]');
+    expect(actionCells.length).toBe(2);
+    actionCells.forEach((cell) => {
+      expect(cell.className).toContain('sm:col-span-4');
+    });
   });
 });

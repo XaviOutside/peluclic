@@ -32,6 +32,19 @@ export interface RowAction<T> {
   destructive?: boolean;
 }
 
+export interface CrossRefAction<T> {
+  /** Unique key for this action */
+  key: string;
+  /** Button text (e.g. "Ver Mascotas") */
+  label: string;
+  /** Material Symbols icon name */
+  icon: string;
+  /** Called when the button is clicked */
+  onClick: (row: T) => void;
+  /** Optional per-row disable predicate */
+  disabled?: (row: T) => boolean;
+}
+
 export interface DataTableProps<T> {
   /** Array of items to display */
   data: T[];
@@ -45,6 +58,10 @@ export interface DataTableProps<T> {
   avatarSrc?: (row: T) => string | undefined;
   /** Row actions shown as icon buttons */
   rowActions?: RowAction<T>[];
+  /** Cross-reference actions shown as labeled bordered buttons before rowActions */
+  crossRefActions?: CrossRefAction<T>[];
+  /** CSS grid column span for the actions cell (default: 'sm:col-span-1') */
+  actionSpan?: string;
   /** Whether data is currently loading */
   loading?: boolean;
   /** Error message to display */
@@ -80,6 +97,8 @@ export default function DataTable<T>({
   avatarName,
   avatarSrc,
   rowActions,
+  crossRefActions,
+  actionSpan = 'sm:col-span-1',
   loading = false,
   error = null,
   onRetry,
@@ -141,6 +160,9 @@ export default function DataTable<T>({
 
   /* ── Desktop column count ── */
   const totalCols = columns.length + (rowActions ? 1 : 0);
+  const hasActions =
+    (crossRefActions && crossRefActions.length > 0) ||
+    (rowActions && rowActions.length > 0);
 
   return (
     <div
@@ -158,8 +180,8 @@ export default function DataTable<T>({
               {col.header}
             </div>
           ))}
-          {rowActions && (
-            <div className="col-span-1 text-right">Actions</div>
+          {hasActions && (
+            <div className={`${actionSpan} text-right`}>Actions</div>
           )}
         </div>
       )}
@@ -219,28 +241,58 @@ export default function DataTable<T>({
               );
             })}
 
-            {/* Row Actions */}
-            {rowActions && rowActions.length > 0 && (
-              <div className="flex flex-wrap sm:justify-end gap-2 mt-2 sm:mt-0 col-span-1 sm:col-span-1">
-                {rowActions.map((action) => (
-                  <button
-                    key={`action-${rowKey(row)}-${action.key}`}
-                    type="button"
-                    onClick={() => action.onAction(row)}
-                    title={action.label}
-                    aria-label={action.label}
-                    className={`p-1.5 rounded-md transition-colors ${
-                      action.destructive
-                        ? 'text-status-error hover:bg-error-container hover:text-on-error-container'
-                        : 'text-secondary hover:bg-secondary-container'
-                    }`}
-                    data-testid={`row-action-${action.key}`}
-                  >
-                    <span className="material-symbols-outlined text-[18px]">
-                      {action.icon}
-                    </span>
-                  </button>
-                ))}
+            {/* Actions cell */}
+            {hasActions && (
+              <div
+                className={`flex flex-wrap items-center sm:justify-end gap-2 mt-2 sm:mt-0 ${actionSpan}`}
+                data-testid="datatable-actions-cell"
+              >
+                {/* CrossRefActions — labeled bordered buttons */}
+                {crossRefActions?.map((action) => {
+                  const isDisabled = action.disabled?.(row) ?? false;
+                  return (
+                    <button
+                      key={`crossref-${rowKey(row)}-${action.key}`}
+                      type="button"
+                      onClick={() => action.onClick(row)}
+                      disabled={isDisabled}
+                      title={action.label}
+                      aria-label={action.label}
+                      className="px-3 py-1.5 text-xs font-label-sm bg-surface-container hover:bg-surface-container-high text-on-surface rounded-md transition-colors flex items-center gap-1 border border-outline-variant/30 disabled:opacity-40 disabled:cursor-not-allowed min-h-[30px]"
+                      data-testid={`crossref-action-${action.key}`}
+                    >
+                      <span className="material-symbols-outlined text-[14px]">
+                        {action.icon}
+                      </span>
+                      {action.label}
+                    </button>
+                  );
+                })}
+
+                {/* RowActions — icon-only buttons */}
+                {rowActions && rowActions.length > 0 && (
+                  <div className="flex gap-1 ml-auto sm:ml-2">
+                    {rowActions.map((action) => (
+                      <button
+                        key={`action-${rowKey(row)}-${action.key}`}
+                        type="button"
+                        onClick={() => action.onAction(row)}
+                        title={action.label}
+                        aria-label={action.label}
+                        className={`p-1.5 rounded-md transition-colors ${
+                          action.destructive
+                            ? 'text-status-error hover:bg-error-container hover:text-on-error-container'
+                            : 'text-secondary hover:bg-secondary-container'
+                        }`}
+                        data-testid={`row-action-${action.key}`}
+                      >
+                        <span className="material-symbols-outlined text-[18px]">
+                          {action.icon}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { Service } from '@/types/service';
 import { useServices } from '@/hooks/useServices';
 import { searchServices } from '@/services/service';
@@ -9,7 +9,7 @@ import ModuleTabs from '@/components/molecules/ModuleTabs';
 import StatusBadge from '@/components/molecules/StatusBadge';
 import ConfirmDialog from '@/components/molecules/ConfirmDialog';
 import Button from '@/components/atoms/Button';
-import type { ColumnConfig, RowAction } from '@/components/organisms/DataTable';
+import type { ColumnConfig, RowAction, CrossRefAction } from '@/components/organisms/DataTable';
 
 const MODULE_TABS = [
   { id: 'clients', label: 'Clientes', icon: 'group' },
@@ -28,13 +28,17 @@ function formatDuration(minutes: number | null): string {
 
 export default function ServicesPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const petIdParam = searchParams.get('petId');
+  const petId = petIdParam ? parseInt(petIdParam, 10) : undefined;
+
   const {
     services: hookServices,
     isLoading: hookLoading,
     error: hookError,
     refresh,
     deleteService,
-  } = useServices();
+  } = useServices({ petId });
 
   /* Search state */
   const [searchState, setSearchState] = useState<{
@@ -113,7 +117,7 @@ export default function ServicesPage() {
     {
       header: 'Servicio',
       render: (s) => s.name,
-      span: 'sm:col-span-3',
+      span: 'sm:col-span-2',
     },
     {
       header: 'Descripción',
@@ -122,7 +126,7 @@ export default function ServicesPage() {
           {s.description || '—'}
         </span>
       ),
-      span: 'sm:col-span-3',
+      span: 'sm:col-span-2',
     },
     {
       header: 'Duración',
@@ -145,6 +149,17 @@ export default function ServicesPage() {
       render: (s) => <StatusBadge status={s.status} />,
       span: 'sm:col-span-1',
       mobileVisible: false,
+    },
+  ];
+
+  /* ── Cross-reference actions ── */
+  const crossRefActions: CrossRefAction<Service>[] = [
+    {
+      key: 'services-pet',
+      label: 'Ver mascota',
+      icon: 'pets',
+      onClick: (s) => s.petId !== null && navigate(`/pets/${s.petId}`),
+      disabled: (s) => s.petId === null,
     },
   ];
 
@@ -223,6 +238,8 @@ export default function ServicesPage() {
         rowKey={(s) => s.id}
         avatarName={(s) => s.name}
         rowActions={rowActions}
+        crossRefActions={crossRefActions}
+        actionSpan="sm:col-span-3"
         loading={displayLoading}
         error={displayError}
         onRetry={refresh}

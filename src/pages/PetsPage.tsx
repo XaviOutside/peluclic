@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { Pet } from '@/types/pet';
 import { usePets } from '@/hooks/usePets';
 import { useDeactivatePet } from '@/hooks/usePetMutations';
@@ -9,7 +9,7 @@ import ModuleTabs from '@/components/molecules/ModuleTabs';
 import StatusBadge from '@/components/molecules/StatusBadge';
 import ConfirmDialog from '@/components/molecules/ConfirmDialog';
 import Button from '@/components/atoms/Button';
-import type { ColumnConfig, RowAction } from '@/components/organisms/DataTable';
+import type { ColumnConfig, RowAction, CrossRefAction } from '@/components/organisms/DataTable';
 
 const MODULE_TABS = [
   { id: 'clients', label: 'Clientes', icon: 'group' },
@@ -19,7 +19,12 @@ const MODULE_TABS = [
 
 export default function PetsPage() {
   const navigate = useNavigate();
-  const { pets, isLoading, error, refresh } = usePets();
+  const [searchParams] = useSearchParams();
+  const clientIdParam = searchParams.get('clientId');
+  const initialClientId = clientIdParam ? parseInt(clientIdParam, 10) : undefined;
+
+  const { pets, isLoading, error, refresh } = usePets(initialClientId);
+
   const deactivateMutation = useDeactivatePet();
 
   const [searchText, setSearchText] = useState('');
@@ -55,13 +60,29 @@ export default function PetsPage() {
     {
       header: 'Raza',
       render: (p) => p.breed,
-      span: 'sm:col-span-3',
+      span: 'sm:col-span-2',
     },
     {
       header: 'Estado',
       render: (p) => <StatusBadge status={p.status} />,
       span: 'sm:col-span-2',
       mobileVisible: false,
+    },
+  ];
+
+  /* ── Cross-reference actions ── */
+  const crossRefActions: CrossRefAction<Pet>[] = [
+    {
+      key: 'pets-client',
+      label: 'Ver Cliente',
+      icon: 'person',
+      onClick: (p) => navigate(`/clients/${p.clientId}`),
+    },
+    {
+      key: 'pets-services',
+      label: 'Ver Servicios',
+      icon: 'receipt_long',
+      onClick: (p) => navigate(`/services?petId=${p.id}`),
     },
   ];
 
@@ -82,7 +103,7 @@ export default function PetsPage() {
     {
       key: 'deactivate',
       label: 'Desactivar',
-      icon: 'block',
+      icon: 'delete',
       destructive: true,
       onAction: (p) => setConfirmTarget(p),
     },
@@ -155,6 +176,8 @@ export default function PetsPage() {
         rowKey={(p) => p.id}
         avatarName={(p) => p.name}
         rowActions={rowActions}
+        crossRefActions={crossRefActions}
+        actionSpan="sm:col-span-3"
         loading={isLoading}
         error={error}
         onRetry={refresh}
