@@ -83,6 +83,50 @@ async function main() {
 
   console.log(`✅ ${clients.length} clients created`);
 
+  /* ── More clients (for pagination testing) ── */
+  const extraClients = [];
+  const firstNames = [
+    'Alejandro', 'Beatriz', 'Carmen', 'Diego', 'Elena', 'Francisco', 'Gloria', 'Héctor',
+    'Isabel', 'Javier', 'Karla', 'Luis', 'Mónica', 'Nicolás', 'Olga', 'Pablo',
+    'Rosa', 'Sergio', 'Teresa', 'Víctor',
+  ];
+  const lastNames = [
+    'Torres', 'Ramírez', 'Flores', 'Díaz', 'Morales', 'Ortiz', 'Herrera', 'Castro',
+    'Vargas', 'Reyes', 'Guzmán', 'Mendoza', 'Silva', 'Peña', 'Rojas', 'Navarro',
+    'Delgado', 'Cruz', 'León', 'Campos',
+  ];
+
+  for (let i = 0; i < 20; i++) {
+    const firstName = firstNames[i];
+    const lastName = lastNames[i];
+    const hasPhone2 = i % 3 !== 0;
+    const hasAddress = i % 2 === 0;
+    const hasNotes = i % 4 !== 0;
+
+    extraClients.push(
+      prisma.client.create({
+        data: {
+          name: `${firstName} ${lastName}`,
+          email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@email.com`,
+          phone: `+34 6${String(i + 10).padStart(2, '0')} ${String(Math.floor(Math.random() * 900) + 100)} ${String(Math.floor(Math.random() * 900) + 100)}`,
+          phone2: hasPhone2 ? `+34 9${String(i + 20).padStart(2, '0')} ${String(Math.floor(Math.random() * 900) + 100)} ${String(Math.floor(Math.random() * 900) + 100)}` : null,
+          address: hasAddress
+            ? `Calle ${lastName} ${i + 1}, ${i % 3 === 0 ? 'Madrid' : i % 3 === 1 ? 'Barcelona' : 'Valencia'}`
+            : null,
+          notes: hasNotes
+            ? `Cliente desde ${2021 + (i % 4)}. ${i % 2 === 0 ? 'Prefiere citas por la mañana.' : 'Suele traer a su mascota cada 4-6 semanas.'}`
+            : null,
+          lastServiceDate: i % 5 !== 0 ? new Date(2026, 6, i + 1) : null,
+          status: i === 19 ? 0 : 1, // last one inactive
+        },
+      })
+    );
+  }
+
+  const createdExtraClients = await Promise.all(extraClients);
+  const allClients = [...clients, ...createdExtraClients];
+  console.log(`✅ ${createdExtraClients.length} extra clients created (${allClients.length} total)`);
+
   /* ── Pets ── */
   const [maria, carlos, laura, miguel, ana] = clients;
 
@@ -181,6 +225,36 @@ async function main() {
   ]);
 
   console.log(`✅ ${pets.length} pets created`);
+
+  /* ── More pets (for pagination) ── */
+  const extraPets = [];
+  const petSpecies = ['Perro', 'Gato', 'Perro', 'Gato', 'Conejo', 'Ave', 'Perro', 'Gato'];
+  const petBreeds = ['Labrador', 'Angora', 'Pastor Alemán', 'Maine Coon', 'Holland Lop', 'Periquito', 'Beagle', 'Sphynx'];
+  const petNames = ['Simba', 'Nala', 'Toby', 'Milo', 'Coco', 'Kira', 'Zeus', 'Lola', 'Bruno', 'Mia', 'Thor', 'Daisy',
+    'Rex', 'Chispa', 'Duke', 'Sasha', 'Oso', 'Cleo', 'Leo', 'Frida'];
+
+  for (let i = 0; i < 20; i++) {
+    const owner = allClients[i % allClients.length];
+    extraPets.push(
+      prisma.pet.create({
+        data: {
+          client_id: owner.id,
+          name: petNames[i],
+          species: petSpecies[i % petSpecies.length],
+          breed: petBreeds[i % petBreeds.length],
+          sex: (i % 3) as 0 | 1 | 2, // 0=unknown, 1=male, 2=female
+          dateOfBirth: new Date(2020 + (i % 6), i % 12, (i % 28) + 1),
+          weightKg: i % 8 === 0 ? null : Number((1 + Math.random() * 40).toFixed(1)),
+          notes: i % 3 === 0 ? null : `Notas de ${petNames[i]}: ${i % 2 === 0 ? 'Requiere manejo especial.' : 'Muy dócil y tranquilo.'}`,
+          status: i === 19 ? 0 : 1,
+        },
+      })
+    );
+  }
+
+  const createdExtraPets = await Promise.all(extraPets);
+  const allPets = [...pets, ...createdExtraPets];
+  console.log(`✅ ${createdExtraPets.length} extra pets created (${allPets.length} total)`);
 
   /* ── Services ── */
   const [max, luna, rocky, bella, coco, toby, nala] = pets;
@@ -290,11 +364,40 @@ async function main() {
 
   console.log(`✅ ${services.length} services created`);
 
+  /* ── More services (for pagination) ── */
+  const extraServices = [];
+  const serviceNames = [
+    'Baño premium', 'Corte a tijera', 'Peinado creativo', 'Tinte natural',
+    'Spa canino', 'Corte higiénico', 'Masaje relajante', 'Planchado',
+    'Baño express', 'Corte a máquina', 'Deslanado', 'Perfume profesional',
+  ];
+
+  for (let i = 0; i < 12; i++) {
+    const pet = allPets[i % allPets.length];
+    extraServices.push(
+      prisma.service.create({
+        data: {
+          name: serviceNames[i],
+          description: `Servicio profesional de ${serviceNames[i].toLowerCase()} adaptado a cada mascota. Incluye revisión general.`,
+          durationMinutes: [15, 20, 30, 45, 60, 90][i % 6],
+          price: [1200, 1800, 2500, 3500, 4500, 5500][i % 6], // cents
+          petId: i % 4 === 0 ? null : pet.id, // some unlinked
+          status: 1,
+        },
+      })
+    );
+  }
+
+  const createdExtraServices = await Promise.all(extraServices);
+  const allServices = [...services, ...createdExtraServices];
+  console.log(`✅ ${createdExtraServices.length} extra services created (${allServices.length} total)`);
+
   /* ── Summary ── */
   console.log('\n📊 Seed complete!');
-  console.log(`   ${clients.length} clients (1 inactive)`);
-  console.log(`   ${pets.length} pets`);
-  console.log(`   ${services.length} services`);
+  console.log(`   ${allClients.length} clients (2 inactive)`);
+  console.log(`   ${allPets.length} pets`);
+  console.log(`   ${allServices.length} services`);
+  console.log('   ✅ Pagination ready — 20+ items per entity');
 }
 
 main()
