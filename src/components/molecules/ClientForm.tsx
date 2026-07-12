@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import Input from '@/components/atoms/Input';
 import Button from '@/components/atoms/Button';
 import { validateClientForm, isValid } from '@/utils/validation';
@@ -35,6 +36,9 @@ export default function ClientForm({
   isLoading = false,
   serverErrors = null,
 }: ClientFormProps) {
+  const { t } = useTranslation('clients');
+  const isEdit = !!initialData && Object.keys(initialData).length > 0;
+
   const [formData, setFormData] = useState<ClientFormData>({
     ...emptyForm,
     ...initialData,
@@ -87,68 +91,68 @@ export default function ClientForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <Input
-        label="Name"
+        label={t('form.label.name')}
         value={formData.name}
         onChange={(e) => handleChange('name', e.target.value)}
         onBlur={() => handleBlur('name')}
         error={getFieldError('name')}
         required
-        placeholder="Client full name"
+        placeholder={t('form.placeholder.name')}
       />
 
       <Input
-        label="Email"
+        label={t('form.label.email')}
         type="email"
         value={formData.email}
         onChange={(e) => handleChange('email', e.target.value)}
         onBlur={() => handleBlur('email')}
         error={getFieldError('email')}
         required
-        placeholder="client@example.com"
+        placeholder={t('form.placeholder.email')}
       />
 
       <Input
-        label="Phone"
+        label={t('form.label.phone')}
         type="tel"
         value={formData.phone}
         onChange={(e) => handleChange('phone', e.target.value)}
         onBlur={() => handleBlur('phone')}
         error={getFieldError('phone')}
         required
-        placeholder="+1 (555) 123-4567"
+        placeholder={t('form.placeholder.phone')}
       />
 
       <Input
-        label="Secondary Phone"
+        label={t('form.label.secondaryPhone')}
         type="tel"
         value={formData.phone2}
         onChange={(e) => handleChange('phone2', e.target.value)}
         onBlur={() => handleBlur('phone2')}
         error={getFieldError('phone2')}
-        placeholder="+1 (555) 987-6543"
+        placeholder={t('form.placeholder.secondaryPhone')}
       />
 
       <Input
-        label="Address"
+        label={t('form.label.address')}
         value={formData.address}
         onChange={(e) => handleChange('address', e.target.value)}
         onBlur={() => handleBlur('address')}
         error={getFieldError('address')}
-        placeholder="123 Main St, City"
+        placeholder={t('form.placeholder.address')}
       />
 
       <Input
-        label="Notes"
+        label={t('form.label.notes')}
         value={formData.notes}
         onChange={(e) => handleChange('notes', e.target.value)}
         onBlur={() => handleBlur('notes')}
         error={getFieldError('notes')}
-        placeholder="Preferences, medical info, etc."
+        placeholder={t('form.placeholder.notes')}
       />
 
       <div className="flex justify-end gap-3 pt-2">
         <Button type="submit" variant="primary" loading={isLoading}>
-          {initialData ? 'Update Client' : 'Create Client'}
+          {isEdit ? t('form.submit.update') : t('form.submit.create')}
         </Button>
       </div>
     </form>

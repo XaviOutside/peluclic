@@ -11,7 +11,7 @@ describe('DashboardLayout', () => {
       </MemoryRouter>,
     );
 
-    // Sidebar has unique brand text "Bark & Bubbles"
+    // Sidebar has unique brand text "Bark & Bubbles" (hardcoded, not i18n)
     expect(screen.getByText('Bark & Bubbles')).toBeInTheDocument();
   });
 
@@ -22,8 +22,8 @@ describe('DashboardLayout', () => {
       </MemoryRouter>,
     );
 
-    // MobileNav has "Inicio" unique to it (Sidebar uses "Dashboard")
-    expect(screen.getByText('Inicio')).toBeInTheDocument();
+    // MobileNav uses i18n; mock returns key "mobileNav.home"
+    expect(screen.getByText('mobileNav.home')).toBeInTheDocument();
   });
 
   it('has md:ml-64 offset class on the main element', () => {
@@ -60,7 +60,6 @@ describe('DashboardLayout', () => {
     );
 
     const main = screen.getByRole('main');
-    // Current App.tsx structure: main has flex-1, pb-24, md:ml-64, md:pb-8
     expect(main).toHaveClass('flex-1');
     expect(main).toHaveClass('pb-24');
     expect(main).toHaveClass('md:ml-64');

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import Input from '@/components/atoms/Input';
 import Select, { type SelectOption } from '@/components/atoms/Select';
 import Button from '@/components/atoms/Button';
@@ -26,12 +27,6 @@ const emptyForm: PetFormData = {
   clientId: '',
 };
 
-const sexOptions: SelectOption[] = [
-  { value: 'unknown', label: 'Unknown' },
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-];
-
 export default function PetForm({
   initialData,
   onSubmit,
@@ -39,12 +34,21 @@ export default function PetForm({
   serverErrors = null,
   clientOptions,
 }: PetFormProps) {
+  const { t } = useTranslation('pets');
+  const isEdit = !!initialData && Object.keys(initialData).length > 0;
+
   const [formData, setFormData] = useState<PetFormData>({
     ...emptyForm,
     ...initialData,
   });
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<Set<string>>(new Set());
+
+  const sexOptions: SelectOption[] = [
+    { value: 'unknown', label: t('sex.unknown') },
+    { value: 'male', label: t('sex.male') },
+    { value: 'female', label: t('sex.female') },
+  ];
 
   function handleChange(field: keyof PetFormData, value: string) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -99,37 +103,37 @@ export default function PetForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <Input
-        label="Name"
+        label={t('form.label.name')}
         value={formData.name}
         onChange={(e) => handleChange('name', e.target.value)}
         onBlur={() => handleBlur('name')}
         error={getFieldError('name')}
         required
-        placeholder="Pet name"
+        placeholder={t('form.placeholder.name')}
       />
 
       <Input
-        label="Species"
+        label={t('form.label.species')}
         value={formData.species}
         onChange={(e) => handleChange('species', e.target.value)}
         onBlur={() => handleBlur('species')}
         error={getFieldError('species')}
         required
-        placeholder="e.g. Dog, Cat, Bird"
+        placeholder={t('form.placeholder.species')}
       />
 
       <Input
-        label="Breed"
+        label={t('form.label.breed')}
         value={formData.breed}
         onChange={(e) => handleChange('breed', e.target.value)}
         onBlur={() => handleBlur('breed')}
         error={getFieldError('breed')}
         required
-        placeholder="e.g. Golden Retriever, Siamese"
+        placeholder={t('form.placeholder.breed')}
       />
 
       <Select
-        label="Sex"
+        label={t('form.label.sex')}
         options={sexOptions}
         value={formData.sex}
         onChange={(e) => handleChange('sex', e.target.value)}
@@ -138,7 +142,7 @@ export default function PetForm({
       />
 
       <Input
-        label="Date of Birth"
+        label={t('form.label.dateOfBirth')}
         type="date"
         value={formData.dateOfBirth}
         onChange={(e) => handleChange('dateOfBirth', e.target.value)}
@@ -147,28 +151,28 @@ export default function PetForm({
       />
 
       <Input
-        label="Weight (kg)"
+        label={t('form.label.weight')}
         type="number"
         value={formData.weightKg}
         onChange={(e) => handleChange('weightKg', e.target.value)}
         onBlur={() => handleBlur('weightKg')}
         error={getFieldError('weightKg')}
-        placeholder="e.g. 12.5"
+        placeholder={t('form.placeholder.weight')}
         step="0.1"
         min="0"
       />
 
       <Input
-        label="Notes"
+        label={t('form.label.notes')}
         value={formData.notes}
         onChange={(e) => handleChange('notes', e.target.value)}
         onBlur={() => handleBlur('notes')}
         error={getFieldError('notes')}
-        placeholder="Medical notes, allergies, etc."
+        placeholder={t('form.placeholder.notes')}
       />
 
       <Select
-        label="Client"
+        label={t('form.label.client')}
         options={clientOptions}
         value={formData.clientId}
         onChange={(e) => handleChange('clientId', e.target.value)}
@@ -178,7 +182,7 @@ export default function PetForm({
 
       <div className="flex justify-end gap-3 pt-2">
         <Button type="submit" variant="primary" loading={isLoading}>
-          {initialData ? 'Update Pet' : 'Create Pet'}
+          {isEdit ? t('form.submit.update') : t('form.submit.create')}
         </Button>
       </div>
     </form>

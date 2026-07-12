@@ -86,16 +86,16 @@ beforeEach(() => {
 /** Helper: wait for the page to finish loading clients and render the form */
 async function waitForFormReady() {
   await waitFor(() => {
-    expect(screen.getByRole('heading', { name: 'Create Pet' })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.name')).toBeInTheDocument();
   });
 }
 
 /** Helper: fill in valid pet form data */
 async function fillValidForm(user: ReturnType<typeof userEvent.setup>) {
-  await user.type(screen.getByLabelText(/^Name/), 'Max');
-  await user.type(screen.getByLabelText(/^Species/), 'Dog');
-  await user.type(screen.getByLabelText(/^Breed/), 'Golden Retriever');
-  await user.selectOptions(screen.getByLabelText('Client'), '1');
+  await user.type(screen.getByPlaceholderText('form.placeholder.name'), 'Max');
+  await user.type(screen.getByPlaceholderText('form.placeholder.species'), 'Dog');
+  await user.type(screen.getByPlaceholderText('form.placeholder.breed'), 'Golden Retriever');
+  await user.selectOptions(screen.getByLabelText('form.label.client'), '1');
 }
 
 describe('PetCreatePage', () => {
@@ -118,16 +118,16 @@ describe('PetCreatePage', () => {
 
     await waitForFormReady();
 
-    // Form fields should be present (labels include * for required fields)
-    expect(screen.getByLabelText(/^Name/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/^Species/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/^Breed/)).toBeInTheDocument();
-    expect(screen.getByLabelText('Sex')).toBeInTheDocument();
-    expect(screen.getByLabelText('Client')).toBeInTheDocument();
+    // Form fields — labels are i18n keys, check via placeholders
+    expect(screen.getByPlaceholderText('form.placeholder.name')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.species')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.breed')).toBeInTheDocument();
+    expect(screen.getByLabelText('form.label.sex')).toBeInTheDocument();
+    expect(screen.getByLabelText('form.label.client')).toBeInTheDocument();
 
     // Only active clients should appear as options
-    const clientSelect = screen.getByLabelText('Client') as HTMLSelectElement;
-    expect(clientSelect.options).toHaveLength(2); // 2 active, no placeholder
+    const clientSelect = screen.getByLabelText('form.label.client') as HTMLSelectElement;
+    expect(clientSelect.options).toHaveLength(2);
     expect(clientSelect.options[0].textContent).toBe('Alice Johnson');
     expect(clientSelect.options[1].textContent).toBe('Bob Smith');
   });
@@ -150,7 +150,7 @@ describe('PetCreatePage', () => {
     await waitForFormReady();
     await fillValidForm(user);
 
-    await user.click(screen.getByRole('button', { name: 'Create Pet' }));
+    await user.click(screen.getByRole('button', { name: /form.submit.create/i }));
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/pets/42');
@@ -165,7 +165,6 @@ describe('PetCreatePage', () => {
       status: 200,
       json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 200, totalPages: 1 } }),
     });
-    // Server returns 422 with field-level errors even though client validation passes
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 422,
@@ -182,10 +181,9 @@ describe('PetCreatePage', () => {
 
     renderPage();
     await waitForFormReady();
-    // Fill in valid data so client-side validation passes
     await fillValidForm(user);
 
-    await user.click(screen.getByRole('button', { name: 'Create Pet' }));
+    await user.click(screen.getByRole('button', { name: /form.submit.create/i }));
 
     await waitFor(() => {
       expect(screen.getByText('A pet with this name already exists')).toBeInTheDocument();
@@ -214,7 +212,7 @@ describe('PetCreatePage', () => {
     await waitForFormReady();
     await fillValidForm(user);
 
-    await user.click(screen.getByRole('button', { name: 'Create Pet' }));
+    await user.click(screen.getByRole('button', { name: /form.submit.create/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/internal server error/i)).toBeInTheDocument();
@@ -233,7 +231,7 @@ describe('PetCreatePage', () => {
 
     await waitForFormReady();
 
-    await user.click(screen.getByRole('button', { name: /← Back/ }));
+    await user.click(screen.getByRole('button', { name: /common:actions.backToList/i }));
 
     expect(mockNavigate).toHaveBeenCalledWith('/pets');
   });

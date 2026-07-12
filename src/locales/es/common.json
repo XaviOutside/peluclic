@@ -1,0 +1,117 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendario",
+    "clients": "Clientes",
+    "pets": "Mascotas",
+    "services": "Servicios",
+    "settings": "Configuración",
+    "support": "Soporte",
+    "newAppointment": "Nueva Cita",
+    "brandSubtitle": "Peluquería Profesional"
+  },
+  "mobileNav": {
+    "home": "Inicio",
+    "calendar": "Calendario",
+    "clients": "Clientes",
+    "pets": "Mascotas",
+    "services": "Servicios",
+    "more": "Más"
+  },
+  "moduleTabs": {
+    "clients": "Clientes",
+    "pets": "Mascotas",
+    "services": "Servicios",
+    "ariaLabel": "Pestañas de módulos"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver detalles",
+    "deactivate": "Desactivar",
+    "reactivate": "Reactivar",
+    "confirm": "Confirmar",
+    "backToList": "← Volver a la lista",
+    "backToHome": "Volver al inicio",
+    "addClient": "Añadir cliente",
+    "addPet": "Añadir mascota",
+    "addService": "Nuevo servicio",
+    "search": "Buscar...",
+    "searchClients": "Buscar clientes...",
+    "searchPets": "Buscar mascotas...",
+    "searchServices": "Buscar servicios...",
+    "viewPets": "Ver Mascotas",
+    "viewServices": "Ver Servicios",
+    "viewClient": "Ver Cliente",
+    "viewPet": "Ver mascota",
+    "updateClient": "Actualizar Cliente",
+    "createClient": "Crear Cliente",
+    "updatePet": "Actualizar Mascota",
+    "createPet": "Crear Mascota",
+    "updateService": "Actualizar Servicio",
+    "createService": "Crear Servicio",
+    "tryAgain": "Reintentar",
+    "unlink": "Desvincular",
+    "actions": "Acciones"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "pagination": {
+    "showing": "Mostrando página {{page}} de {{totalPages}} ({{total}} total)",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "ariaLabel": "Paginación"
+  },
+  "empty": {
+    "noClients": "No hay clientes registrados.",
+    "noPets": "No hay mascotas registradas.",
+    "noServices": "No hay servicios registrados.",
+    "noItems": "No se encontraron elementos."
+  },
+  "confirm": {
+    "title": "Confirmar",
+    "message": "¿Estás seguro?",
+    "yes": "Sí",
+    "no": "No",
+    "deactivateClient": "Desactivar cliente",
+    "deactivateClientMessage": "¿Estás seguro de que deseas desactivar a {{name}}?",
+    "deactivatePet": "Desactivar mascota",
+    "deactivatePetMessage": "¿Estás seguro de que deseas desactivar a {{name}}?",
+    "deleteService": "Eliminar servicio",
+    "deleteServiceMessage": "¿Estás seguro de que deseas eliminar \"{{name}}\"?",
+    "errorDeactivate": "Error al desactivar.",
+    "errorDelete": "Error al eliminar."
+  },
+  "errors": {
+    "generic": "Ha ocurrido un error.",
+    "retry": "Reintentar",
+    "loading": "Cargando...",
+    "searchFailed": "Error en la búsqueda"
+  },
+  "language": {
+    "es": "Español",
+    "en": "English",
+    "switchAria": "Cambiar idioma a {{lang}}"
+  },
+  "detail": {
+    "notProvided": "No proporcionado",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "secondaryPhone": "Teléfono secundario",
+    "address": "Dirección",
+    "notes": "Notas",
+    "created": "Creado",
+    "updated": "Actualizado",
+    "client": "Cliente",
+    "clientNumber": "Cliente #{{id}}"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Página no encontrada",
+    "backHome": "Volver al inicio"
+  }
+}

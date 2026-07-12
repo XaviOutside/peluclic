@@ -1,0 +1,117 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "clients": "Clients",
+    "pets": "Pets",
+    "services": "Services",
+    "settings": "Settings",
+    "support": "Support",
+    "newAppointment": "New Appointment",
+    "brandSubtitle": "Professional Grooming"
+  },
+  "mobileNav": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "clients": "Clients",
+    "pets": "Pets",
+    "services": "Services",
+    "more": "More"
+  },
+  "moduleTabs": {
+    "clients": "Clients",
+    "pets": "Pets",
+    "services": "Services",
+    "ariaLabel": "Module tabs"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View details",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate",
+    "confirm": "Confirm",
+    "backToList": "← Back to list",
+    "backToHome": "Back to home",
+    "addClient": "Add client",
+    "addPet": "Add pet",
+    "addService": "New service",
+    "search": "Search...",
+    "searchClients": "Search clients...",
+    "searchPets": "Search pets...",
+    "searchServices": "Search services...",
+    "viewPets": "View Pets",
+    "viewServices": "View Services",
+    "viewClient": "View Client",
+    "viewPet": "View pet",
+    "updateClient": "Update Client",
+    "createClient": "Create Client",
+    "updatePet": "Update Pet",
+    "createPet": "Create Pet",
+    "updateService": "Update Service",
+    "createService": "Create Service",
+    "tryAgain": "Try Again",
+    "unlink": "Unlink",
+    "actions": "Actions"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "pagination": {
+    "showing": "Showing page {{page}} of {{totalPages}} ({{total}} total)",
+    "previous": "Previous",
+    "next": "Next",
+    "ariaLabel": "Pagination"
+  },
+  "empty": {
+    "noClients": "No clients registered.",
+    "noPets": "No pets registered.",
+    "noServices": "No services registered.",
+    "noItems": "No items found."
+  },
+  "confirm": {
+    "title": "Confirm",
+    "message": "Are you sure?",
+    "yes": "Yes",
+    "no": "No",
+    "deactivateClient": "Deactivate client",
+    "deactivateClientMessage": "Are you sure you want to deactivate {{name}}?",
+    "deactivatePet": "Deactivate pet",
+    "deactivatePetMessage": "Are you sure you want to deactivate {{name}}?",
+    "deleteService": "Delete service",
+    "deleteServiceMessage": "Are you sure you want to delete \"{{name}}\"?",
+    "errorDeactivate": "Error deactivating.",
+    "errorDelete": "Error deleting."
+  },
+  "errors": {
+    "generic": "An error has occurred.",
+    "retry": "Retry",
+    "loading": "Loading...",
+    "searchFailed": "Search failed"
+  },
+  "language": {
+    "es": "Spanish",
+    "en": "English",
+    "switchAria": "Switch language to {{lang}}"
+  },
+  "detail": {
+    "notProvided": "Not provided",
+    "email": "Email",
+    "phone": "Phone",
+    "secondaryPhone": "Secondary Phone",
+    "address": "Address",
+    "notes": "Notes",
+    "created": "Created",
+    "updated": "Updated",
+    "client": "Client",
+    "clientNumber": "Client #{{id}}"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Page not found",
+    "backHome": "Back to home"
+  }
+}

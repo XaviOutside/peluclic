@@ -1,8 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Service } from '@/types/service';
 import { useServices } from '@/hooks/useServices';
 import { searchServices } from '@/services/service';
+import { useModuleTabs } from '@/hooks/useModuleTabs';
 import DataTable from '@/components/organisms/DataTable';
 import PageHeader from '@/components/organisms/PageHeader';
 import ModuleTabs from '@/components/molecules/ModuleTabs';
@@ -11,24 +13,12 @@ import ConfirmDialog from '@/components/molecules/ConfirmDialog';
 import Button from '@/components/atoms/Button';
 import type { ColumnConfig, RowAction, CrossRefAction } from '@/components/organisms/DataTable';
 
-const MODULE_TABS = [
-  { id: 'clients', label: 'Clientes', icon: 'group' },
-  { id: 'pets', label: 'Mascotas', icon: 'pets' },
-  { id: 'services', label: 'Servicios', icon: 'content_cut' },
-];
-
-function formatPrice(price: number): string {
-  return `$${price.toFixed(2)}`;
-}
-
-function formatDuration(minutes: number | null): string {
-  if (minutes === null) return '—';
-  return `${minutes} min`;
-}
-
 export default function ServicesPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation(['services', 'common']);
+  const moduleTabs = useModuleTabs();
+
   const petIdParam = searchParams.get('petId');
   const petId = petIdParam ? parseInt(petIdParam, 10) : undefined;
 
@@ -117,14 +107,14 @@ export default function ServicesPage() {
   }
 
   /* ── Column defs ── */
-  const columns: ColumnConfig<Service>[] = [
+  const columns: ColumnConfig<Service>[] = useMemo(() => [
     {
-      header: 'Servicio',
+      header: t('column.service'),
       render: (s) => s.name,
       span: 'sm:col-span-2',
     },
     {
-      header: 'Descripción',
+      header: t('column.description'),
       render: (s) => (
         <span className="text-sm text-on-surface-variant line-clamp-2">
           {s.description || '—'}
@@ -133,34 +123,40 @@ export default function ServicesPage() {
       span: 'sm:col-span-2',
     },
     {
-      header: 'Duración',
-      render: (s) => formatDuration(s.durationMinutes),
+      header: t('column.duration'),
+      render: (s) => (
+        <span>
+          {s.durationMinutes !== null
+            ? t('format.durationShort', { minutes: s.durationMinutes })
+            : t('format.durationNA')}
+        </span>
+      ),
       span: 'sm:col-span-2',
       align: 'center',
     },
     {
-      header: 'Precio',
+      header: t('column.price'),
       render: (s) => (
         <span className="font-headline font-semibold text-primary-container">
-          {formatPrice(s.price)}
+          {t('format.priceSymbol', { price: s.price.toFixed(2) })}
         </span>
       ),
       span: 'sm:col-span-2',
       align: 'right',
     },
     {
-      header: 'Estado',
+      header: t('column.status'),
       render: (s) => <StatusBadge status={s.status} />,
       span: 'sm:col-span-1',
       mobileVisible: false,
     },
-  ];
+  ], [t]);
 
   /* ── Cross-reference actions ── */
   const crossRefActions: CrossRefAction<Service>[] = [
     {
       key: 'services-pet',
-      label: 'Ver mascota',
+      label: t('common:actions.viewPet'),
       icon: 'pets',
       onClick: (s) => s.petId !== null && navigate(`/pets/${s.petId}`),
       disabled: (s) => s.petId === null,
@@ -171,19 +167,19 @@ export default function ServicesPage() {
   const rowActions: RowAction<Service>[] = [
     {
       key: 'view',
-      label: 'Ver detalles',
+      label: t('common:actions.view'),
       icon: 'visibility',
       onAction: (s) => navigate(`/services/${s.id}`),
     },
     {
       key: 'edit',
-      label: 'Editar',
+      label: t('common:actions.edit'),
       icon: 'edit',
       onAction: (s) => navigate(`/services/${s.id}/edit`),
     },
     {
       key: 'delete',
-      label: 'Eliminar',
+      label: t('common:actions.delete'),
       icon: 'delete',
       destructive: true,
       onAction: (s) => setDeleteTarget(s),
@@ -194,7 +190,7 @@ export default function ServicesPage() {
     <div className="flex flex-col gap-6" data-testid="services-page">
       {/* ── Module tabs ── */}
       <ModuleTabs
-        tabs={MODULE_TABS}
+        tabs={moduleTabs}
         activeTab="services"
         onTabChange={(tabId) => {
           if (tabId === 'clients') navigate('/clients');
@@ -204,7 +200,7 @@ export default function ServicesPage() {
 
       {/* ── Header ── */}
       <PageHeader
-        searchPlaceholder="Buscar servicios..."
+        searchPlaceholder={t('common:actions.searchServices')}
         searchValue={searchState.query}
         onSearchChange={handleSearchChange}
         action={
@@ -215,7 +211,7 @@ export default function ServicesPage() {
             className="flex items-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">add</span>
-            Nuevo servicio
+            {t('common:actions.addService')}
           </Button>
         }
       />
@@ -247,7 +243,7 @@ export default function ServicesPage() {
         loading={displayLoading}
         error={displayError}
         onRetry={refresh}
-        emptyMessage="No hay servicios registrados."
+        emptyMessage={t('common:empty.noServices')}
         pagination={totalPages > 1 ? { page, totalPages, totalItems: totalCount, onPageChange: goToPage } : undefined}
       />
 
@@ -256,13 +252,13 @@ export default function ServicesPage() {
         isOpen={deleteTarget !== null}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleConfirmDelete}
-        title="Eliminar servicio"
+        title={t('delete.title')}
         message={
           deleteTarget
-            ? `¿Estás seguro de que deseas eliminar "${deleteTarget.name}"?`
+            ? t('delete.message', { name: deleteTarget.name })
             : ''
         }
-        confirmLabel="Eliminar"
+        confirmLabel={t('common:actions.delete')}
         destructive
         isLoading={deleting}
       />

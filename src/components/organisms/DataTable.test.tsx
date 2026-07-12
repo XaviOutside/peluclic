@@ -300,8 +300,8 @@ describe('DataTable', () => {
       />,
     );
 
-    // Find the actions header cell
-    const actionHeader = screen.getByText('Actions');
+    // Find the actions header cell — i18n'd in PR2
+    const actionHeader = screen.getByText('actions.actions');
     expect(actionHeader.className).toContain('sm:col-span-4');
 
     // Each row's actions cell should have the span class

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import Input from '@/components/atoms/Input';
 import Button from '@/components/atoms/Button';
 import { validateServiceForm, isValid } from '@/utils/validation';
@@ -26,6 +27,8 @@ export default function ServiceForm({
   isLoading = false,
   serverErrors = null,
 }: ServiceFormProps) {
+  const { t } = useTranslation('services');
+
   const [formData, setFormData] = useState<ServiceFormData>({
     ...emptyForm,
     ...initialData,
@@ -77,52 +80,52 @@ export default function ServiceForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <Input
-        label="Name"
+        label={t('form.label.name')}
         value={formData.name}
         onChange={(e) => handleChange('name', e.target.value)}
         onBlur={() => handleBlur('name')}
         error={getFieldError('name')}
         required
-        placeholder="Service name"
+        placeholder={t('form.placeholder.name')}
       />
 
       <Input
-        label="Description"
+        label={t('form.label.description')}
         value={formData.description}
         onChange={(e) => handleChange('description', e.target.value)}
         onBlur={() => handleBlur('description')}
         error={getFieldError('description')}
-        placeholder="Service description (optional)"
+        placeholder={t('form.placeholder.description')}
       />
 
       <Input
-        label="Duration (minutes)"
+        label={t('form.label.duration')}
         type="number"
         value={formData.durationMinutes}
         onChange={(e) => handleChange('durationMinutes', e.target.value)}
         onBlur={() => handleBlur('durationMinutes')}
         error={getFieldError('durationMinutes')}
-        placeholder="e.g. 60"
+        placeholder={t('form.placeholder.duration')}
         min="1"
         step="1"
       />
 
       <Input
-        label="Price ($)"
+        label={t('form.label.price')}
         type="number"
         value={formData.price}
         onChange={(e) => handleChange('price', e.target.value)}
         onBlur={() => handleBlur('price')}
         error={getFieldError('price')}
         required
-        placeholder="e.g. 49.99"
+        placeholder={t('form.placeholder.price')}
         min="0"
         step="0.01"
       />
 
       <div className="flex justify-end gap-3 pt-2">
         <Button type="submit" variant="primary" loading={isLoading}>
-          {isEdit ? 'Update Service' : 'Create Service'}
+          {isEdit ? t('form.submit.update') : t('form.submit.create')}
         </Button>
       </div>
     </form>

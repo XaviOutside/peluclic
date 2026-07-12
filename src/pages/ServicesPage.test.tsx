@@ -87,15 +87,15 @@ describe('ServicesPage', () => {
 
   /* ── Cross-reference button ── */
 
-  it('renders "Ver mascota" cross-ref button per row', () => {
+  it('renders cross-ref button per row (i18n key)', () => {
     renderPage();
 
     const buttons = screen.getAllByTestId('crossref-action-services-pet');
     expect(buttons).toHaveLength(2);
-    expect(buttons[0]).toHaveTextContent('Ver mascota');
+    expect(buttons[0]).toHaveTextContent('common:actions.viewPet');
   });
 
-  it('disables "Ver mascota" when petId is null', () => {
+  it('disables cross-ref button when petId is null', () => {
     renderPage();
 
     const buttons = screen.getAllByTestId('crossref-action-services-pet');
@@ -105,7 +105,7 @@ describe('ServicesPage', () => {
     expect(buttons[1]).toBeDisabled();
   });
 
-  it('"Ver mascota" navigates to /pets/:petId when pet is linked', () => {
+  it('cross-ref navigates to /pets/:petId when pet is linked', () => {
     mockNavigate.mockClear();
     renderPage();
 

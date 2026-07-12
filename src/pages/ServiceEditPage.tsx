@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useServices } from '@/hooks/useServices';
 import type { HttpError } from '@/services/http';
 import ServiceForm from '@/components/molecules/ServiceForm';
@@ -11,6 +12,7 @@ import type { FieldErrors } from '@/utils/validation';
 export default function ServiceEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation(['services', 'common']);
   const serviceId = id ? Number(id) : undefined;
 
   const { service, fetchService, isLoading, error, updateService } = useServices();
@@ -19,7 +21,6 @@ export default function ServiceEditPage() {
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch service on mount
   useEffect(() => {
     if (serviceId && serviceId > 0) {
       fetchService(serviceId);
@@ -51,7 +52,7 @@ export default function ServiceEditPage() {
         setServerErrors(httpErr.fieldErrors);
       } else {
         setGeneralError(
-          httpErr.message || 'Failed to update service. Please try again.',
+          httpErr.message || t('detail.updateFail'),
         );
       }
     } finally {
@@ -59,7 +60,6 @@ export default function ServiceEditPage() {
     }
   }
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -68,7 +68,6 @@ export default function ServiceEditPage() {
     );
   }
 
-  // Error / not found
   if (error || !service) {
     const isNotFound =
       error?.toLowerCase().includes('not found') ||
@@ -78,14 +77,14 @@ export default function ServiceEditPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-8 text-center shadow-sm">
         {isNotFound ? (
           <>
-            <h2 className="text-lg font-semibold text-gray-900">Service not found</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('detail.notFound')}</h2>
             <p className="mt-2 text-sm text-gray-500">
-              The service you are trying to edit does not exist.
+              {t('detail.editNotFound')}
             </p>
           </>
         ) : (
           <>
-            <h2 className="text-lg font-semibold text-red-800">Error loading service</h2>
+            <h2 className="text-lg font-semibold text-red-800">{t('detail.loadError')}</h2>
             <p className="mt-2 text-sm text-red-600">{error}</p>
           </>
         )}
@@ -95,7 +94,7 @@ export default function ServiceEditPage() {
           className="mt-6"
           onClick={() => navigate('/services')}
         >
-          &larr; Back to services
+          {t('common:actions.backToList')}
         </Button>
       </div>
     );
@@ -104,13 +103,13 @@ export default function ServiceEditPage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Service</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{t('common:actions.updateService')}</h1>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate(`/services/${service.id}`)}
         >
-          &larr; Back
+          {t('common:actions.backToList')}
         </Button>
       </div>
 

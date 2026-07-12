@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Pet } from '@/types/pet';
 import StatusBadge from '@/components/molecules/StatusBadge';
 import Button from '@/components/atoms/Button';
@@ -27,6 +28,7 @@ function ActionsDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     if (!open) return;
@@ -52,7 +54,7 @@ function ActionsDropdown({
         variant="ghost"
         size="sm"
         onClick={() => setOpen((prev) => !prev)}
-        aria-label="Actions"
+        aria-label={t('actions.actions')}
       >
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
@@ -66,14 +68,14 @@ function ActionsDropdown({
               onClick={handleAction(onView)}
               className="block w-full px-4 py-2 text-left text-body-md text-on-surface hover:bg-surface-container transition-colors"
             >
-              View
+              {t('actions.view')}
             </button>
             <button
               type="button"
               onClick={handleAction(onEdit)}
               className="block w-full px-4 py-2 text-left text-body-md text-on-surface hover:bg-surface-container transition-colors"
             >
-              Edit
+              {t('actions.edit')}
             </button>
             {pet.status === 'active' ? (
               <button
@@ -81,7 +83,7 @@ function ActionsDropdown({
                 onClick={handleAction(onDeactivate)}
                 className="block w-full px-4 py-2 text-left text-body-md text-error hover:bg-error-container/30 transition-colors"
               >
-                Deactivate
+                {t('actions.deactivate')}
               </button>
             ) : (
               <button
@@ -89,7 +91,7 @@ function ActionsDropdown({
                 onClick={handleAction(onReactivate)}
                 className="block w-full px-4 py-2 text-left text-body-md text-primary-container hover:bg-primary-container/20 transition-colors"
               >
-                Reactivate
+                {t('actions.reactivate')}
               </button>
             )}
           </div>
@@ -108,8 +110,8 @@ function Td({ children, label }: { children: ReactNode; label: string }) {
   );
 }
 
-function getClientDisplay(clientId: number, clientNames?: Record<number, string>): string {
-  return clientNames?.[clientId] ?? `Client #${clientId}`;
+function getClientDisplay(clientId: number, clientNames: Record<number, string> | undefined, t: (key: string, params?: Record<string, unknown>) => string): string {
+  return clientNames?.[clientId] ?? t('detail.clientNumber', { id: clientId });
 }
 
 export default function PetTable({
@@ -120,13 +122,15 @@ export default function PetTable({
   onDeactivate,
   onReactivate,
 }: PetTableProps) {
+  const { t } = useTranslation(['common', 'pets']);
+
   if (pets.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-outline-variant bg-surface-container-lowest p-12 text-center">
         <svg className="mx-auto h-12 w-12 text-outline" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
         </svg>
-        <p className="mt-4 text-body-md text-on-surface-variant">No pets found.</p>
+        <p className="mt-4 text-body-md text-on-surface-variant">{t('empty.noPets', { ns: 'common' })}</p>
       </div>
     );
   }
@@ -137,29 +141,29 @@ export default function PetTable({
         <thead className="hidden md:table-header-group">
           <tr className="bg-surface-container">
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Name
+              {t('form.label.name', { ns: 'pets' })}
             </th>
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Species
+              {t('column.species', { ns: 'pets' })}
             </th>
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Breed
+              {t('column.breed', { ns: 'pets' })}
             </th>
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Client
+              {t('form.label.client', { ns: 'pets' })}
             </th>
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Status
+              {t('column.status', { ns: 'pets' })}
             </th>
             <th className="px-4 py-3 text-right text-label-md text-on-surface-variant">
-              Actions
+              {t('actions.actions', { ns: 'common' })}
             </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-outline-variant">
           {pets.map((pet) => (
             <tr key={pet.id} className="flex flex-col border-b border-outline-variant last:border-b-0 md:table-row md:border-b-0 hover:bg-surface-container transition-colors">
-              <Td label="Name">
+              <Td label={t('form.label.name', { ns: 'pets' })}>
                 <div className="flex items-center gap-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary/15 text-label-md text-secondary-container">
                     <svg className="h-4 w-4" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
@@ -169,10 +173,10 @@ export default function PetTable({
                   <span className="font-headline font-medium text-on-surface">{pet.name}</span>
                 </div>
               </Td>
-              <Td label="Species">{pet.species}</Td>
-              <Td label="Breed">{pet.breed}</Td>
-              <Td label="Client">{getClientDisplay(pet.clientId, clientNames)}</Td>
-              <Td label="Status">
+              <Td label={t('column.species', { ns: 'pets' })}>{pet.species}</Td>
+              <Td label={t('column.breed', { ns: 'pets' })}>{pet.breed}</Td>
+              <Td label={t('form.label.client', { ns: 'pets' })}>{getClientDisplay(pet.clientId, clientNames, t)}</Td>
+              <Td label={t('column.status', { ns: 'pets' })}>
                 <StatusBadge status={pet.status} />
               </Td>
               <td className="px-4 py-3 text-right md:table-cell">

@@ -1,7 +1,8 @@
-import type { Pet, PetSex } from '@/types/pet';
+import type { Pet } from '@/types/pet';
+import { useTranslation } from 'react-i18next';
 import StatusBadge from '@/components/molecules/StatusBadge';
 import Button from '@/components/atoms/Button';
-import { formatDate } from '@/utils/format';
+import { formatDate, formatSex, formatWeight } from '@/utils/format';
 
 export interface PetDetailCardProps {
   pet: Pet;
@@ -18,33 +19,18 @@ export interface PetDetailCardProps {
 interface DetailRowProps {
   label: string;
   value: string | null | undefined;
+  notProvided: string;
 }
 
-function DetailRow({ label, value }: DetailRowProps) {
+function DetailRow({ label, value, notProvided }: DetailRowProps) {
   return (
     <div className="flex flex-col gap-1 py-3 sm:flex-row sm:gap-4">
       <dt className="min-w-[140px] text-label-md text-on-surface-variant">{label}</dt>
       <dd className="text-body-md text-on-surface">
-        {value || <span className="italic text-outline">Not provided</span>}
+        {value || <span className="italic text-outline">{notProvided}</span>}
       </dd>
     </div>
   );
-}
-
-function formatSex(sex: PetSex): string {
-  switch (sex) {
-    case 'male':
-      return 'Male';
-    case 'female':
-      return 'Female';
-    default:
-      return 'Unknown';
-  }
-}
-
-function formatWeight(weightKg: number | null): string | null {
-  if (weightKg === null || weightKg === undefined) return null;
-  return `${weightKg} kg`;
 }
 
 export default function PetDetailCard({
@@ -58,6 +44,11 @@ export default function PetDetailCard({
   deactivateLoading = false,
   reactivateLoading = false,
 }: PetDetailCardProps) {
+  const { t } = useTranslation(['common', 'pets']);
+  const tc = (key: string) => t(key, { ns: 'common' });
+  const tp = (key: string, params?: Record<string, unknown>) => t(key, { ns: 'pets', ...params });
+  const notProvided = tc('detail.notProvided');
+
   return (
     <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest shadow-card">
       {/* Header */}
@@ -68,7 +59,7 @@ export default function PetDetailCard({
             <StatusBadge status={pet.status} />
           </div>
           <Button variant="ghost" size="sm" onClick={onBack}>
-            &larr; Back to list
+            {tc('actions.backToList')}
           </Button>
         </div>
       </div>
@@ -77,19 +68,21 @@ export default function PetDetailCard({
       <div className="px-6 py-4">
         <dl className="divide-y divide-outline-variant">
           <DetailRow
-            label="Species / Breed"
+            label={tp('detail.speciesBreed')}
             value={`${pet.species} — ${pet.breed}`}
+            notProvided={notProvided}
           />
-          <DetailRow label="Sex" value={formatSex(pet.sex)} />
+          <DetailRow label={tp('detail.sex')} value={formatSex(pet.sex, t)} notProvided={notProvided} />
           <DetailRow
-            label="Date of Birth"
+            label={tp('detail.dateOfBirth')}
             value={pet.dateOfBirth ? formatDate(pet.dateOfBirth) : null}
+            notProvided={notProvided}
           />
-          <DetailRow label="Weight" value={formatWeight(pet.weightKg)} />
-          <DetailRow label="Notes" value={pet.notes} />
+          <DetailRow label={tp('detail.weight')} value={formatWeight(pet.weightKg, t)} notProvided={notProvided} />
+          <DetailRow label={tp('detail.notes')} value={pet.notes} notProvided={notProvided} />
           {clientName ? (
             <div className="flex flex-col gap-1 py-3 sm:flex-row sm:gap-4">
-              <dt className="min-w-[140px] text-label-md text-on-surface-variant">Client</dt>
+              <dt className="min-w-[140px] text-label-md text-on-surface-variant">{tp('detail.client')}</dt>
               <dd className="text-body-md">
                 {onViewClient ? (
                   <button
@@ -106,12 +99,13 @@ export default function PetDetailCard({
             </div>
           ) : (
             <DetailRow
-              label="Client"
-              value={`Client #${pet.clientId}`}
+              label={tp('detail.client')}
+              value={tp('detail.clientNumber', { id: pet.clientId })}
+              notProvided={notProvided}
             />
           )}
-          <DetailRow label="Created" value={formatDate(pet.createdAt)} />
-          <DetailRow label="Updated" value={formatDate(pet.updatedAt)} />
+          <DetailRow label={tp('detail.created')} value={formatDate(pet.createdAt)} notProvided={notProvided} />
+          <DetailRow label={tp('detail.updated')} value={formatDate(pet.updatedAt)} notProvided={notProvided} />
         </dl>
       </div>
 
@@ -119,15 +113,15 @@ export default function PetDetailCard({
       <div className="flex flex-col gap-2 border-t border-outline-variant bg-surface-container px-6 py-4 sm:flex-row sm:justify-end">
         {pet.status === 'active' ? (
           <Button variant="danger" onClick={onDeactivate} loading={deactivateLoading}>
-            Deactivate
+            {tc('actions.deactivate')}
           </Button>
         ) : (
           <Button variant="primary" onClick={onReactivate} loading={reactivateLoading}>
-            Reactivate
+            {tc('actions.reactivate')}
           </Button>
         )}
         <Button variant="secondary" onClick={onEdit}>
-          Edit
+          {tc('actions.edit')}
         </Button>
       </div>
     </div>

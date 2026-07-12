@@ -1,0 +1,56 @@
+{
+  "list": {
+    "title": "Service List"
+  },
+  "column": {
+    "service": "Service",
+    "description": "Description",
+    "duration": "Duration",
+    "price": "Price",
+    "status": "Status"
+  },
+  "form": {
+    "label": {
+      "name": "Name",
+      "description": "Description",
+      "duration": "Duration (minutes)",
+      "price": "Price ($)"
+    },
+    "placeholder": {
+      "name": "Service name",
+      "description": "Service description (optional)",
+      "duration": "e.g. 60",
+      "price": "e.g. 49.99"
+    },
+    "submit": {
+      "create": "Create Service",
+      "update": "Update Service"
+    }
+  },
+  "delete": {
+    "title": "Delete service",
+    "message": "Are you sure you want to delete \"{{name}}\"?",
+    "success": "{{name}} deleted.",
+    "error": "Error deleting."
+  },
+  "detail": {
+    "description": "Description",
+    "duration": "Duration",
+    "price": "Price",
+    "notFound": "Service not found",
+    "notFoundMessage": "The service you are looking for does not exist or has been removed.",
+    "loadError": "Error loading service",
+    "editNotFound": "The service you are trying to edit does not exist.",
+    "deactivateService": "Deactivate Service",
+    "deleteService": "Delete Service",
+    "actionFailed": "Action failed",
+    "createFail": "Failed to create service. Please try again.",
+    "updateFail": "Failed to update service. Please try again."
+  },
+  "format": {
+    "durationMinutes": "{{minutes}} minutes",
+    "durationShort": "{{minutes}} min",
+    "durationNA": "N/A",
+    "priceSymbol": "${{price}}"
+  }
+}

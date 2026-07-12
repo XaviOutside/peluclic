@@ -79,7 +79,7 @@ describe('ClientDetailPage — embedded pet list', () => {
       status: 200,
       json: () => Promise.resolve({ data: mockPets, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
-    // Per-pet service list calls (PetServiceCard fetches services for each pet)
+    // Per-pet service list calls
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -102,8 +102,8 @@ describe('ClientDetailPage — embedded pet list', () => {
     });
 
     expect(screen.getByText('Bella')).toBeInTheDocument();
-    // Pets section heading
-    expect(screen.getByText('Pets')).toBeInTheDocument();
+    // Pets section heading — i18n key
+    expect(screen.getByText('detail.pets')).toBeInTheDocument();
   });
 
   it('shows empty pet list when client has no pets', async () => {
@@ -125,7 +125,8 @@ describe('ClientDetailPage — embedded pet list', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('No pets found.')).toBeInTheDocument();
+      // PetTable renders an empty message (was i18n'd in PR 2)
+      expect(screen.getByText('empty.noPets')).toBeInTheDocument();
     });
   });
 
@@ -148,10 +149,10 @@ describe('ClientDetailPage — embedded pet list', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('No pets found.')).toBeInTheDocument();
+      expect(screen.getByText('empty.noPets')).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: /add pet/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /detail\.addPet/i })).toBeInTheDocument();
   });
 
   it('still displays client card with edit and deactivate buttons', async () => {
@@ -172,7 +173,8 @@ describe('ClientDetailPage — embedded pet list', () => {
       expect(screen.getByText('Alice Johnson')).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Deactivate' })).toBeInTheDocument();
+    // ClientDetailCard was i18n'd in PR 2 — buttons use common namespace keys
+    expect(screen.getByRole('button', { name: 'actions.edit' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'actions.deactivate' })).toBeInTheDocument();
   });
 });

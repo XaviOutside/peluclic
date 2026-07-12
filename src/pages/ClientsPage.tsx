@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Client } from '@/types/client';
 import { useClients } from '@/hooks/useClients';
 import { useDeactivateClient } from '@/hooks/useClientMutations';
+import { useModuleTabs } from '@/hooks/useModuleTabs';
 import DataTable from '@/components/organisms/DataTable';
 import PageHeader from '@/components/organisms/PageHeader';
 import ModuleTabs from '@/components/molecules/ModuleTabs';
@@ -11,14 +13,11 @@ import Button from '@/components/atoms/Button';
 import { formatServiceDate } from '@/utils/format';
 import type { ColumnConfig, RowAction, CrossRefAction } from '@/components/organisms/DataTable';
 
-const MODULE_TABS = [
-  { id: 'clients', label: 'Clientes', icon: 'group' },
-  { id: 'pets', label: 'Mascotas', icon: 'pets' },
-  { id: 'services', label: 'Servicios', icon: 'content_cut' },
-];
-
 export default function ClientsPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation(['clients', 'common']);
+  const moduleTabs = useModuleTabs();
+
   const {
     clients,
     isLoading,
@@ -62,7 +61,7 @@ export default function ClientsPage() {
   /* ── Column defs ── */
   const columns: ColumnConfig<Client>[] = [
     {
-      header: 'Cliente',
+      header: t('column.client'),
       render: (c) => (
         <>
           <span className="font-semibold">{c.name}</span>
@@ -75,7 +74,7 @@ export default function ClientsPage() {
       span: 'sm:col-span-3',
     },
     {
-      header: 'Contacto',
+      header: t('column.contact'),
       render: (c) => (
         <div className="flex flex-col gap-1 text-sm">
           <span className="flex items-center gap-2 text-on-surface-variant">
@@ -103,7 +102,7 @@ export default function ClientsPage() {
       span: 'sm:col-span-3',
     },
     {
-      header: 'Notas',
+      header: t('column.notes'),
       render: (c) => (
         <span className="line-clamp-2 text-sm text-on-surface-variant" title={c.notes ?? undefined}>{c.notes || '—'}</span>
       ),
@@ -116,13 +115,13 @@ export default function ClientsPage() {
   const crossRefActions: CrossRefAction<Client>[] = [
     {
       key: 'clients-pets',
-      label: 'Ver Mascotas',
+      label: t('common:actions.viewPets'),
       icon: 'pets',
       onClick: (c) => navigate(`/pets?clientId=${c.id}`),
     },
     {
       key: 'clients-services',
-      label: 'Ver Servicios',
+      label: t('common:actions.viewServices'),
       icon: 'receipt_long',
       onClick: () => navigate('/services'),
     },
@@ -132,19 +131,19 @@ export default function ClientsPage() {
   const rowActions: RowAction<Client>[] = [
     {
       key: 'view',
-      label: 'Ver detalles',
+      label: t('common:actions.view'),
       icon: 'visibility',
       onAction: (c) => navigate(`/clients/${c.id}`),
     },
     {
       key: 'edit',
-      label: 'Editar',
+      label: t('common:actions.edit'),
       icon: 'edit',
       onAction: (c) => navigate(`/clients/${c.id}/edit`),
     },
     {
       key: 'delete',
-      label: 'Desactivar',
+      label: t('common:actions.deactivate'),
       icon: 'delete',
       destructive: true,
       onAction: (c) => setConfirmTarget(c),
@@ -170,7 +169,7 @@ export default function ClientsPage() {
     <div className="flex flex-col gap-6" data-testid="clients-page">
       {/* ── Module tabs ── */}
       <ModuleTabs
-        tabs={MODULE_TABS}
+        tabs={moduleTabs}
         activeTab="clients"
         onTabChange={(tabId) => {
           if (tabId === 'pets') navigate('/pets');
@@ -180,7 +179,7 @@ export default function ClientsPage() {
 
       {/* ── Header ── */}
       <PageHeader
-        searchPlaceholder="Buscar clientes..."
+        searchPlaceholder={t('common:actions.searchClients')}
         searchValue={searchQuery}
         onSearchChange={handleSearchChange}
         action={
@@ -191,7 +190,7 @@ export default function ClientsPage() {
             className="flex items-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">person_add</span>
-            Añadir cliente
+            {t('common:actions.addClient')}
           </Button>
         }
       />
@@ -223,7 +222,7 @@ export default function ClientsPage() {
         loading={isLoading}
         error={error}
         onRetry={fetchClients}
-        emptyMessage="No hay clientes registrados."
+        emptyMessage={t('common:empty.noClients')}
         pagination={totalPages > 1 ? { page, totalPages, totalItems: totalCount, onPageChange: goToPage } : undefined}
       />
 
@@ -232,13 +231,13 @@ export default function ClientsPage() {
         isOpen={confirmTarget !== null}
         onClose={() => setConfirmTarget(null)}
         onConfirm={handleConfirmDeactivate}
-        title="Desactivar cliente"
+        title={t('deactivate.title')}
         message={
           confirmTarget
-            ? `¿Estás seguro de que deseas desactivar a ${confirmTarget.name}?`
+            ? t('deactivate.message', { name: confirmTarget.name })
             : ''
         }
-        confirmLabel="Desactivar"
+        confirmLabel={t('common:actions.deactivate')}
         destructive
         isLoading={deactivateMutation.isLoading}
       />

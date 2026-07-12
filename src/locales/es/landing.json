@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "title": "Gestiona tu salón de peluquería canina fácilmente.",
+    "subtitle": "Pawsitive Manager te ayuda a organizar citas, seguir las preferencias de tus clientes y ofrecer el mejor cuidado a cada mascota.",
+    "cta": "Prueba gratis",
+    "demo": "Ver Demo"
+  },
+  "features": {
+    "title": "Todo lo que necesitas para gestionar tu salón",
+    "scheduling": {
+      "title": "Agendamiento Inteligente",
+      "description": "Gestiona tus citas diarias sin esfuerzo con nuestro calendario intuitivo. Nunca más una doble reserva."
+    },
+    "clients": {
+      "title": "Directorio de Clientes",
+      "description": "Guarda todos los detalles, contactos e historial de tus clientes en un solo lugar seguro."
+    },
+    "pets": {
+      "title": "Perfiles de Mascotas",
+      "description": "Registra razas, alergias, preferencias de peluquería y notas de comportamiento."
+    },
+    "services": {
+      "title": "Personalización de Servicios",
+      "description": "Define tus servicios, establece duraciones y asigna peluqueros específicos a tareas especializadas para optimizar tu flujo de trabajo."
+    }
+  },
+  "footer": {
+    "brand": "Pawsitive Manager",
+    "copyright": "© 2024 Pawsitive Grooming Solutions. Todos los derechos reservados.",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "contact": "Contáctanos"
+  },
+  "register": {
+    "title": "Próximamente",
+    "message": "El registro aún no está disponible. Vuelve pronto.",
+    "backHome": "Volver al inicio"
+  }
+}

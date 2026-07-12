@@ -1,29 +1,33 @@
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/molecules/LanguageSwitcher';
 
 interface NavItem {
   to: string;
   icon: string;
-  label: string;
+  labelKey: string;
   filled?: boolean;
 }
 
 const mainItems: NavItem[] = [
-  { to: '/', icon: 'dashboard', label: 'Dashboard' },
-  { to: '/calendar', icon: 'calendar_month', label: 'Calendario' },
-  { to: '/clients', icon: 'group', label: 'Clientes', filled: true },
-  { to: '/pets', icon: 'pets', label: 'Mascotas' },
-  { to: '/services', icon: 'content_cut', label: 'Servicios' },
+  { to: '/', icon: 'dashboard', labelKey: 'navigation.dashboard' },
+  { to: '/calendar', icon: 'calendar_month', labelKey: 'navigation.calendar' },
+  { to: '/clients', icon: 'group', labelKey: 'navigation.clients', filled: true },
+  { to: '/pets', icon: 'pets', labelKey: 'navigation.pets' },
+  { to: '/services', icon: 'content_cut', labelKey: 'navigation.services' },
 ];
 
 const bottomItems: NavItem[] = [
-  { to: '/settings', icon: 'settings', label: 'Configuración' },
-  { to: '/support', icon: 'help', label: 'Soporte' },
+  { to: '/settings', icon: 'settings', labelKey: 'navigation.settings' },
+  { to: '/support', icon: 'help', labelKey: 'navigation.support' },
 ];
 
 const linkBaseClasses =
   'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-label text-label-md';
 
 export default function Sidebar() {
+  const { t } = useTranslation('common');
+
   return (
     <nav className="fixed left-0 top-0 z-40 hidden h-full w-64 flex-col border-r border-outline-variant bg-surface-container p-4 md:flex">
       {/* Brand */}
@@ -39,7 +43,7 @@ export default function Sidebar() {
           Bark &amp; Bubbles
         </h1>
         <p className="mt-1 text-center font-label text-label-sm text-on-surface-variant">
-          Professional Grooming
+          {t('navigation.brandSubtitle')}
         </p>
       </div>
 
@@ -51,7 +55,7 @@ export default function Sidebar() {
         >
           add
         </span>
-        Nueva Cita
+        {t('navigation.newAppointment')}
       </button>
 
       {/* Main navigation */}
@@ -78,7 +82,7 @@ export default function Sidebar() {
               >
                 {item.icon}
               </span>
-              {item.label}
+              {t(item.labelKey)}
             </NavLink>
           </li>
         ))}
@@ -102,10 +106,13 @@ export default function Sidebar() {
                 <span className="material-symbols-outlined text-sm">
                   {item.icon}
                 </span>
-                {item.label}
+                {t(item.labelKey)}
               </NavLink>
             </li>
           ))}
+          <li>
+            <LanguageSwitcher />
+          </li>
         </ul>
       </div>
     </nav>

@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import userEvent from '@testing-library/user-event';
 import PetForm from './PetForm';
 import type { SelectOption } from '@/components/atoms/Select';
+import { encodeValidationError, VALIDATION_KEYS } from '@/utils/validation';
 
 afterEach(cleanup);
 
@@ -17,26 +18,28 @@ describe('PetForm', () => {
       <PetForm onSubmit={vi.fn()} clientOptions={mockClientOptions} />,
     );
 
-    expect(screen.getByPlaceholderText('Pet name')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('e.g. Dog, Cat, Bird')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('e.g. Golden Retriever, Siamese')).toBeInTheDocument();
-    expect(screen.getByLabelText('Sex')).toBeInTheDocument();
-    expect(screen.getByLabelText('Date of Birth')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('e.g. 12.5')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Medical notes, allergies, etc.')).toBeInTheDocument();
-    expect(screen.getByLabelText('Client')).toBeInTheDocument();
+    // Placeholders now return i18n keys
+    expect(screen.getByPlaceholderText('form.placeholder.name')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.species')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.breed')).toBeInTheDocument();
+    // Labels are i18n keys
+    expect(screen.getByLabelText('form.label.sex')).toBeInTheDocument();
+    expect(screen.getByLabelText('form.label.dateOfBirth')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.weight')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.notes')).toBeInTheDocument();
+    expect(screen.getByLabelText('form.label.client')).toBeInTheDocument();
   });
 
-  it('renders sex options including Unknown', () => {
+  it('renders sex options as i18n keys', () => {
     render(
       <PetForm onSubmit={vi.fn()} clientOptions={mockClientOptions} />,
     );
 
-    const sexSelect = screen.getByLabelText('Sex') as HTMLSelectElement;
+    const sexSelect = screen.getByLabelText('form.label.sex') as HTMLSelectElement;
     const options = Array.from(sexSelect.options).map((o) => o.textContent);
-    expect(options).toContain('Unknown');
-    expect(options).toContain('Male');
-    expect(options).toContain('Female');
+    expect(options).toContain('sex.unknown');
+    expect(options).toContain('sex.male');
+    expect(options).toContain('sex.female');
   });
 
   it('renders client options from clientOptions prop', () => {
@@ -44,7 +47,7 @@ describe('PetForm', () => {
       <PetForm onSubmit={vi.fn()} clientOptions={mockClientOptions} />,
     );
 
-    const clientSelect = screen.getByLabelText('Client') as HTMLSelectElement;
+    const clientSelect = screen.getByLabelText('form.label.client') as HTMLSelectElement;
     const options = Array.from(clientSelect.options).map((o) => o.textContent);
     expect(options).toContain('Alice Johnson');
     expect(options).toContain('Bob Smith');
@@ -56,14 +59,18 @@ describe('PetForm', () => {
       <PetForm onSubmit={onSubmit} clientOptions={mockClientOptions} />,
     );
 
-    const submitBtn = screen.getByRole('button', { name: /create pet/i });
+    const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(screen.getByText('Name is required')).toBeInTheDocument();
-      expect(screen.getByText('Species is required')).toBeInTheDocument();
-      expect(screen.getByText('Breed is required')).toBeInTheDocument();
-      expect(screen.getByText('Client is required')).toBeInTheDocument();
+      const nameKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' });
+      const speciesKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Species' });
+      const breedKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Breed' });
+      const clientKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Client' });
+      expect(screen.getByText(nameKey)).toBeInTheDocument();
+      expect(screen.getByText(speciesKey)).toBeInTheDocument();
+      expect(screen.getByText(breedKey)).toBeInTheDocument();
+      expect(screen.getByText(clientKey)).toBeInTheDocument();
     });
   });
 
@@ -75,15 +82,15 @@ describe('PetForm', () => {
       <PetForm onSubmit={onSubmit} clientOptions={mockClientOptions} />,
     );
 
-    await user.type(screen.getByPlaceholderText('Pet name'), 'Buddy');
-    await user.type(screen.getByPlaceholderText('e.g. Dog, Cat, Bird'), 'Dog');
-    await user.type(screen.getByPlaceholderText('e.g. Golden Retriever, Siamese'), 'Labrador');
-    await user.selectOptions(screen.getByLabelText('Sex'), 'male');
-    await user.type(screen.getByPlaceholderText('e.g. 12.5'), '25.0');
-    await user.type(screen.getByPlaceholderText('Medical notes, allergies, etc.'), 'Very friendly');
-    await user.selectOptions(screen.getByLabelText('Client'), '10');
+    await user.type(screen.getByPlaceholderText('form.placeholder.name'), 'Buddy');
+    await user.type(screen.getByPlaceholderText('form.placeholder.species'), 'Dog');
+    await user.type(screen.getByPlaceholderText('form.placeholder.breed'), 'Labrador');
+    await user.selectOptions(screen.getByLabelText('form.label.sex'), 'male');
+    await user.type(screen.getByPlaceholderText('form.placeholder.weight'), '25.0');
+    await user.type(screen.getByPlaceholderText('form.placeholder.notes'), 'Very friendly');
+    await user.selectOptions(screen.getByLabelText('form.label.client'), '10');
 
-    const submitBtn = screen.getByRole('button', { name: /create pet/i });
+    const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
     await user.click(submitBtn);
 
     await waitFor(() => {
@@ -130,12 +137,12 @@ describe('PetForm', () => {
       />,
     );
 
-    expect(screen.getByPlaceholderText('Pet name')).toHaveValue('Luna');
-    expect(screen.getByPlaceholderText('e.g. Dog, Cat, Bird')).toHaveValue('Cat');
-    expect(screen.getByPlaceholderText('e.g. Golden Retriever, Siamese')).toHaveValue('Siamese');
-    expect(screen.getByPlaceholderText('e.g. 12.5')).toHaveValue(4.5);
-    expect(screen.getByLabelText('Client')).toHaveValue('20');
-    expect(screen.getByLabelText('Sex')).toHaveValue('female');
+    expect(screen.getByPlaceholderText('form.placeholder.name')).toHaveValue('Luna');
+    expect(screen.getByPlaceholderText('form.placeholder.species')).toHaveValue('Cat');
+    expect(screen.getByPlaceholderText('form.placeholder.breed')).toHaveValue('Siamese');
+    expect(screen.getByPlaceholderText('form.placeholder.weight')).toHaveValue(4.5);
+    expect(screen.getByLabelText('form.label.client')).toHaveValue('20');
+    expect(screen.getByLabelText('form.label.sex')).toHaveValue('female');
   });
 
   it('shows loading state on submit button', () => {
@@ -147,7 +154,7 @@ describe('PetForm', () => {
       />,
     );
 
-    const submitBtn = screen.getByRole('button', { name: /create pet/i });
+    const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
     expect(submitBtn).toBeDisabled();
   });
 
@@ -160,7 +167,7 @@ describe('PetForm', () => {
       />,
     );
 
-    expect(screen.getByRole('button', { name: /update pet/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /form.submit.update/i })).toBeInTheDocument();
   });
 
   it('validates field on blur after being touched', async () => {
@@ -170,12 +177,13 @@ describe('PetForm', () => {
       <PetForm onSubmit={vi.fn()} clientOptions={mockClientOptions} />,
     );
 
-    const nameInput = screen.getByPlaceholderText('Pet name');
+    const nameInput = screen.getByPlaceholderText('form.placeholder.name');
     await user.click(nameInput);
     await user.tab();
 
     await waitFor(() => {
-      expect(screen.getByText('Name is required')).toBeInTheDocument();
+      const nameKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' });
+      expect(screen.getByText(nameKey)).toBeInTheDocument();
     });
   });
 });

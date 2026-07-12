@@ -11,7 +11,8 @@ describe('RegisterPage', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText(/coming soon|register|próximamente/i)).toBeInTheDocument();
+    // i18n mock returns key as value
+    expect(screen.getByText('register.title')).toBeInTheDocument();
   });
 
   it('renders a back link to home', () => {
@@ -21,7 +22,7 @@ describe('RegisterPage', () => {
       </MemoryRouter>,
     );
 
-    const backLink = screen.getByRole('link', { name: /volver|back|inicio/i });
+    const backLink = screen.getByRole('link', { name: 'register.backHome' });
     expect(backLink).toHaveAttribute('href', '/');
   });
 });

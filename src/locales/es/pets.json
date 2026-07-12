@@ -1,0 +1,80 @@
+{
+  "list": {
+    "title": "Lista de Mascotas"
+  },
+  "column": {
+    "pet": "Mascota",
+    "species": "Especie",
+    "breed": "Raza",
+    "status": "Estado"
+  },
+  "form": {
+    "label": {
+      "name": "Nombre",
+      "species": "Especie",
+      "breed": "Raza",
+      "sex": "Sexo",
+      "dateOfBirth": "Fecha de nacimiento",
+      "weight": "Peso (kg)",
+      "notes": "Notas",
+      "client": "Cliente"
+    },
+    "placeholder": {
+      "name": "Nombre de la mascota",
+      "species": "ej. Perro, Gato, Ave",
+      "breed": "ej. Golden Retriever, Siamés",
+      "weight": "ej. 12.5",
+      "notes": "Notas médicas, alergias, etc."
+    },
+    "submit": {
+      "create": "Crear Mascota",
+      "update": "Actualizar Mascota"
+    }
+  },
+  "deactivate": {
+    "title": "Desactivar mascota",
+    "message": "¿Estás seguro de que deseas desactivar a {{name}}?",
+    "success": "{{name}} desactivado.",
+    "error": "Error al desactivar."
+  },
+  "detail": {
+    "speciesBreed": "Especie / Raza",
+    "sex": "Sexo",
+    "dateOfBirth": "Fecha de nacimiento",
+    "weight": "Peso",
+    "weightUnit": "{{weight}} kg",
+    "notes": "Notas",
+    "client": "Cliente",
+    "clientNumber": "Cliente #{{id}}",
+    "created": "Creado",
+    "updated": "Actualizado",
+    "notFound": "Mascota no encontrada",
+    "notFoundMessage": "La mascota que buscas no existe o ha sido eliminada.",
+    "loadError": "Error al cargar la mascota",
+    "editNotFound": "La mascota que intentas editar no existe.",
+    "linkedServices": "Servicios Vinculados",
+    "noLinkedServices": "Sin servicios vinculados",
+    "linkService": "Vincular un Servicio",
+    "selectService": "Seleccionar un servicio",
+    "selectServicePlaceholder": "— Seleccionar un servicio —",
+    "noAvailableServices": "No hay servicios disponibles para vincular.",
+    "link": "Vincular",
+    "actionFailed": "Acción fallida",
+    "reactivateUnavailable": "La reactivación aún no está disponible. Esta mascota permanece inactiva.",
+    "unlinkFail": "Error al desvincular",
+    "loadServicesFail": "Error al cargar servicios",
+    "linkFail": "Error al vincular",
+    "createFail": "Error al crear la mascota. Intenta de nuevo.",
+    "updateFail": "Error al actualizar la mascota. Intenta de nuevo.",
+    "loadClientsFail": "Error al cargar clientes",
+    "deactivatePet": "Desactivar Mascota",
+    "deletePet": "Eliminar Mascota",
+    "deactivateMessage": "¿Estás seguro de que deseas desactivar a {{name}}?",
+    "deleteMessage": "¿Estás seguro de que deseas eliminar a {{name}}?"
+  },
+  "sex": {
+    "male": "Macho",
+    "female": "Hembra",
+    "unknown": "Desconocido"
+  }
+}

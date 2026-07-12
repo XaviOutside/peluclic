@@ -69,7 +69,7 @@ vi.mock('@/hooks/usePets', () => ({
   }),
 }));
 
-// Mock usePetMutations (already used by existing PetsPage)
+// Mock usePetMutations
 vi.mock('@/hooks/usePetMutations', () => ({
   useDeactivatePet: () => ({
     mutate: vi.fn().mockResolvedValue(undefined),
@@ -96,15 +96,15 @@ describe('PetsPage', () => {
 
   /* ── Cross-reference buttons ── */
 
-  it('renders "Ver Cliente" cross-ref button per row', () => {
+  it('renders cross-ref button per row (i18n key)', () => {
     renderPage();
 
     const buttons = screen.getAllByTestId('crossref-action-pets-client');
     expect(buttons).toHaveLength(2);
-    expect(buttons[0]).toHaveTextContent('Ver Cliente');
+    expect(buttons[0]).toHaveTextContent('common:actions.viewClient');
   });
 
-  it('"Ver Cliente" navigates to /clients/:clientId', () => {
+  it('cross-ref navigates to /clients/:clientId', () => {
     mockNavigate.mockClear();
     renderPage();
 
@@ -113,15 +113,15 @@ describe('PetsPage', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/clients/42');
   });
 
-  it('renders "Ver Servicios" cross-ref button per row', () => {
+  it('renders cross-ref button per row (i18n key)', () => {
     renderPage();
 
     const buttons = screen.getAllByTestId('crossref-action-pets-services');
     expect(buttons).toHaveLength(2);
-    expect(buttons[0]).toHaveTextContent('Ver Servicios');
+    expect(buttons[0]).toHaveTextContent('common:actions.viewServices');
   });
 
-  it('"Ver Servicios" navigates to /services?petId=X', () => {
+  it('cross-ref navigates to /services?petId=X', () => {
     mockNavigate.mockClear();
     renderPage();
 

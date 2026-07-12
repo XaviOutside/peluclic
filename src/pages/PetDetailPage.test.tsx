@@ -71,9 +71,13 @@ describe('PetDetailPage', () => {
       expect(screen.getByText('Max')).toBeInTheDocument();
     });
 
+    // PetDetailCard was i18n'd in PR2 — species/breed combined, sex via t(), weight via t()
     expect(screen.getByText('Dog — Golden Retriever')).toBeInTheDocument();
-    expect(screen.getByText('Male')).toBeInTheDocument();
-    expect(screen.getByText('32.5 kg')).toBeInTheDocument();
+    // Sex is now an i18n key from pets namespace with prefix
+    expect(screen.getByText('pets.sex.male')).toBeInTheDocument();
+    // Weight with interpolation
+    expect(screen.getByText('pets.detail.weightUnit')).toBeInTheDocument();
+    // Notes is data
     expect(screen.getByText('Friendly')).toBeInTheDocument();
   });
 
@@ -87,7 +91,7 @@ describe('PetDetailPage', () => {
     renderPage('999');
 
     await waitFor(() => {
-      expect(screen.getByText('Pet not found')).toBeInTheDocument();
+      expect(screen.getByText('detail.notFound')).toBeInTheDocument();
     });
   });
 
@@ -118,8 +122,8 @@ describe('PetDetailPage', () => {
       expect(screen.getByText('Max')).toBeInTheDocument();
     });
 
-    // PetDetailCard renders "← Back to list" button
-    const backButtons = screen.getAllByRole('button', { name: /← Back/i });
+    // PetDetailCard renders back button with unprefixed key
+    const backButtons = screen.getAllByRole('button', { name: /actions.backToList/i });
     const user = userEvent.setup();
     await user.click(backButtons[0]);
 
@@ -140,7 +144,7 @@ describe('PetDetailPage', () => {
     });
 
     const user = userEvent.setup();
-    await user.click(screen.getByRole('button', { name: 'Edit' }));
+    await user.click(screen.getByRole('button', { name: 'actions.edit' }));
 
     expect(mockNavigate).toHaveBeenCalledWith('/pets/1/edit');
   });
@@ -160,14 +164,13 @@ describe('PetDetailPage', () => {
 
     const user = userEvent.setup();
 
-    // Click Deactivate — there may be multiple buttons with this name,
-    // target the one in the PetDetailCard action bar (first occurrence)
-    const deactivateButtons = screen.getAllByRole('button', { name: 'Deactivate' });
+    const deactivateButtons = screen.getAllByRole('button', { name: 'actions.deactivate' });
     await user.click(deactivateButtons[0]);
 
-    // Confirm dialog should appear
-    expect(screen.getByText('Deactivate Pet')).toBeInTheDocument();
-    expect(screen.getByText(/deactivate Max\?/i)).toBeInTheDocument();
+    // Confirm dialog — title from PetDetailPage detail keys
+    expect(screen.getByText('detail.deactivatePet')).toBeInTheDocument();
+    // Message with interpolation returns raw key
+    expect(screen.getByText('detail.deactivateMessage')).toBeInTheDocument();
 
     // Mock the deactivate API call
     mockFetch.mockResolvedValueOnce({
@@ -176,9 +179,8 @@ describe('PetDetailPage', () => {
       json: () => Promise.resolve({ ...activePet, status: 'inactive' }),
     });
 
-    // Click confirm in the dialog — now there are 2 "Deactivate" buttons,
-    // the second one (index 1) is in the dialog
-    const confirmButtons = screen.getAllByRole('button', { name: 'Deactivate' });
+    // Click confirm in the dialog
+    const confirmButtons = screen.getAllByRole('button', { name: 'common:actions.deactivate' });
     await user.click(confirmButtons[1]);
 
     await waitFor(() => {
@@ -199,8 +201,8 @@ describe('PetDetailPage', () => {
       expect(screen.getByText('Max')).toBeInTheDocument();
     });
 
-    // Client info should be displayed as Client #10
-    expect(screen.getByText('Client #10')).toBeInTheDocument();
+    // Client info uses i18n key with interpolation
+    expect(screen.getByText('detail.clientNumber')).toBeInTheDocument();
   });
 });
 
@@ -250,7 +252,6 @@ describe('PetDetailPage — linked services', () => {
       status: 200,
       json: () => Promise.resolve(activePet),
     });
-    // Services fetch never resolves — stays loading
     mockFetch.mockReturnValueOnce(new Promise(() => {}));
 
     renderPage();
@@ -259,8 +260,8 @@ describe('PetDetailPage — linked services', () => {
       expect(screen.getByText('Max')).toBeInTheDocument();
     });
 
-    // Linked Services heading visible, spinner inside the section
-    expect(screen.getByText('Linked Services')).toBeInTheDocument();
+    // Linked Services heading now uses i18n key
+    expect(screen.getByText('detail.linkedServices')).toBeInTheDocument();
     const spinners = screen.getAllByRole('status', { name: /loading/i });
     expect(spinners.length).toBeGreaterThanOrEqual(1);
   });
@@ -280,14 +281,15 @@ describe('PetDetailPage — linked services', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('Linked Services')).toBeInTheDocument();
+      expect(screen.getByText('detail.linkedServices')).toBeInTheDocument();
     });
 
+    // Service names and prices are data, not i18n
     expect(screen.getByText('Bath & Brush')).toBeInTheDocument();
     expect(screen.getByText('Nail Trim')).toBeInTheDocument();
     expect(screen.getByText('$45.00')).toBeInTheDocument();
     expect(screen.getByText('$20.00')).toBeInTheDocument();
-    expect(screen.queryByText('No linked services')).not.toBeInTheDocument();
+    expect(screen.queryByText('detail.noLinkedServices')).not.toBeInTheDocument();
   });
 
   it('shows empty state with Link Service button when no linked services', async () => {
@@ -305,10 +307,10 @@ describe('PetDetailPage — linked services', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('No linked services')).toBeInTheDocument();
+      expect(screen.getByText('detail.noLinkedServices')).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: /link a service/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /detail\.linkService/i })).toBeInTheDocument();
   });
 
   it('shows error state with retry button when services fail', async () => {
@@ -329,7 +331,8 @@ describe('PetDetailPage — linked services', () => {
       expect(screen.getByText(/failed to load services/i)).toBeInTheDocument();
     });
 
-    expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
+    // Retry button uses common namespace
+    expect(screen.getByRole('button', { name: /common:errors.retry/i })).toBeInTheDocument();
   });
 
   it('Link Service button opens modal with unlinked services', async () => {
@@ -347,15 +350,13 @@ describe('PetDetailPage — linked services', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText('No linked services')).toBeInTheDocument();
+      expect(screen.getByText('detail.noLinkedServices')).toBeInTheDocument();
     });
 
     const user = userEvent.setup();
 
-    // Click "Link a Service" button
-    await user.click(screen.getByRole('button', { name: /link a service/i }));
+    await user.click(screen.getByRole('button', { name: /detail\.linkService/i }));
 
-    // Modal appears and triggers fetch for unlinked services
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -363,7 +364,7 @@ describe('PetDetailPage — linked services', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByRole('dialog', { name: /link a service/i })).toBeInTheDocument();
+      expect(screen.getByRole('dialog', { name: /detail\.linkService/i })).toBeInTheDocument();
     });
   });
 });

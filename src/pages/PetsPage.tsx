@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Pet } from '@/types/pet';
 import { usePets } from '@/hooks/usePets';
 import { useDeactivatePet } from '@/hooks/usePetMutations';
+import { useModuleTabs } from '@/hooks/useModuleTabs';
 import DataTable from '@/components/organisms/DataTable';
 import PageHeader from '@/components/organisms/PageHeader';
 import ModuleTabs from '@/components/molecules/ModuleTabs';
@@ -11,15 +13,12 @@ import ConfirmDialog from '@/components/molecules/ConfirmDialog';
 import Button from '@/components/atoms/Button';
 import type { ColumnConfig, RowAction, CrossRefAction } from '@/components/organisms/DataTable';
 
-const MODULE_TABS = [
-  { id: 'clients', label: 'Clientes', icon: 'group' },
-  { id: 'pets', label: 'Mascotas', icon: 'pets' },
-  { id: 'services', label: 'Servicios', icon: 'content_cut' },
-];
-
 export default function PetsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation(['pets', 'common']);
+  const moduleTabs = useModuleTabs();
+
   const clientIdParam = searchParams.get('clientId');
   const initialClientId = clientIdParam ? parseInt(clientIdParam, 10) : undefined;
 
@@ -48,22 +47,22 @@ export default function PetsPage() {
   /* ── Column defs ── */
   const columns: ColumnConfig<Pet>[] = [
     {
-      header: 'Mascota',
+      header: t('column.pet'),
       render: (p) => p.name,
       span: 'sm:col-span-3',
     },
     {
-      header: 'Especie',
+      header: t('column.species'),
       render: (p) => p.species,
       span: 'sm:col-span-2',
     },
     {
-      header: 'Raza',
+      header: t('column.breed'),
       render: (p) => p.breed,
       span: 'sm:col-span-2',
     },
     {
-      header: 'Estado',
+      header: t('column.status'),
       render: (p) => <StatusBadge status={p.status} />,
       span: 'sm:col-span-2',
       mobileVisible: false,
@@ -74,13 +73,13 @@ export default function PetsPage() {
   const crossRefActions: CrossRefAction<Pet>[] = [
     {
       key: 'pets-client',
-      label: 'Ver Cliente',
+      label: t('common:actions.viewClient'),
       icon: 'person',
       onClick: (p) => navigate(`/clients/${p.clientId}`),
     },
     {
       key: 'pets-services',
-      label: 'Ver Servicios',
+      label: t('common:actions.viewServices'),
       icon: 'receipt_long',
       onClick: (p) => navigate(`/services?petId=${p.id}`),
     },
@@ -90,19 +89,19 @@ export default function PetsPage() {
   const rowActions: RowAction<Pet>[] = [
     {
       key: 'view',
-      label: 'Ver detalles',
+      label: t('common:actions.view'),
       icon: 'visibility',
       onAction: (p) => navigate(`/pets/${p.id}`),
     },
     {
       key: 'edit',
-      label: 'Editar',
+      label: t('common:actions.edit'),
       icon: 'edit',
       onAction: (p) => navigate(`/pets/${p.id}/edit`),
     },
     {
       key: 'deactivate',
-      label: 'Desactivar',
+      label: t('common:actions.deactivate'),
       icon: 'delete',
       destructive: true,
       onAction: (p) => setConfirmTarget(p),
@@ -128,7 +127,7 @@ export default function PetsPage() {
     <div className="flex flex-col gap-6" data-testid="pets-page">
       {/* ── Module tabs ── */}
       <ModuleTabs
-        tabs={MODULE_TABS}
+        tabs={moduleTabs}
         activeTab="pets"
         onTabChange={(tabId) => {
           if (tabId === 'clients') navigate('/clients');
@@ -138,7 +137,7 @@ export default function PetsPage() {
 
       {/* ── Header ── */}
       <PageHeader
-        searchPlaceholder="Buscar mascotas..."
+        searchPlaceholder={t('common:actions.searchPets')}
         searchValue={searchText}
         onSearchChange={setSearchText}
         action={
@@ -149,7 +148,7 @@ export default function PetsPage() {
             className="flex items-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">pets</span>
-            Añadir mascota
+            {t('common:actions.addPet')}
           </Button>
         }
       />
@@ -181,7 +180,7 @@ export default function PetsPage() {
         loading={isLoading}
         error={error}
         onRetry={refresh}
-        emptyMessage="No hay mascotas registradas."
+        emptyMessage={t('common:empty.noPets')}
         pagination={totalPages > 1 ? { page, totalPages, totalItems: totalCount, onPageChange: goToPage } : undefined}
       />
 
@@ -190,13 +189,13 @@ export default function PetsPage() {
         isOpen={confirmTarget !== null}
         onClose={() => setConfirmTarget(null)}
         onConfirm={handleConfirmDeactivate}
-        title="Desactivar mascota"
+        title={t('deactivate.title')}
         message={
           confirmTarget
-            ? `¿Estás seguro de que deseas desactivar a ${confirmTarget.name}?`
+            ? t('deactivate.message', { name: confirmTarget.name })
             : ''
         }
-        confirmLabel="Desactivar"
+        confirmLabel={t('common:actions.deactivate')}
         destructive
         isLoading={deactivateMutation.isLoading}
       />

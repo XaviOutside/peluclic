@@ -79,14 +79,14 @@ describe('PetTable', () => {
     render(
       <PetTable pets={mockPets} clientNames={mockClientNames} {...handlers} />,
     );
-    const activeBadges = screen.getAllByText('Active');
+    const activeBadges = screen.getAllByText('status.active');
     expect(activeBadges.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText('Inactive')).toBeInTheDocument();
+    expect(screen.getByText('status.inactive')).toBeInTheDocument();
   });
 
   it('shows empty state when no pets', () => {
     render(<PetTable pets={[]} {...handlers} />);
-    expect(screen.getByText('No pets found.')).toBeInTheDocument();
+    expect(screen.getByText('empty.noPets')).toBeInTheDocument();
   });
 
   it('opens actions dropdown and calls onView', () => {
@@ -94,14 +94,14 @@ describe('PetTable', () => {
       <PetTable pets={mockPets} clientNames={mockClientNames} {...handlers} />,
     );
 
-    const actionButtons = screen.getAllByLabelText('Actions');
+    const actionButtons = screen.getAllByLabelText('actions.actions');
     fireEvent.click(actionButtons[0]);
 
-    expect(screen.getByText('View')).toBeInTheDocument();
-    expect(screen.getByText('Edit')).toBeInTheDocument();
-    expect(screen.getByText('Deactivate')).toBeInTheDocument();
+    expect(screen.getByText('actions.view')).toBeInTheDocument();
+    expect(screen.getByText('actions.edit')).toBeInTheDocument();
+    expect(screen.getByText('actions.deactivate')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText('View'));
+    fireEvent.click(screen.getByText('actions.view'));
     expect(handlers.onView).toHaveBeenCalledWith(mockPets[0]);
   });
 
@@ -110,21 +110,21 @@ describe('PetTable', () => {
       <PetTable pets={mockPets} clientNames={mockClientNames} {...handlers} />,
     );
 
-    const actionButtons = screen.getAllByLabelText('Actions');
+    const actionButtons = screen.getAllByLabelText('actions.actions');
     fireEvent.click(actionButtons[1]);
 
-    expect(screen.getByText('Reactivate')).toBeInTheDocument();
+    expect(screen.getByText('actions.reactivate')).toBeInTheDocument();
   });
 
   it('shows client ID when clientNames map has no entry', () => {
     const { rerender } = render(
       <PetTable pets={mockPets} clientNames={{}} {...handlers} />,
     );
-    expect(screen.getByText('Client #10')).toBeInTheDocument();
-    expect(screen.getByText('Client #20')).toBeInTheDocument();
+    expect(screen.getAllByText('detail.clientNumber').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('detail.clientNumber').length).toBeGreaterThanOrEqual(2);
 
     // Also works without clientNames prop at all
     rerender(<PetTable pets={mockPets} {...handlers} />);
-    expect(screen.getByText('Client #10')).toBeInTheDocument();
+    expect(screen.getAllByText('detail.clientNumber').length).toBeGreaterThanOrEqual(1);
   });
 });

@@ -11,14 +11,14 @@ describe('App routing — public routes', () => {
       </MemoryRouter>,
     );
 
-    // Landing page content should be visible
-    expect(screen.getByText('Manage your grooming salon with ease.')).toBeInTheDocument();
+    // Landing page content — i18n mock returns keys as values
+    expect(screen.getByText('hero.title')).toBeInTheDocument();
 
-    // Sidebar must NOT be present on public routes
+    // Sidebar must NOT be present on public routes ("Bark & Bubbles" is hardcoded in Sidebar)
     expect(screen.queryByText('Bark & Bubbles')).not.toBeInTheDocument();
 
-    // MobileNav must NOT be present on public routes
-    expect(screen.queryByText('Inicio')).not.toBeInTheDocument();
+    // MobileNav must NOT be present on public routes (i18n key from MobileNav)
+    expect(screen.queryByText('mobileNav.home')).not.toBeInTheDocument();
   });
 });
 
@@ -33,10 +33,10 @@ describe('App routing — dashboard routes', () => {
     // Dashboard page content — clients page container is visible
     expect(screen.getByTestId('clients-page')).toBeInTheDocument();
 
-    // Sidebar must be present on dashboard routes
+    // Sidebar must be present on dashboard routes ("Bark & Bubbles" is hardcoded)
     expect(screen.getByText('Bark & Bubbles')).toBeInTheDocument();
 
-    // MobileNav must be present on dashboard routes
-    expect(screen.getByText('Inicio')).toBeInTheDocument();
+    // MobileNav must be present on dashboard routes (i18n key from MobileNav)
+    expect(screen.getByText('mobileNav.home')).toBeInTheDocument();
   });
 });

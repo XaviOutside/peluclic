@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SVG Icons — equivalents to Material Symbols in the HTML
@@ -30,29 +31,31 @@ const HERO_IMAGE = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCP-2mYS7
    Landing Page — matches pantalla_inicial_desktop.html
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function LandingPage() {
+  const { t } = useTranslation('landing');
+
   return (
     <>
       {/* ── Hero Section ── */}
       <section className="mx-auto max-w-[--container-max] px-[--spacing-margin-mobile] py-12 md:grid md:grid-cols-2 md:items-center md:gap-12 md:px-[--spacing-margin-desktop] md:py-24">
         <div className="space-y-6">
           <h1 className="text-headline-xl-mobile text-on-surface md:text-headline-xl">
-            Manage your grooming salon with ease.
+            {t('hero.title')}
           </h1>
           <p className="max-w-lg text-body-lg text-on-surface-variant">
-            Pawsitive Manager helps you streamline appointments, track customer preferences, and provide the best care for every pet.
+            {t('hero.subtitle')}
           </p>
           <div className="flex flex-col gap-4 pt-4 sm:flex-row">
             <NavLink
               to="/register"
               className="inline-flex w-full items-center justify-center rounded-full bg-primary-container px-8 py-3 text-label-md font-semibold text-on-primary-container transition-colors hover:bg-surface-tint sm:w-auto"
             >
-              Prueba gratis
+              {t('hero.cta')}
             </NavLink>
             <NavLink
               to="/services"
               className="inline-flex w-full items-center justify-center rounded-full bg-secondary-container px-8 py-3 text-label-md font-semibold text-on-secondary-container transition-colors hover:bg-secondary-fixed sm:w-auto"
             >
-              Ver Demo
+              {t('hero.demo')}
             </NavLink>
           </div>
         </div>
@@ -67,7 +70,7 @@ export default function LandingPage() {
 
       {/* ── Features Bento Grid ── */}
       <section className="mx-auto max-w-[--container-max] px-[--spacing-margin-mobile] py-16 md:px-[--spacing-margin-desktop]">
-        <h2 className="mb-12 text-center text-headline-lg text-on-surface">Everything you need to run your salon</h2>
+        <h2 className="mb-12 text-center text-headline-lg text-on-surface">{t('features.title')}</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
 
           {/* Feature 1: Smart Scheduling — wide */}
@@ -75,30 +78,30 @@ export default function LandingPage() {
             <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary-container/10 blur-2xl transition-colors group-hover:bg-primary-container/20" />
             <div className="relative">
               <div className="mb-4 text-primary-container"><CalendarIcon size="lg" /></div>
-              <h3 className="mb-2 text-headline-md text-on-surface">Smart Scheduling</h3>
-              <p className="max-w-md text-body-md text-on-surface-variant">Effortlessly manage your daily appointments with our intuitive drag-and-drop calendar. Never double-book again.</p>
+              <h3 className="mb-2 text-headline-md text-on-surface">{t('features.scheduling.title')}</h3>
+              <p className="max-w-md text-body-md text-on-surface-variant">{t('features.scheduling.description')}</p>
             </div>
           </div>
 
           {/* Feature 2: Client Directory */}
           <div className="col-span-1 rounded-2xl border border-surface-variant bg-surface-bright p-8 shadow-sm transition-shadow hover:shadow-md">
             <div className="mb-4 text-primary-container"><GroupIcon size="lg" /></div>
-            <h3 className="mb-2 text-headline-md text-on-surface">Client Directory</h3>
-            <p className="text-body-md text-on-surface-variant">Keep all client details, contact info, and history in one secure place.</p>
+            <h3 className="mb-2 text-headline-md text-on-surface">{t('features.clients.title')}</h3>
+            <p className="text-body-md text-on-surface-variant">{t('features.clients.description')}</p>
           </div>
 
           {/* Feature 3: Pet Profiles */}
           <div className="col-span-1 rounded-2xl border border-surface-variant bg-surface-bright p-8 shadow-sm transition-shadow hover:shadow-md">
             <div className="mb-4 text-primary-container"><PetsIcon size="lg" /></div>
-            <h3 className="mb-2 text-headline-md text-on-surface">Pet Profiles</h3>
-            <p className="text-body-md text-on-surface-variant">Track breeds, allergies, grooming preferences, and behavioral notes.</p>
+            <h3 className="mb-2 text-headline-md text-on-surface">{t('features.pets.title')}</h3>
+            <p className="text-body-md text-on-surface-variant">{t('features.pets.description')}</p>
           </div>
 
           {/* Feature 4: Service Customization — wide */}
           <div className="col-span-1 rounded-2xl border border-surface-variant bg-surface-bright p-8 shadow-sm transition-shadow hover:shadow-md md:col-span-2">
             <div className="mb-4 text-primary-container"><CutIcon size="lg" /></div>
-            <h3 className="mb-2 text-headline-md text-on-surface">Service Customization</h3>
-            <p className="text-body-md text-on-surface-variant">Define your services, set durations, and assign specific groomers to specialized tasks to optimize your workflow.</p>
+            <h3 className="mb-2 text-headline-md text-on-surface">{t('features.services.title')}</h3>
+            <p className="text-body-md text-on-surface-variant">{t('features.services.description')}</p>
           </div>
 
         </div>
@@ -109,14 +112,14 @@ export default function LandingPage() {
         <div className="mb-6 text-center md:mb-0 md:text-left">
           <div className="mb-2 flex items-center justify-center gap-2 opacity-80 transition-opacity hover:opacity-100 md:justify-start">
             <span className="text-primary-container"><PetsIcon size="sm" /></span>
-            <span className="text-headline-md text-primary-container">Pawsitive Manager</span>
+            <span className="text-headline-md text-primary-container">{t('footer.brand')}</span>
           </div>
-          <p className="text-body-md text-on-surface-variant">© 2024 Pawsitive Grooming Solutions. All paws reserved.</p>
+          <p className="text-body-md text-on-surface-variant">{t('footer.copyright')}</p>
         </div>
         <div className="flex flex-col gap-4 text-center md:flex-row md:text-left">
-          <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">Privacy Policy</a>
-          <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">Terms of Service</a>
-          <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">Contact Us</a>
+          <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">{t('footer.privacy')}</a>
+          <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">{t('footer.terms')}</a>
+          <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">{t('footer.contact')}</a>
         </div>
       </footer>
     </>

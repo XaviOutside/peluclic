@@ -3,26 +3,30 @@ import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ServiceForm from './ServiceForm';
 import type { ServiceFormData } from '@/utils/validation';
+import { encodeValidationError, VALIDATION_KEYS } from '@/utils/validation';
 
 afterEach(() => cleanup());
+
+const nameKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' });
+const priceKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Price' });
 
 describe('ServiceForm', () => {
   it('renders name, description, duration, price fields', () => {
     render(<ServiceForm onSubmit={vi.fn()} />);
 
-    expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/duration/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/price/i)).toBeInTheDocument();
+    // Labels are i18n keys — check via placeholders
+    expect(screen.getByPlaceholderText('form.placeholder.name')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.description')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.duration')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.price')).toBeInTheDocument();
   });
 
   it('shows required indicators on name and price', () => {
     render(<ServiceForm onSubmit={vi.fn()} />);
 
-    const nameLabel = screen.getByText(/name/i).closest('label');
-    const priceLabel = screen.getByText(/price/i).closest('label');
+    const nameLabel = screen.getByText('form.label.name').closest('label');
+    const priceLabel = screen.getByText('form.label.price').closest('label');
 
-    // Both should have the required asterisk (visually hidden but in DOM)
     expect(nameLabel?.querySelector('[aria-hidden="true"]')).toBeTruthy();
     expect(priceLabel?.querySelector('[aria-hidden="true"]')).toBeTruthy();
   });
@@ -31,12 +35,12 @@ describe('ServiceForm', () => {
     const user = userEvent.setup();
     render(<ServiceForm onSubmit={vi.fn()} />);
 
-    const nameInput = screen.getByLabelText(/name/i);
+    const nameInput = screen.getByPlaceholderText('form.placeholder.name');
     await user.click(nameInput);
     await user.tab(); // blur
 
     await waitFor(() => {
-      expect(screen.getByText(/name is required/i)).toBeInTheDocument();
+      expect(screen.getByText(nameKey)).toBeInTheDocument();
     });
   });
 
@@ -45,12 +49,11 @@ describe('ServiceForm', () => {
     const user = userEvent.setup();
     render(<ServiceForm onSubmit={onSubmit} />);
 
-    // Submit empty form
-    await user.click(screen.getByRole('button', { name: /create/i }));
+    await user.click(screen.getByRole('button', { name: /form.submit.create/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/name is required/i)).toBeInTheDocument();
-      expect(screen.getByText(/price is required/i)).toBeInTheDocument();
+      expect(screen.getByText(nameKey)).toBeInTheDocument();
+      expect(screen.getByText(priceKey)).toBeInTheDocument();
     });
 
     expect(onSubmit).not.toHaveBeenCalled();
@@ -61,11 +64,11 @@ describe('ServiceForm', () => {
     const user = userEvent.setup();
     render(<ServiceForm onSubmit={onSubmit} />);
 
-    await user.type(screen.getByLabelText(/name/i), 'Full Groom');
-    await user.type(screen.getByLabelText(/price/i), '49.99');
-    await user.type(screen.getByLabelText(/duration/i), '60');
+    await user.type(screen.getByPlaceholderText('form.placeholder.name'), 'Full Groom');
+    await user.type(screen.getByPlaceholderText('form.placeholder.price'), '49.99');
+    await user.type(screen.getByPlaceholderText('form.placeholder.duration'), '60');
 
-    await user.click(screen.getByRole('button', { name: /create/i }));
+    await user.click(screen.getByRole('button', { name: /form.submit.create/i }));
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -90,16 +93,14 @@ describe('ServiceForm', () => {
       />,
     );
 
-    expect(screen.getByLabelText(/name/i)).toHaveValue('Existing');
-    expect(screen.getByLabelText(/description/i)).toHaveValue('Old desc');
-    expect(screen.getByLabelText(/duration/i)).toHaveValue(30);
-    // type="number" input strips trailing .00 — "25.00" becomes 25
-    expect(screen.getByLabelText(/price/i)).toHaveValue(25);
-    expect(screen.getByRole('button', { name: /update/i })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.name')).toHaveValue('Existing');
+    expect(screen.getByPlaceholderText('form.placeholder.description')).toHaveValue('Old desc');
+    expect(screen.getByPlaceholderText('form.placeholder.duration')).toHaveValue(30);
+    expect(screen.getByPlaceholderText('form.placeholder.price')).toHaveValue(25);
+    expect(screen.getByRole('button', { name: /form.submit.update/i })).toBeInTheDocument();
   });
 
   it('shows loading state during submission', async () => {
-    // Create a promise that never resolves to keep loading state
     let resolvePromise: (value: unknown) => void;
     const promise = new Promise((resolve) => {
       resolvePromise = resolve;
@@ -109,16 +110,15 @@ describe('ServiceForm', () => {
 
     render(<ServiceForm onSubmit={onSubmit} />);
 
-    await user.type(screen.getByLabelText(/name/i), 'Test');
-    await user.type(screen.getByLabelText(/price/i), '10.00');
+    await user.type(screen.getByPlaceholderText('form.placeholder.name'), 'Test');
+    await user.type(screen.getByPlaceholderText('form.placeholder.price'), '10.00');
 
-    await user.click(screen.getByRole('button', { name: /create/i }));
+    await user.click(screen.getByRole('button', { name: /form.submit.create/i }));
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalled();
     });
 
-    // Cleanup
     resolvePromise!(undefined);
   });
 

@@ -1,0 +1,15 @@
+{
+  "required": "{{field}} es obligatorio",
+  "email": "Por favor, introduce un correo electrónico válido",
+  "phone": "Por favor, introduce un número de teléfono válido",
+  "length": {
+    "tooShort": "{{field}} debe tener al menos {{min}} carácter",
+    "tooShortPlural": "{{field}} debe tener al menos {{min}} caracteres",
+    "tooLong": "{{field}} debe tener como máximo {{max}} caracteres"
+  },
+  "sex": "El sexo debe ser Desconocido, Macho o Hembra",
+  "date": "Por favor, introduce una fecha válida",
+  "weight": "El peso debe ser un número positivo",
+  "price": "El precio debe ser un número no negativo",
+  "duration": "La duración debe ser un número entero positivo"
+}

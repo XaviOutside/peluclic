@@ -21,7 +21,6 @@ const inactiveService: Service = {
   status: 'inactive',
 };
 
-// Clean up DOM between tests to avoid stale renders
 afterEach(() => cleanup());
 
 describe('ServiceDetailCard', () => {
@@ -38,7 +37,8 @@ describe('ServiceDetailCard', () => {
 
     expect(screen.getByText('Full Groom')).toBeInTheDocument();
     expect(screen.getByText('Complete grooming package')).toBeInTheDocument();
-    expect(screen.getByText('Active')).toBeInTheDocument();
+    // StatusBadge was i18n'd — returns i18n key
+    expect(screen.getByText('status.active')).toBeInTheDocument();
   });
 
   it('shows Active badge for active service', () => {
@@ -52,7 +52,7 @@ describe('ServiceDetailCard', () => {
       />,
     );
 
-    expect(screen.getByText('Active')).toBeInTheDocument();
+    expect(screen.getByText('status.active')).toBeInTheDocument();
   });
 
   it('shows Inactive badge for inactive service', () => {
@@ -66,7 +66,7 @@ describe('ServiceDetailCard', () => {
       />,
     );
 
-    expect(screen.getByText('Inactive')).toBeInTheDocument();
+    expect(screen.getByText('status.inactive')).toBeInTheDocument();
   });
 
   it('shows Deactivate + Delete buttons for active service', () => {
@@ -80,9 +80,9 @@ describe('ServiceDetailCard', () => {
       />,
     );
 
-    expect(screen.getByRole('button', { name: /deactivate/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /actions.deactivate/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /actions.delete/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /actions.edit/i })).toBeInTheDocument();
   });
 
   it('hides Deactivate button for inactive service', () => {
@@ -96,9 +96,8 @@ describe('ServiceDetailCard', () => {
       />,
     );
 
-    expect(screen.queryByRole('button', { name: /deactivate/i })).toBeNull();
-    // Delete should still be available for inactive
-    expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /actions.deactivate/i })).toBeNull();
+    expect(screen.getByRole('button', { name: /actions.delete/i })).toBeInTheDocument();
   });
 
   it('displays price in dollar format', () => {
@@ -126,10 +125,11 @@ describe('ServiceDetailCard', () => {
       />,
     );
 
-    expect(screen.getByText(/60 minutes/)).toBeInTheDocument();
+    // formatDuration now returns i18n key with services namespace
+    expect(screen.getByText('services.format.durationMinutes')).toBeInTheDocument();
   });
 
-  it('shows "Not provided" for null description', () => {
+  it('shows i18n key for null description', () => {
     const svc = { ...activeService, description: null };
     render(
       <ServiceDetailCard
@@ -141,6 +141,6 @@ describe('ServiceDetailCard', () => {
       />,
     );
 
-    expect(screen.getByText(/not provided/i)).toBeInTheDocument();
+    expect(screen.getByText('detail.notProvided')).toBeInTheDocument();
   });
 });

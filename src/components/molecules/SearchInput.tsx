@@ -1,4 +1,5 @@
 import { type InputHTMLAttributes } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
   /** Called on every keystroke (for controlled components) */
@@ -8,9 +9,11 @@ export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> 
 export default function SearchInput({
   onValueChange,
   className = '',
-  placeholder = 'Search...',
+  placeholder,
   ...props
 }: SearchInputProps) {
+  const { t } = useTranslation('common');
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     onValueChange?.(e.target.value);
     props.onChange?.(e);
@@ -27,7 +30,7 @@ export default function SearchInput({
       <input
         type="search"
         className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 pl-10 text-body-md text-on-surface placeholder:text-outline-variant shadow-sm transition-all duration-150 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
-        placeholder={placeholder}
+        placeholder={placeholder ?? t('actions.search')}
         data-testid="search-input"
         {...props}
         onChange={handleChange}

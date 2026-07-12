@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { usePet } from '@/hooks/usePet';
 import { useDeactivatePet } from '@/hooks/usePetMutations';
 import { useServices } from '@/hooks/useServices';
@@ -16,12 +17,12 @@ import Button from '@/components/atoms/Button';
 export default function PetDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation(['pets', 'common']);
   const petId = id ? Number(id) : undefined;
 
   const { pet, isLoading, error } = usePet(petId);
   const deactivateMutation = useDeactivatePet();
 
-  // Linked services
   const {
     services: linkedServices,
     isLoading: servicesLoading,
@@ -33,7 +34,6 @@ export default function PetDetailPage() {
   const [confirmAction, setConfirmAction] = useState<'deactivate' | 'delete' | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  // Link Service modal state
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [unlinkedServices, setUnlinkedServices] = useState<Service[]>([]);
   const [linkModalLoading, setLinkModalLoading] = useState(false);
@@ -46,8 +46,7 @@ export default function PetDetailPage() {
   }
 
   function handleReactivate() {
-    // Reactivation endpoint not yet available
-    setActionError('Reactivation is not yet available. This pet remains inactive.');
+    setActionError(t('detail.reactivateUnavailable'));
   }
 
   async function handleConfirm() {
@@ -62,7 +61,7 @@ export default function PetDetailPage() {
       setConfirmAction(null);
       navigate('/pets');
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Action failed';
+      const message = err instanceof Error ? err.message : t('detail.actionFailed');
       setActionError(message);
     }
   }
@@ -84,7 +83,7 @@ export default function PetDetailPage() {
       await updateService(service.id, { petId: null });
       refreshServices();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unlink failed';
+      const message = err instanceof Error ? err.message : t('detail.unlinkFail');
       setActionError(message);
     }
   }
@@ -97,7 +96,7 @@ export default function PetDetailPage() {
       const result = await listServices(1, 200);
       setUnlinkedServices(result.data.filter((s) => s.petId === null));
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to load services';
+      const message = err instanceof Error ? err.message : t('detail.loadServicesFail');
       setActionError(message);
     } finally {
       setLinkModalLoading(false);
@@ -114,14 +113,13 @@ export default function PetDetailPage() {
       setSelectedServiceId('');
       setUnlinkedServices([]);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Link failed';
+      const message = err instanceof Error ? err.message : t('detail.linkFail');
       setActionError(message);
     } finally {
       setLinking(false);
     }
   }
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -130,7 +128,6 @@ export default function PetDetailPage() {
     );
   }
 
-  // Error / 404 state
   if (error || !pet) {
     const isNotFound =
       error?.toLowerCase().includes('not found') ||
@@ -141,14 +138,14 @@ export default function PetDetailPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-8 text-center shadow-sm">
         {isNotFound ? (
           <>
-            <h2 className="text-lg font-semibold text-gray-900">Pet not found</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('detail.notFound')}</h2>
             <p className="mt-2 text-sm text-gray-500">
-              The pet you are looking for does not exist or has been removed.
+              {t('detail.notFoundMessage')}
             </p>
           </>
         ) : (
           <>
-            <h2 className="text-lg font-semibold text-red-800">Error loading pet</h2>
+            <h2 className="text-lg font-semibold text-red-800">{t('detail.loadError')}</h2>
             <p className="mt-2 text-sm text-red-600">{error}</p>
           </>
         )}
@@ -158,7 +155,7 @@ export default function PetDetailPage() {
           className="mt-6"
           onClick={() => navigate('/pets')}
         >
-          &larr; Back to pets
+          {t('common:actions.backToList')}
         </Button>
       </div>
     );
@@ -168,7 +165,7 @@ export default function PetDetailPage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <PetDetailCard
         pet={pet}
-        clientName={`Client #${pet.clientId}`}
+        clientName={t('detail.clientNumber', { id: pet.clientId })}
         onEdit={handleEdit}
         onDeactivate={handleDeactivate}
         onReactivate={handleReactivate}
@@ -190,13 +187,13 @@ export default function PetDetailPage() {
           setConfirmAction(null);
         }}
         onConfirm={handleConfirm}
-        title={confirmAction === 'deactivate' ? 'Deactivate Pet' : 'Delete Pet'}
+        title={confirmAction === 'deactivate' ? t('detail.deactivatePet') : t('detail.deletePet')}
         message={
           confirmAction === 'deactivate'
-            ? `Are you sure you want to deactivate ${pet.name}?`
-            : `Are you sure you want to delete ${pet.name}?`
+            ? t('detail.deactivateMessage', { name: pet.name })
+            : t('detail.deleteMessage', { name: pet.name })
         }
-        confirmLabel={confirmAction === 'deactivate' ? 'Deactivate' : 'Delete'}
+        confirmLabel={confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.delete')}
         destructive
         isLoading={deactivateMutation.isLoading}
       />
@@ -204,7 +201,7 @@ export default function PetDetailPage() {
       {/* Linked Services Section */}
       <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Linked Services</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t('detail.linkedServices')}</h2>
         </div>
         <div className="px-6 py-4">
           {servicesLoading && (
@@ -221,20 +218,20 @@ export default function PetDetailPage() {
                 className="mt-2"
                 onClick={refreshServices}
               >
-                Retry
+                {t('common:errors.retry')}
               </Button>
             </div>
           )}
           {!servicesLoading && !servicesError && linkedServices.length === 0 && (
             <div className="text-center py-6">
-              <p className="text-sm text-gray-500">No linked services</p>
+              <p className="text-sm text-gray-500">{t('detail.noLinkedServices')}</p>
               <Button
                 variant="secondary"
                 size="sm"
                 className="mt-2"
                 onClick={handleOpenLinkModal}
               >
-                Link a Service
+                {t('detail.linkService')}
               </Button>
             </div>
           )}
@@ -256,7 +253,7 @@ export default function PetDetailPage() {
           setShowLinkModal(false);
           setSelectedServiceId('');
         }}
-        title="Link a Service"
+        title={t('detail.linkService')}
       >
         {linkModalLoading && (
           <div className="flex justify-center py-4">
@@ -264,14 +261,14 @@ export default function PetDetailPage() {
           </div>
         )}
         {!linkModalLoading && unlinkedServices.length === 0 && (
-          <p className="text-sm text-gray-500 py-4">No available services to link.</p>
+          <p className="text-sm text-gray-500 py-4">{t('detail.noAvailableServices')}</p>
         )}
         {!linkModalLoading && unlinkedServices.length > 0 && (
           <>
             <Select
-              label="Select a service"
+              label={t('detail.selectService')}
               options={[
-                { value: '', label: '— Select a service —' },
+                { value: '', label: t('detail.selectServicePlaceholder') },
                 ...unlinkedServices.map((s) => ({
                   value: String(s.id),
                   label: `${s.name} ($${s.price.toFixed(2)})`,
@@ -289,7 +286,7 @@ export default function PetDetailPage() {
                   setSelectedServiceId('');
                 }}
               >
-                Cancel
+                {t('common:actions.cancel')}
               </Button>
               <Button
                 variant="primary"
@@ -298,7 +295,7 @@ export default function PetDetailPage() {
                 disabled={!selectedServiceId}
                 onClick={handleLink}
               >
-                Link
+                {t('detail.link')}
               </Button>
             </div>
           </>

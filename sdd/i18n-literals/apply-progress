@@ -1,0 +1,33 @@
+# Apply Progress — i18n-literals PR 1: Infrastructure
+
+## Status: Complete
+
+### Completed Tasks
+- [x] 1.1 Install react-i18next, i18next, i18next-browser-languagedetector
+- [x] 1.2 Create src/i18n.ts — init i18next with language detection, en fallback, <html lang> sync, 6 namespaces
+- [x] 1.3 Create 12 locale JSONs under src/locales/{en,es}/ (common, landing, clients, pets, services, validation) — 400 total keys (200 per language)
+- [x] 1.4 Create src/test-utils/i18n.ts — useTranslation mock returning t: (key) => key
+- [x] 1.5 Modify src/test-setup.ts — import ./test-utils/i18n
+- [x] 1.6 Modify src/main.tsx — import i18n config, wrap App with I18nextProvider
+- [x] 1.7 Refactor src/utils/format.ts — locale param to formatDate/formatServiceDate, extract formatSex with t function, unify formatDuration/formatDurationLong, add formatWeight
+- [x] 1.8 Refactor src/utils/validation.ts — return i18n keys instead of hardcoded English strings; export VALIDATION_KEYS constants and encodeValidationError/decodeValidationError helpers
+- [x] 1.9 Create src/constants/modules.ts — deduplicate MODULE_TABS array
+
+### Files Created (15)
+- src/locales/es/common.json, src/locales/es/clients.json, src/locales/es/pets.json, src/locales/es/services.json, src/locales/es/landing.json, src/locales/es/validation.json
+- src/locales/en/common.json, src/locales/en/clients.json, src/locales/en/pets.json, src/locales/en/services.json, src/locales/en/landing.json, src/locales/en/validation.json
+- src/i18n.ts
+- src/test-utils/i18n.ts
+- src/constants/modules.ts
+
+### Files Modified (4)
+- src/test-setup.ts — added import for i18n mock
+- src/main.tsx — added I18nextProvider wrapper
+- src/utils/format.ts — added formatSex, formatDuration, formatDurationLong, formatWeight; locale param to formatDate/formatServiceDate
+- src/utils/validation.ts — changed to return i18n keys with params encoding; added VALIDATION_KEYS, encodeValidationError, decodeValidationError
+
+### Build: Pass (0 errors)
+### Tests: 257 passed / 13 failed (expected intermediate state — fixed in PR 2/3)
+
+### Total locale keys: 400 (200 per language × 2)
+### Dependencies installed: react-i18next, i18next, i18next-browser-languagedetector

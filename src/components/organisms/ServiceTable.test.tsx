@@ -45,12 +45,14 @@ describe('ServiceTable', () => {
       />,
     );
 
+    // Data values still render as-is
     expect(screen.getByText('Full Groom')).toBeInTheDocument();
-    expect(screen.getByText('60 min')).toBeInTheDocument();
+    // Duration now uses i18n format function with services namespace
+    expect(screen.getByText('services.format.durationShort')).toBeInTheDocument();
     expect(screen.getByText('$50.00')).toBeInTheDocument();
   });
 
-  it('shows "N/A" for null duration', () => {
+  it('shows em dash for null duration', () => {
     render(
       <ServiceTable
         services={[mockServiceWithNullDuration]}
@@ -59,7 +61,7 @@ describe('ServiceTable', () => {
       />,
     );
 
-    expect(screen.getByText('N/A')).toBeInTheDocument();
+    expect(screen.getByText('—')).toBeInTheDocument();
   });
 
   it('renders active and inactive badges', () => {
@@ -71,8 +73,8 @@ describe('ServiceTable', () => {
       />,
     );
 
-    expect(screen.getByText('Active')).toBeInTheDocument();
-    expect(screen.getByText('Inactive')).toBeInTheDocument();
+    expect(screen.getByText('status.active')).toBeInTheDocument();
+    expect(screen.getByText('status.inactive')).toBeInTheDocument();
   });
 
   it('shows empty state when no services', () => {
@@ -80,7 +82,7 @@ describe('ServiceTable', () => {
       <ServiceTable services={[]} onEdit={vi.fn()} onDelete={vi.fn()} />,
     );
 
-    expect(screen.getByText(/no services/i)).toBeInTheDocument();
+    expect(screen.getByText('empty.noServices')).toBeInTheDocument();
   });
 
   it('formats price with two decimal places', () => {

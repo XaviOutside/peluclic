@@ -1,45 +1,103 @@
 /**
  * Client-side form validation utilities.
+ *
  * Returns error message strings — empty string means valid.
+ * Messages are i18n keys (e.g. "validation.required") that callers
+ * resolve via t() or the resolveValidationMessage helper.
+ *
+ * Format for key+params: "key|param1=value1|param2=value2"
  */
 
 // ReDoS-safe: character classes are disjoint, no nested quantifiers
 // eslint-disable-next-line sonarjs/slow-regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
- 
+
 const PHONE_REGEX = /^\+?[\d\s\-().]{7,20}$/;
+
+/* ------------------------------------------------------------------ */
+/*  Validation key constants                                           */
+/* ------------------------------------------------------------------ */
+
+export const VALIDATION_KEYS = {
+  required: 'validation.required',
+  email: 'validation.email',
+  phone: 'validation.phone',
+  lengthTooShort: 'validation.length.tooShort',
+  lengthTooShortPlural: 'validation.length.tooShortPlural',
+  lengthTooLong: 'validation.length.tooLong',
+  sex: 'validation.sex',
+  date: 'validation.date',
+  weight: 'validation.weight',
+  price: 'validation.price',
+  duration: 'validation.duration',
+} as const;
+
+/* ------------------------------------------------------------------ */
+/*  Helper: encode key + params into a single string                   */
+/* ------------------------------------------------------------------ */
+
+/** Encode a validation key with key=value params for interpolation. */
+export function encodeValidationError(key: string, params?: Record<string, string | number>): string {
+  if (!params || Object.keys(params).length === 0) return key;
+  const paramStr = Object.entries(params)
+    .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
+    .join('|');
+  return `${key}|${paramStr}`;
+}
+
+/**
+ * Decode a validation error string back to key + params.
+ * Used by callers in PR 2/3 to extract params for t() interpolation.
+ */
+export function decodeValidationError(error: string): { key: string; params?: Record<string, string | number> } {
+  const parts = error.split('|');
+  if (parts.length === 1) return { key: parts[0] };
+  const key = parts[0];
+  const params: Record<string, string | number> = {};
+  for (let i = 1; i < parts.length; i++) {
+    const eqIdx = parts[i].indexOf('=');
+    if (eqIdx > 0) {
+      params[parts[i].slice(0, eqIdx)] = decodeURIComponent(parts[i].slice(eqIdx + 1));
+    }
+  }
+  return { key, params };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Atomic validators                                                  */
+/* ------------------------------------------------------------------ */
 
 /**
  * Validates that a value is non-empty after trimming.
- * Returns error message or empty string.
+ * Returns i18n error key or empty string.
  */
 export function validateRequired(value: string, fieldName: string): string {
   if (!value || value.trim().length === 0) {
-    return `${fieldName} is required`;
+    return encodeValidationError(VALIDATION_KEYS.required, { field: fieldName });
   }
   return '';
 }
 
 /**
  * Validates an email address format.
- * Returns error message or empty string if valid or empty.
+ * Returns i18n error key or empty string if valid or empty.
  */
 export function validateEmail(email: string): string {
   if (!email || email.trim().length === 0) return '';
   if (!EMAIL_REGEX.test(email.trim())) {
-    return 'Please enter a valid email address';
+    return VALIDATION_KEYS.email;
   }
   return '';
 }
 
 /**
  * Validates a phone number format.
- * Returns error message or empty string if valid or empty.
+ * Returns i18n error key or empty string if valid or empty.
  */
 export function validatePhone(phone: string): string {
   if (!phone || phone.trim().length === 0) return '';
   if (!PHONE_REGEX.test(phone.trim())) {
-    return 'Please enter a valid phone number';
+    return VALIDATION_KEYS.phone;
   }
   return '';
 }
@@ -60,8 +118,8 @@ export interface ClientFormData {
 
 /**
  * Validates all fields in a client form.
- * Returns a map of field name → error message.
- * Empty error messages mean the field is valid.
+ * Returns a map of field name → i18n error key.
+ * Empty values mean the field is valid.
  */
 export function validateClientForm(data: ClientFormData): FieldErrors {
   const errors: FieldErrors = {};
@@ -106,23 +164,26 @@ export interface PetFormData {
 
 /**
  * Validates that a string's length is within [min, max].
- * Returns error message or empty string.
+ * Returns i18n error key or empty string.
  */
 export function validateLength(value: string, fieldName: string, min: number, max: number): string {
   const trimmed = value.trim();
   if (trimmed.length < min) {
-    return `${fieldName} must be at least ${min} character${min === 1 ? '' : 's'}`;
+    const key = min === 1
+      ? VALIDATION_KEYS.lengthTooShort
+      : VALIDATION_KEYS.lengthTooShortPlural;
+    return encodeValidationError(key, { field: fieldName, min });
   }
   if (trimmed.length > max) {
-    return `${fieldName} must be at most ${max} characters`;
+    return encodeValidationError(VALIDATION_KEYS.lengthTooLong, { field: fieldName, max });
   }
   return '';
 }
 
 /**
  * Validates all fields in a pet form.
- * Returns a map of field name → error message.
- * Empty error messages mean the field is valid.
+ * Returns a map of field name → i18n error key.
+ * Empty values mean the field is valid.
  */
 export function validatePetForm(data: PetFormData): FieldErrors {
   const errors: FieldErrors = {};
@@ -156,14 +217,14 @@ export function validatePetForm(data: PetFormData): FieldErrors {
 
   // Sex: must be one of known values if provided
   if (data.sex && !['unknown', 'male', 'female'].includes(data.sex)) {
-    errors.sex = 'Sex must be Unknown, Male, or Female';
+    errors.sex = VALIDATION_KEYS.sex;
   }
 
   // Date of birth: if provided, must be a valid date
   if (data.dateOfBirth) {
     const d = new Date(data.dateOfBirth);
     if (isNaN(d.getTime())) {
-      errors.dateOfBirth = 'Please enter a valid date';
+      errors.dateOfBirth = VALIDATION_KEYS.date;
     }
   }
 
@@ -171,7 +232,7 @@ export function validatePetForm(data: PetFormData): FieldErrors {
   if (data.weightKg) {
     const w = Number(data.weightKg);
     if (isNaN(w) || w <= 0) {
-      errors.weightKg = 'Weight must be a positive number';
+      errors.weightKg = VALIDATION_KEYS.weight;
     }
   }
 
@@ -191,6 +252,7 @@ export interface ServiceFormData {
 
 /**
  * Validates all fields in a service form.
+ * Returns i18n error keys.
  */
 export function validateServiceForm(data: ServiceFormData): FieldErrors {
   const errors: FieldErrors = {};
@@ -211,7 +273,7 @@ export function validateServiceForm(data: ServiceFormData): FieldErrors {
   } else {
     const priceNum = Number(data.price);
     if (isNaN(priceNum) || priceNum < 0) {
-      errors.price = 'Price must be a non-negative number';
+      errors.price = VALIDATION_KEYS.price;
     }
   }
 
@@ -219,7 +281,7 @@ export function validateServiceForm(data: ServiceFormData): FieldErrors {
   if (data.durationMinutes) {
     const dur = Number(data.durationMinutes);
     if (isNaN(dur) || dur <= 0 || !Number.isInteger(dur)) {
-      errors.durationMinutes = 'Duration must be a positive whole number';
+      errors.durationMinutes = VALIDATION_KEYS.duration;
     }
   }
 

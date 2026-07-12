@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import SearchInput from '@/components/molecules/SearchInput';
 
 export interface PageHeaderProps {
@@ -17,13 +18,15 @@ export interface PageHeaderProps {
 }
 
 export default function PageHeader({
-  searchPlaceholder = 'Search...',
+  searchPlaceholder,
   searchValue,
   onSearchChange,
   action,
   className = '',
   hideSearch = false,
 }: PageHeaderProps) {
+  const { t } = useTranslation('common');
+
   return (
     <header
       className={`sticky top-0 z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 rounded-xl border border-outline-variant/20 bg-surface-container-lowest/90 p-4 shadow-sm backdrop-blur-sm ${className}`}
@@ -34,7 +37,7 @@ export default function PageHeader({
           <SearchInput
             value={searchValue}
             onValueChange={onSearchChange}
-            placeholder={searchPlaceholder}
+            placeholder={searchPlaceholder ?? t('actions.search')}
           />
         </div>
       )}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useServices } from '@/hooks/useServices';
 import ServiceDetailCard from '@/components/organisms/ServiceDetailCard';
 import ConfirmDialog from '@/components/molecules/ConfirmDialog';
@@ -9,6 +10,7 @@ import Button from '@/components/atoms/Button';
 export default function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation(['services', 'common']);
   const serviceId = id ? Number(id) : undefined;
 
   const {
@@ -25,7 +27,6 @@ export default function ServiceDetailPage() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
 
-  // Fetch service on mount
   useEffect(() => {
     if (serviceId && serviceId > 0) {
       fetchService(serviceId);
@@ -50,7 +51,6 @@ export default function ServiceDetailPage() {
     try {
       if (confirmAction === 'deactivate') {
         await deactivateService(service.id);
-        // Re-fetch to update local state
         fetchService(service.id);
       } else if (confirmAction === 'delete') {
         await deleteService(service.id);
@@ -60,7 +60,7 @@ export default function ServiceDetailPage() {
       setShowConfirm(false);
       setConfirmAction(null);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Action failed';
+      const message = err instanceof Error ? err.message : t('detail.actionFailed');
       setActionError(message);
     } finally {
       setActionLoading(false);
@@ -73,7 +73,6 @@ export default function ServiceDetailPage() {
     }
   }
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -82,7 +81,6 @@ export default function ServiceDetailPage() {
     );
   }
 
-  // Error / 404 state
   if (error || !service) {
     const isNotFound =
       error?.toLowerCase().includes('not found') ||
@@ -92,14 +90,14 @@ export default function ServiceDetailPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-8 text-center shadow-sm">
         {isNotFound ? (
           <>
-            <h2 className="text-lg font-semibold text-gray-900">Service not found</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('detail.notFound')}</h2>
             <p className="mt-2 text-sm text-gray-500">
-              The service you are looking for does not exist or has been removed.
+              {t('detail.notFoundMessage')}
             </p>
           </>
         ) : (
           <>
-            <h2 className="text-lg font-semibold text-red-800">Error loading service</h2>
+            <h2 className="text-lg font-semibold text-red-800">{t('detail.loadError')}</h2>
             <p className="mt-2 text-sm text-red-600">{error}</p>
           </>
         )}
@@ -109,16 +107,14 @@ export default function ServiceDetailPage() {
           className="mt-6"
           onClick={() => navigate('/services')}
         >
-          &larr; Back to services
+          {t('common:actions.backToList')}
         </Button>
       </div>
     );
   }
 
-  // Pre-compute confirm message to avoid nested ternary
-  const actionVerb = confirmAction === 'deactivate' ? 'deactivate' : 'delete';
-  const confirmMessage = service
-    ? `Are you sure you want to ${actionVerb} ${service.name}?`
+  const confirmMessage = service && confirmAction
+    ? t('delete.message', { name: service.name })
     : '';
 
   return (
@@ -145,9 +141,9 @@ export default function ServiceDetailPage() {
           setConfirmAction(null);
         }}
         onConfirm={handleConfirm}
-        title={confirmAction === 'deactivate' ? 'Deactivate Service' : 'Delete Service'}
+        title={confirmAction === 'deactivate' ? t('detail.deactivateService') : t('detail.deleteService')}
         message={confirmMessage}
-        confirmLabel={confirmAction === 'deactivate' ? 'Deactivate' : 'Delete'}
+        confirmLabel={confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.delete')}
         destructive
         isLoading={actionLoading}
       />

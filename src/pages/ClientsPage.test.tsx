@@ -94,10 +94,10 @@ describe('ClientsPage', () => {
   it('renders three columns with headers', () => {
     renderPage();
 
-    // Column headers may appear in both desktop header row and mobile card labels
-    expect(screen.getByText('Cliente')).toBeInTheDocument();
-    expect(screen.getAllByText('Contacto').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Notas').length).toBeGreaterThan(0);
+    // Column headers now use i18n keys (mock returns key as value)
+    expect(screen.getByText('column.client')).toBeInTheDocument();
+    expect(screen.getAllByText('column.contact').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('column.notes').length).toBeGreaterThan(0);
 
     // "Último servicio" column no longer exists — date moved inside Cliente column
     expect(screen.queryAllByText('Último servicio')).toHaveLength(0);
@@ -149,15 +149,15 @@ describe('ClientsPage', () => {
 
   /* ── Cross-reference buttons ── */
 
-  it('renders "Ver Mascotas" cross-ref button per row', () => {
+  it('renders cross-ref button per row (i18n key)', () => {
     renderPage();
 
     const buttons = screen.getAllByTestId('crossref-action-clients-pets');
     expect(buttons).toHaveLength(2);
-    expect(buttons[0]).toHaveTextContent('Ver Mascotas');
+    expect(buttons[0]).toHaveTextContent('common:actions.viewPets');
   });
 
-  it('"Ver Mascotas" navigates to /pets?clientId=X', () => {
+  it('cross-ref navigates to /pets?clientId=X', () => {
     mockNavigate.mockClear();
     renderPage();
 
@@ -166,15 +166,15 @@ describe('ClientsPage', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/pets?clientId=42');
   });
 
-  it('renders "Ver Servicios" cross-ref button per row', () => {
+  it('renders cross-ref button per row (i18n key)', () => {
     renderPage();
 
     const buttons = screen.getAllByTestId('crossref-action-clients-services');
     expect(buttons).toHaveLength(2);
-    expect(buttons[0]).toHaveTextContent('Ver Servicios');
+    expect(buttons[0]).toHaveTextContent('common:actions.viewServices');
   });
 
-  it('"Ver Servicios" navigates to /services', () => {
+  it('cross-ref navigates to /services', () => {
     mockNavigate.mockClear();
     renderPage();
 
@@ -196,15 +196,14 @@ describe('ClientsPage', () => {
     renderPage();
 
     // ConfirmDialog should not be visible initially
-    expect(screen.queryByText('Desactivar cliente')).not.toBeInTheDocument();
+    expect(screen.queryByText('deactivate.title')).not.toBeInTheDocument();
 
     // Click delete on first row
     const deleteButtons = screen.getAllByTestId('row-action-delete');
     fireEvent.click(deleteButtons[0]);
 
-    // ConfirmDialog should now be visible with title and client name in message
-    expect(screen.getByText('Desactivar cliente')).toBeInTheDocument();
-    // María García appears both in the row and in the confirm dialog message
-    expect(screen.getAllByText(/María García/).length).toBeGreaterThanOrEqual(2);
+    // ConfirmDialog should now be visible with title and deactivate message key
+    expect(screen.getByText('deactivate.title')).toBeInTheDocument();
+    expect(screen.getByText('deactivate.message')).toBeInTheDocument();
   });
 });

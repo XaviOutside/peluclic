@@ -1,21 +1,24 @@
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface MobileNavItem {
   to: string;
   icon: string;
-  label: string;
+  labelKey: string;
   filled?: boolean;
 }
 
 const items: MobileNavItem[] = [
-  { to: '/', icon: 'home', label: 'Inicio' },
-  { to: '/calendar', icon: 'event', label: 'Calendario' },
-  { to: '/clients', icon: 'person', label: 'Clientes', filled: true },
-  { to: '/pets', icon: 'pets', label: 'Mascotas' },
-  { to: '/services', icon: 'content_cut', label: 'Servicios' },
+  { to: '/', icon: 'home', labelKey: 'mobileNav.home' },
+  { to: '/calendar', icon: 'event', labelKey: 'mobileNav.calendar' },
+  { to: '/clients', icon: 'person', labelKey: 'mobileNav.clients', filled: true },
+  { to: '/pets', icon: 'pets', labelKey: 'mobileNav.pets' },
+  { to: '/services', icon: 'content_cut', labelKey: 'mobileNav.services' },
 ];
 
 export default function MobileNav() {
+  const { t } = useTranslation('common');
+
   return (
     <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-xl bg-surface-container-highest px-4 py-2 shadow-lg md:hidden">
       {items.map((item) => (
@@ -45,7 +48,7 @@ export default function MobileNav() {
               item.filled ? 'font-bold' : ''
             }`}
           >
-            {item.label}
+            {t(item.labelKey)}
           </span>
         </NavLink>
       ))}

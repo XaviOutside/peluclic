@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "Client List"
+  },
+  "column": {
+    "client": "Client",
+    "contact": "Contact",
+    "notes": "Notes",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "form": {
+    "label": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "secondaryPhone": "Secondary Phone",
+      "address": "Address",
+      "notes": "Notes"
+    },
+    "placeholder": {
+      "name": "Client full name",
+      "email": "client@example.com",
+      "phone": "+1 (555) 123-4567",
+      "secondaryPhone": "+1 (555) 987-6543",
+      "address": "123 Main St, City",
+      "notes": "Preferences, medical info, etc."
+    },
+    "submit": {
+      "create": "Create Client",
+      "update": "Update Client"
+    }
+  },
+  "deactivate": {
+    "title": "Deactivate client",
+    "message": "Are you sure you want to deactivate {{name}}?",
+    "success": "{{name}} deactivated.",
+    "error": "Error deactivating."
+  },
+  "detail": {
+    "notFound": "Client not found",
+    "notFoundMessage": "The client you are looking for does not exist or has been removed.",
+    "loadError": "Error loading client",
+    "pets": "Pets",
+    "addPet": "Add Pet",
+    "servicesByPet": "Services by Pet",
+    "linkService": "Link a Service",
+    "noLinkedServices": "No linked services",
+    "selectService": "Select a service",
+    "selectServicePlaceholder": "— Select a service —",
+    "noAvailableServices": "No available services to link.",
+    "link": "Link",
+    "linkedServices": "Linked Services",
+    "actionFailed": "Action failed",
+    "createFail": "Failed to create client. Please try again.",
+    "updateFail": "Failed to update client. Please try again."
+  }
+}

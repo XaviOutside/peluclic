@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 export interface ModuleTab {
   /** Unique identifier for the tab */
   id: string;
@@ -26,11 +28,13 @@ export default function ModuleTabs({
   onTabChange,
   className = '',
 }: ModuleTabsProps) {
+  const { t } = useTranslation('common');
+
   return (
     <nav
       className={`flex border-b border-outline-variant overflow-x-auto ${className}`}
       role="tablist"
-      aria-label="Module tabs"
+      aria-label={t('moduleTabs.ariaLabel')}
       data-testid="module-tabs"
     >
       {tabs.map((tab) => {

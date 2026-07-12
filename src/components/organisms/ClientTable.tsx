@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Client } from '@/types/client';
 import StatusBadge from '@/components/molecules/StatusBadge';
 import Button from '@/components/atoms/Button';
@@ -26,6 +27,7 @@ function ActionsDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation('common');
 
   // Close on click outside
   useEffect(() => {
@@ -52,7 +54,7 @@ function ActionsDropdown({
         variant="ghost"
         size="sm"
         onClick={() => setOpen((prev) => !prev)}
-        aria-label="Actions"
+        aria-label={t('actions.actions')}
       >
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
           <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
@@ -66,14 +68,14 @@ function ActionsDropdown({
               onClick={handleAction(onView)}
               className="block w-full px-4 py-2 text-left text-body-md text-on-surface hover:bg-surface-container transition-colors"
             >
-              View
+              {t('actions.view')}
             </button>
             <button
               type="button"
               onClick={handleAction(onEdit)}
               className="block w-full px-4 py-2 text-left text-body-md text-on-surface hover:bg-surface-container transition-colors"
             >
-              Edit
+              {t('actions.edit')}
             </button>
             {client.status === 'active' ? (
               <button
@@ -81,7 +83,7 @@ function ActionsDropdown({
                 onClick={handleAction(onDeactivate)}
                 className="block w-full px-4 py-2 text-left text-body-md text-error hover:bg-error-container/30 transition-colors"
               >
-                Deactivate
+                {t('actions.deactivate')}
               </button>
             ) : (
               <button
@@ -89,7 +91,7 @@ function ActionsDropdown({
                 onClick={handleAction(onReactivate)}
                 className="block w-full px-4 py-2 text-left text-body-md text-primary-container hover:bg-primary-container/20 transition-colors"
               >
-                Reactivate
+                {t('actions.reactivate')}
               </button>
             )}
           </div>
@@ -116,13 +118,15 @@ export default function ClientTable({
   onDeactivate,
   onReactivate,
 }: ClientTableProps) {
+  const { t } = useTranslation(['common', 'clients']);
+
   if (clients.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-outline-variant bg-surface-container-lowest p-12 text-center">
         <svg className="mx-auto h-12 w-12 text-outline" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
-        <p className="mt-4 text-body-md text-on-surface-variant">No clients found.</p>
+        <p className="mt-4 text-body-md text-on-surface-variant">{t('empty.noClients', { ns: 'common' })}</p>
       </div>
     );
   }
@@ -133,26 +137,26 @@ export default function ClientTable({
         <thead className="hidden md:table-header-group">
           <tr className="bg-surface-container">
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Name
+              {t('form.label.name', { ns: 'clients' })}
             </th>
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Email
+              {t('form.label.email', { ns: 'clients' })}
             </th>
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Phone
+              {t('form.label.phone', { ns: 'clients' })}
             </th>
             <th className="px-4 py-3 text-left text-label-md text-on-surface-variant">
-              Status
+              {t('column.status', { ns: 'clients' })}
             </th>
             <th className="px-4 py-3 text-right text-label-md text-on-surface-variant">
-              Actions
+              {t('actions.actions', { ns: 'common' })}
             </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-outline-variant">
           {clients.map((client) => (
             <tr key={client.id} className="flex flex-col border-b border-outline-variant last:border-b-0 md:table-row md:border-b-0 hover:bg-surface-container transition-colors">
-              <Td label="Name">
+              <Td label={t('form.label.name', { ns: 'clients' })}>
                 <div className="flex items-center gap-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-container/15 text-label-md font-headline font-semibold text-primary-container">
                     {client.name.charAt(0).toUpperCase()}
@@ -160,7 +164,7 @@ export default function ClientTable({
                   <span className="font-headline font-medium text-on-surface">{client.name}</span>
                 </div>
               </Td>
-              <Td label="Email">
+              <Td label={t('form.label.email', { ns: 'clients' })}>
                 <a
                   href={`mailto:${client.email}`}
                   className="text-primary-container hover:underline"
@@ -169,8 +173,8 @@ export default function ClientTable({
                   {client.email}
                 </a>
               </Td>
-              <Td label="Phone">{client.phone}</Td>
-              <Td label="Status">
+              <Td label={t('form.label.phone', { ns: 'clients' })}>{client.phone}</Td>
+              <Td label={t('column.status', { ns: 'clients' })}>
                 <StatusBadge status={client.status} />
               </Td>
               <td className="px-4 py-3 text-right md:table-cell">

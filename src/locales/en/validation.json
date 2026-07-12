@@ -1,0 +1,15 @@
+{
+  "required": "{{field}} is required",
+  "email": "Please enter a valid email address",
+  "phone": "Please enter a valid phone number",
+  "length": {
+    "tooShort": "{{field}} must be at least {{min}} character",
+    "tooShortPlural": "{{field}} must be at least {{min}} characters",
+    "tooLong": "{{field}} must be at most {{max}} characters"
+  },
+  "sex": "Sex must be Unknown, Male, or Female",
+  "date": "Please enter a valid date",
+  "weight": "Weight must be a positive number",
+  "price": "Price must be a non-negative number",
+  "duration": "Duration must be a positive whole number"
+}

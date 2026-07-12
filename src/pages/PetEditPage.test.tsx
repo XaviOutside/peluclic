@@ -77,7 +77,7 @@ beforeEach(() => {
 /** Helper: wait for the page to finish loading and render the form */
 async function waitForFormReady() {
   await waitFor(() => {
-    expect(screen.getByRole('heading', { name: 'Edit Pet' })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('form.placeholder.name')).toBeInTheDocument();
   });
 }
 
@@ -100,18 +100,16 @@ describe('PetEditPage', () => {
     renderPage('999');
 
     await waitFor(() => {
-      expect(screen.getByText('Pet not found')).toBeInTheDocument();
+      expect(screen.getByText('detail.notFound')).toBeInTheDocument();
     });
   });
 
   it('renders form pre-populated with pet data', async () => {
-    // Fetch pet
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve(existingPet),
     });
-    // Fetch clients
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -122,16 +120,15 @@ describe('PetEditPage', () => {
 
     await waitForFormReady();
 
-    const nameInput = screen.getByLabelText(/^Name/) as HTMLInputElement;
-    const speciesInput = screen.getByLabelText(/^Species/) as HTMLInputElement;
-    const breedInput = screen.getByLabelText(/^Breed/) as HTMLInputElement;
-    const clientSelect = screen.getByLabelText('Client') as HTMLSelectElement;
+    const nameInput = screen.getByPlaceholderText('form.placeholder.name') as HTMLInputElement;
+    const speciesInput = screen.getByPlaceholderText('form.placeholder.species') as HTMLInputElement;
+    const breedInput = screen.getByPlaceholderText('form.placeholder.breed') as HTMLInputElement;
+    const clientSelect = screen.getByLabelText('form.label.client') as HTMLSelectElement;
 
     expect(nameInput.value).toBe('Max');
     expect(speciesInput.value).toBe('Dog');
     expect(breedInput.value).toBe('Golden Retriever');
 
-    // Client dropdown should show active clients
     expect(clientSelect.options).toHaveLength(2);
     expect(clientSelect.options[0].textContent).toBe('Alice Johnson');
     expect(clientSelect.options[1].textContent).toBe('Bob Smith');
@@ -140,19 +137,16 @@ describe('PetEditPage', () => {
   it('updates pet successfully and redirects to detail page', async () => {
     const user = userEvent.setup();
 
-    // Fetch pet
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve(existingPet),
     });
-    // Fetch clients
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
-    // Update pet
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -162,12 +156,11 @@ describe('PetEditPage', () => {
     renderPage();
     await waitForFormReady();
 
-    // Clear and retype name
-    const nameInput = screen.getByLabelText(/^Name/) as HTMLInputElement;
+    const nameInput = screen.getByPlaceholderText('form.placeholder.name') as HTMLInputElement;
     await user.clear(nameInput);
     await user.type(nameInput, 'Max Updated');
 
-    await user.click(screen.getByRole('button', { name: 'Update Pet' }));
+    await user.click(screen.getByRole('button', { name: /form.submit.update/i }));
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/pets/1');
@@ -177,19 +170,16 @@ describe('PetEditPage', () => {
   it('shows field-level validation errors on 422 response', async () => {
     const user = userEvent.setup();
 
-    // Fetch pet
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve(existingPet),
     });
-    // Fetch clients
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
-    // Update returns 422
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 422,
@@ -206,7 +196,7 @@ describe('PetEditPage', () => {
     renderPage();
     await waitForFormReady();
 
-    await user.click(screen.getByRole('button', { name: 'Update Pet' }));
+    await user.click(screen.getByRole('button', { name: /form.submit.update/i }));
 
     await waitFor(() => {
       expect(screen.getByText('A pet with this name already exists')).toBeInTheDocument();
@@ -216,19 +206,16 @@ describe('PetEditPage', () => {
   it('shows general error on server failure', async () => {
     const user = userEvent.setup();
 
-    // Fetch pet
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve(existingPet),
     });
-    // Fetch clients
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
       json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
-    // Update returns 500
     mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
@@ -242,7 +229,7 @@ describe('PetEditPage', () => {
     renderPage();
     await waitForFormReady();
 
-    await user.click(screen.getByRole('button', { name: 'Update Pet' }));
+    await user.click(screen.getByRole('button', { name: /form.submit.update/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/internal server error/i)).toBeInTheDocument();
@@ -266,7 +253,7 @@ describe('PetEditPage', () => {
 
     await waitForFormReady();
 
-    await user.click(screen.getByRole('button', { name: /← Back/ }));
+    await user.click(screen.getByRole('button', { name: /common:actions.backToList/i }));
 
     expect(mockNavigate).toHaveBeenCalledWith('/pets/1');
   });

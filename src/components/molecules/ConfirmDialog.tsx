@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Modal from '@/components/atoms/Modal';
 import Button from '@/components/atoms/Button';
 
@@ -19,11 +20,13 @@ export default function ConfirmDialog({
   onConfirm,
   title,
   message,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel,
+  cancelLabel,
   destructive = false,
   isLoading = false,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation('common');
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
       <p className="mb-6 text-body-md text-on-surface-variant">{message}</p>
@@ -33,14 +36,14 @@ export default function ConfirmDialog({
           onClick={onClose}
           disabled={isLoading}
         >
-          {cancelLabel}
+          {cancelLabel ?? t('actions.cancel')}
         </Button>
         <Button
           variant={destructive ? 'danger' : 'primary'}
           onClick={onConfirm}
           loading={isLoading}
         >
-          {confirmLabel}
+          {confirmLabel ?? t('actions.confirm')}
         </Button>
       </div>
     </Modal>

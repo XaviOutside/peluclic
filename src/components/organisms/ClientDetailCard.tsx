@@ -1,4 +1,5 @@
 import type { Client } from '@/types/client';
+import { useTranslation } from 'react-i18next';
 import StatusBadge from '@/components/molecules/StatusBadge';
 import Button from '@/components/atoms/Button';
 import { formatDate } from '@/utils/format';
@@ -16,14 +17,15 @@ export interface ClientDetailCardProps {
 interface DetailRowProps {
   label: string;
   value: string | null | undefined;
+  notProvided: string;
 }
 
-function DetailRow({ label, value }: DetailRowProps) {
+function DetailRow({ label, value, notProvided }: DetailRowProps) {
   return (
     <div className="flex flex-col gap-1 py-3 sm:flex-row sm:gap-4">
       <dt className="min-w-[140px] text-label-md text-on-surface-variant">{label}</dt>
       <dd className="text-body-md text-on-surface">
-        {value || <span className="italic text-outline">Not provided</span>}
+        {value || <span className="italic text-outline">{notProvided}</span>}
       </dd>
     </div>
   );
@@ -38,6 +40,9 @@ export default function ClientDetailCard({
   deactivateLoading = false,
   reactivateLoading = false,
 }: ClientDetailCardProps) {
+  const { t } = useTranslation('common');
+  const notProvided = t('detail.notProvided');
+
   return (
     <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest shadow-card">
       {/* Header */}
@@ -48,7 +53,7 @@ export default function ClientDetailCard({
             <StatusBadge status={client.status} />
           </div>
           <Button variant="ghost" size="sm" onClick={onBack}>
-            &larr; Back to list
+            {t('actions.backToList')}
           </Button>
         </div>
       </div>
@@ -56,13 +61,13 @@ export default function ClientDetailCard({
       {/* Body */}
       <div className="px-6 py-4">
         <dl className="divide-y divide-outline-variant">
-          <DetailRow label="Email" value={client.email} />
-          <DetailRow label="Phone" value={client.phone} />
-          <DetailRow label="Secondary Phone" value={client.phone2} />
-          <DetailRow label="Address" value={client.address} />
-          <DetailRow label="Notes" value={client.notes} />
-          <DetailRow label="Created" value={formatDate(client.createdAt)} />
-          <DetailRow label="Updated" value={formatDate(client.updatedAt)} />
+          <DetailRow label={t('detail.email')} value={client.email} notProvided={notProvided} />
+          <DetailRow label={t('detail.phone')} value={client.phone} notProvided={notProvided} />
+          <DetailRow label={t('detail.secondaryPhone')} value={client.phone2} notProvided={notProvided} />
+          <DetailRow label={t('detail.address')} value={client.address} notProvided={notProvided} />
+          <DetailRow label={t('detail.notes')} value={client.notes} notProvided={notProvided} />
+          <DetailRow label={t('detail.created')} value={formatDate(client.createdAt)} notProvided={notProvided} />
+          <DetailRow label={t('detail.updated')} value={formatDate(client.updatedAt)} notProvided={notProvided} />
         </dl>
       </div>
 
@@ -70,15 +75,15 @@ export default function ClientDetailCard({
       <div className="flex flex-col gap-2 border-t border-outline-variant bg-surface-container px-6 py-4 sm:flex-row sm:justify-end">
         {client.status === 'active' ? (
           <Button variant="danger" onClick={onDeactivate} loading={deactivateLoading}>
-            Deactivate
+            {t('actions.deactivate')}
           </Button>
         ) : (
           <Button variant="primary" onClick={onReactivate} loading={reactivateLoading}>
-            Reactivate
+            {t('actions.reactivate')}
           </Button>
         )}
         <Button variant="secondary" onClick={onEdit}>
-          Edit
+          {t('actions.edit')}
         </Button>
       </div>
     </div>

@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "title": "Manage your grooming salon with ease.",
+    "subtitle": "Pawsitive Manager helps you streamline appointments, track customer preferences, and provide the best care for every pet.",
+    "cta": "Free trial",
+    "demo": "View Demo"
+  },
+  "features": {
+    "title": "Everything you need to run your salon",
+    "scheduling": {
+      "title": "Smart Scheduling",
+      "description": "Effortlessly manage your daily appointments with our intuitive drag-and-drop calendar. Never double-book again."
+    },
+    "clients": {
+      "title": "Client Directory",
+      "description": "Keep all client details, contact info, and history in one secure place."
+    },
+    "pets": {
+      "title": "Pet Profiles",
+      "description": "Track breeds, allergies, grooming preferences, and behavioral notes."
+    },
+    "services": {
+      "title": "Service Customization",
+      "description": "Define your services, set durations, and assign specific groomers to specialized tasks to optimize your workflow."
+    }
+  },
+  "footer": {
+    "brand": "Pawsitive Manager",
+    "copyright": "© 2024 Pawsitive Grooming Solutions. All paws reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact Us"
+  },
+  "register": {
+    "title": "Coming Soon",
+    "message": "Registration is not yet available. Please check back later.",
+    "backHome": "Back to home"
+  }
+}

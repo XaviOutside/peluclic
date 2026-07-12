@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useServices } from '@/hooks/useServices';
 import type { HttpError } from '@/services/http';
 import ServiceForm from '@/components/molecules/ServiceForm';
@@ -9,6 +10,7 @@ import type { FieldErrors } from '@/utils/validation';
 
 export default function ServiceCreatePage() {
   const navigate = useNavigate();
+  const { t } = useTranslation(['services', 'common']);
   const { createService } = useServices();
 
   const [serverErrors, setServerErrors] = useState<FieldErrors | null>(null);
@@ -21,7 +23,6 @@ export default function ServiceCreatePage() {
     setIsSubmitting(true);
 
     try {
-      // Convert dollars to cents for API
       const priceInCents = Math.round(Number(data.price) * 100);
       const service = await createService({
         name: data.name.trim(),
@@ -40,7 +41,7 @@ export default function ServiceCreatePage() {
         setServerErrors(httpErr.fieldErrors);
       } else {
         setGeneralError(
-          httpErr.message || 'Failed to create service. Please try again.',
+          httpErr.message || t('detail.createFail'),
         );
       }
     } finally {
@@ -51,9 +52,9 @@ export default function ServiceCreatePage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Create Service</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{t('common:actions.createService')}</h1>
         <Button variant="ghost" size="sm" onClick={() => navigate('/services')}>
-          &larr; Back
+          {t('common:actions.backToList')}
         </Button>
       </div>
 

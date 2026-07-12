@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ export interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, children, title }: ModalProps) {
+  const { t } = useTranslation('common');
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape key
@@ -48,7 +50,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
-      aria-label={title ?? 'Dialog'}
+      aria-label={title ?? t('actions.confirm')}
     >
       <div className="mx-4 w-full max-w-md rounded-xl bg-surface-container-lowest p-6 shadow-modal">
         {title && (

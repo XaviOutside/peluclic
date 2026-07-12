@@ -14,7 +14,8 @@ describe('SearchInput', () => {
   it('renders default placeholder when none provided', () => {
     render(<SearchInput value="" onChange={() => {}} />);
     const input = screen.getByTestId('search-input');
-    expect(input).toHaveAttribute('placeholder', 'Search...');
+    // Default placeholder now uses i18n key
+    expect(input).toHaveAttribute('placeholder', 'actions.search');
   });
 
   it('calls onValueChange when user types', () => {

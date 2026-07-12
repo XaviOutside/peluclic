@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Pet } from '@/types/pet';
 import type { Service } from '@/types/service';
 import { useClient } from '@/hooks/useClient';
@@ -13,13 +14,13 @@ import Spinner from '@/components/atoms/Spinner';
 import Button from '@/components/atoms/Button';
 
 function PetServiceCard({ pet }: { pet: Pet }) {
+  const { t } = useTranslation('services');
   const {
     services,
     isLoading,
     error,
   } = useServices({ petId: pet.id });
 
-  // Only render if there are linked services or still loading
   if (isLoading) {
     return (
       <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
@@ -41,7 +42,7 @@ function PetServiceCard({ pet }: { pet: Pet }) {
   }
 
   if (services.length === 0) {
-    return null; // Hidden when no linked services
+    return null;
   }
 
   return (
@@ -51,7 +52,7 @@ function PetServiceCard({ pet }: { pet: Pet }) {
         {services.map((svc: Service) => (
           <div key={svc.id} className="flex justify-between items-center">
             <span>{svc.name}</span>
-            <span className="text-gray-400">${svc.price.toFixed(2)}</span>
+            <span className="text-gray-400">{t('format.priceSymbol', { price: svc.price.toFixed(2) })}</span>
           </div>
         ))}
       </div>
@@ -62,13 +63,13 @@ function PetServiceCard({ pet }: { pet: Pet }) {
 export default function ClientDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation(['clients', 'common']);
   const clientId = id ? Number(id) : undefined;
 
   const { client, isLoading, error, refetch } = useClient(clientId);
   const deactivateMutation = useDeactivateClient();
   const reactivateMutation = useReactivateClient();
 
-  // Embedded pet list
   const {
     pets,
     isLoading: petsLoading,
@@ -123,7 +124,7 @@ export default function ClientDetailPage() {
       setConfirmAction(null);
       refetch(client.id);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Action failed';
+      const message = err instanceof Error ? err.message : t('detail.actionFailed');
       setActionError(message);
     }
   }
@@ -134,7 +135,6 @@ export default function ClientDetailPage() {
     }
   }
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -143,7 +143,6 @@ export default function ClientDetailPage() {
     );
   }
 
-  // Error / 404 state
   if (error || !client) {
     const isNotFound =
       error?.toLowerCase().includes('not found') ||
@@ -154,14 +153,14 @@ export default function ClientDetailPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-8 text-center shadow-sm">
         {isNotFound ? (
           <>
-            <h2 className="text-lg font-semibold text-gray-900">Client not found</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('detail.notFound')}</h2>
             <p className="mt-2 text-sm text-gray-500">
-              The client you are looking for does not exist or has been removed.
+              {t('detail.notFoundMessage')}
             </p>
           </>
         ) : (
           <>
-            <h2 className="text-lg font-semibold text-red-800">Error loading client</h2>
+            <h2 className="text-lg font-semibold text-red-800">{t('detail.loadError')}</h2>
             <p className="mt-2 text-sm text-red-600">{error}</p>
           </>
         )}
@@ -171,7 +170,7 @@ export default function ClientDetailPage() {
           className="mt-6"
           onClick={() => navigate('/clients')}
         >
-          &larr; Back to clients
+          {t('common:actions.backToList')}
         </Button>
       </div>
     );
@@ -203,14 +202,14 @@ export default function ClientDetailPage() {
         }}
         onConfirm={handleConfirm}
         title={
-          confirmAction === 'deactivate' ? 'Deactivate Client' : 'Reactivate Client'
+          confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')
         }
         message={
           confirmAction === 'deactivate'
-            ? `Are you sure you want to deactivate ${client.name}? They will no longer appear in active searches.`
-            : `Are you sure you want to reactivate ${client.name}?`
+            ? t('deactivate.message', { name: client.name })
+            : t('deactivate.message', { name: client.name })
         }
-        confirmLabel={confirmAction === 'deactivate' ? 'Deactivate' : 'Reactivate'}
+        confirmLabel={confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')}
         destructive={confirmAction === 'deactivate'}
         isLoading={deactivateMutation.isLoading || reactivateMutation.isLoading}
       />
@@ -218,13 +217,13 @@ export default function ClientDetailPage() {
       {/* Embedded pet list */}
       <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Pets</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t('detail.pets')}</h2>
           <Button
             variant="primary"
             size="sm"
             onClick={() => navigate('/pets/new')}
           >
-            Add Pet
+            {t('detail.addPet')}
           </Button>
         </div>
         <div className="px-6 py-4">
@@ -248,11 +247,11 @@ export default function ClientDetailPage() {
         </div>
       </div>
 
-      {/* Services by Pet — per-pet linked services */}
+      {/* Services by Pet */}
       {!petsLoading && !petsError && pets.length > 0 && (
         <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
           <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-            <h2 className="text-lg font-semibold text-gray-900">Services by Pet</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('detail.servicesByPet')}</h2>
           </div>
           <div className="px-6 py-4 space-y-3">
             {pets.map((pet) => (

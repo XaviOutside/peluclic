@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useClient } from '@/hooks/useClient';
 import { useUpdateClient } from '@/hooks/useClientMutations';
 import type { HttpError } from '@/services/http';
@@ -12,6 +13,7 @@ import type { FieldErrors } from '@/utils/validation';
 export default function ClientEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation(['clients', 'common']);
   const clientId = id ? Number(id) : undefined;
 
   const { client, isLoading, error } = useClient(clientId);
@@ -42,13 +44,12 @@ export default function ClientEditPage() {
         setServerErrors(httpErr.fieldErrors);
       } else {
         setGeneralError(
-          httpErr.message || 'Failed to update client. Please try again.',
+          httpErr.message || t('detail.updateFail'),
         );
       }
     }
   }
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -57,13 +58,12 @@ export default function ClientEditPage() {
     );
   }
 
-  // Error / not found
   if (error || !client) {
     return (
       <div className="rounded-lg border border-gray-200 bg-white p-8 text-center shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">Client not found</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('detail.notFound')}</h2>
         <p className="mt-2 text-sm text-gray-500">
-          The client you are trying to edit does not exist.
+          {t('detail.editNotFoundMessage') || t('detail.notFoundMessage')}
         </p>
         <Button
           variant="secondary"
@@ -71,7 +71,7 @@ export default function ClientEditPage() {
           className="mt-6"
           onClick={() => navigate('/clients')}
         >
-          &larr; Back to clients
+          {t('common:actions.backToList')}
         </Button>
       </div>
     );
@@ -80,13 +80,13 @@ export default function ClientEditPage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Client</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{t('common:actions.updateClient')}</h1>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate(`/clients/${client.id}`)}
         >
-          &larr; Back
+          {t('common:actions.backToList')}
         </Button>
       </div>
 

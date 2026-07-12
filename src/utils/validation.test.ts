@@ -5,15 +5,21 @@ import {
   validatePhone,
   validateClientForm,
   isValid,
+  encodeValidationError,
+  VALIDATION_KEYS,
 } from './validation';
 
 describe('validateRequired', () => {
   it('returns error for empty string', () => {
-    expect(validateRequired('', 'Name')).toBe('Name is required');
+    expect(validateRequired('', 'Name')).toBe(
+      encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' }),
+    );
   });
 
   it('returns error for whitespace-only string', () => {
-    expect(validateRequired('   ', 'Name')).toBe('Name is required');
+    expect(validateRequired('   ', 'Name')).toBe(
+      encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' }),
+    );
   });
 
   it('returns empty string for valid value', () => {
@@ -27,7 +33,7 @@ describe('validateEmail', () => {
   });
 
   it('returns error for invalid email', () => {
-    expect(validateEmail('not-an-email')).toBe('Please enter a valid email address');
+    expect(validateEmail('not-an-email')).toBe(VALIDATION_KEYS.email);
   });
 
   it('returns empty for valid email', () => {
@@ -53,7 +59,7 @@ describe('validatePhone', () => {
   });
 
   it('returns error for too-short input', () => {
-    expect(validatePhone('12')).toBe('Please enter a valid phone number');
+    expect(validatePhone('12')).toBe(VALIDATION_KEYS.phone);
   });
 });
 
@@ -66,9 +72,15 @@ describe('validateClientForm', () => {
       phone2: '',
       address: '',
     });
-    expect(errors.name).toBe('Name is required');
-    expect(errors.email).toBe('Email is required');
-    expect(errors.phone).toBe('Phone is required');
+    expect(errors.name).toBe(
+      encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' }),
+    );
+    expect(errors.email).toBe(
+      encodeValidationError(VALIDATION_KEYS.required, { field: 'Email' }),
+    );
+    expect(errors.phone).toBe(
+      encodeValidationError(VALIDATION_KEYS.required, { field: 'Phone' }),
+    );
     expect(errors.phone2).toBeUndefined();
   });
 
@@ -80,7 +92,7 @@ describe('validateClientForm', () => {
       phone2: '',
       address: '',
     });
-    expect(errors.email).toBe('Please enter a valid email address');
+    expect(errors.email).toBe(VALIDATION_KEYS.email);
   });
 
   it('returns no errors for valid data', () => {
@@ -102,7 +114,7 @@ describe('validateClientForm', () => {
       phone2: 'bad',
       address: '',
     });
-    expect(errors.phone2).toBe('Please enter a valid phone number');
+    expect(errors.phone2).toBe(VALIDATION_KEYS.phone);
   });
 });
 
@@ -116,6 +128,9 @@ describe('isValid', () => {
   });
 
   it('returns false when any error has a message', () => {
-    expect(isValid({ name: 'Name is required', email: '' })).toBe(false);
+    expect(isValid({
+      name: encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' }),
+      email: '',
+    })).toBe(false);
   });
 });

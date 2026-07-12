@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useCreateClient } from '@/hooks/useClientMutations';
 import type { HttpError } from '@/services/http';
 import ClientForm from '@/components/molecules/ClientForm';
@@ -9,6 +10,7 @@ import type { FieldErrors } from '@/utils/validation';
 
 export default function ClientCreatePage() {
   const navigate = useNavigate();
+  const { t } = useTranslation(['clients', 'common']);
   const createMutation = useCreateClient();
   const [serverErrors, setServerErrors] = useState<FieldErrors | null>(null);
   const [generalError, setGeneralError] = useState<string | null>(null);
@@ -35,7 +37,7 @@ export default function ClientCreatePage() {
         setServerErrors(httpErr.fieldErrors);
       } else {
         setGeneralError(
-          httpErr.message || 'Failed to create client. Please try again.',
+          httpErr.message || t('detail.createFail'),
         );
       }
     }
@@ -44,9 +46,9 @@ export default function ClientCreatePage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Create Client</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{t('common:actions.createClient')}</h1>
         <Button variant="ghost" size="sm" onClick={() => navigate('/clients')}>
-          &larr; Back
+          {t('common:actions.backToList')}
         </Button>
       </div>
 

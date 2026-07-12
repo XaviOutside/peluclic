@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useCreatePet } from '@/hooks/usePetMutations';
 import { listClients } from '@/services/client';
 import type { HttpError } from '@/services/http';
@@ -12,18 +13,16 @@ import type { FieldErrors } from '@/utils/validation';
 
 export default function PetCreatePage() {
   const navigate = useNavigate();
+  const { t } = useTranslation(['pets', 'common']);
   const createMutation = useCreatePet();
 
-  // Client options for the pet form dropdown
   const [clientOptions, setClientOptions] = useState<SelectOption[]>([]);
   const [clientsLoading, setClientsLoading] = useState(true);
   const [clientsError, setClientsError] = useState<string | null>(null);
 
-  // Form error states
   const [serverErrors, setServerErrors] = useState<FieldErrors | null>(null);
   const [generalError, setGeneralError] = useState<string | null>(null);
 
-  // Fetch active clients on mount for the owner dropdown
   useEffect(() => {
     let cancelled = false;
 
@@ -41,7 +40,7 @@ export default function PetCreatePage() {
       } catch (err) {
         if (cancelled) return;
         const message =
-          err instanceof Error ? err.message : 'Failed to load clients';
+          err instanceof Error ? err.message : t('detail.loadClientsFail');
         setClientsError(message);
       } finally {
         if (!cancelled) {
@@ -55,7 +54,7 @@ export default function PetCreatePage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   async function handleSubmit(data: PetFormData) {
     setServerErrors(null);
@@ -81,13 +80,12 @@ export default function PetCreatePage() {
         setServerErrors(httpErr.fieldErrors);
       } else {
         setGeneralError(
-          httpErr.message || 'Failed to create pet. Please try again.',
+          httpErr.message || t('detail.createFail'),
         );
       }
     }
   }
 
-  // Loading state while fetching clients
   if (clientsLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -96,7 +94,6 @@ export default function PetCreatePage() {
     );
   }
 
-  // Error fetching clients
   if (clientsError) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
@@ -108,9 +105,9 @@ export default function PetCreatePage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Create Pet</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{t('common:actions.createPet')}</h1>
         <Button variant="ghost" size="sm" onClick={() => navigate('/pets')}>
-          &larr; Back
+          {t('common:actions.backToList')}
         </Button>
       </div>
 

@@ -56,37 +56,38 @@ describe('ClientTable', () => {
 
   it('renders status badges', () => {
     render(<ClientTable clients={mockClients} {...handlers} />);
-    // "Active" may appear in both table cell and mobile label, use getAllByText
-    const activeBadges = screen.getAllByText('Active');
+    // StatusBadge was i18n'd — returns i18n keys
+    const activeBadges = screen.getAllByText('status.active');
     expect(activeBadges.length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText('Inactive')).toBeInTheDocument();
+    expect(screen.getByText('status.inactive')).toBeInTheDocument();
   });
 
   it('shows empty state when no clients', () => {
     render(<ClientTable clients={[]} {...handlers} />);
-    expect(screen.getByText('No clients found.')).toBeInTheDocument();
+    expect(screen.getByText('empty.noClients')).toBeInTheDocument();
   });
 
   it('opens actions dropdown and calls onView', () => {
     render(<ClientTable clients={mockClients} {...handlers} />);
 
-    const actionButtons = screen.getAllByLabelText('Actions');
+    // "Actions" aria-label was i18n'd
+    const actionButtons = screen.getAllByLabelText('actions.actions');
     fireEvent.click(actionButtons[0]);
 
-    expect(screen.getByText('View')).toBeInTheDocument();
-    expect(screen.getByText('Edit')).toBeInTheDocument();
-    expect(screen.getByText('Deactivate')).toBeInTheDocument();
+    expect(screen.getByText('actions.view')).toBeInTheDocument();
+    expect(screen.getByText('actions.edit')).toBeInTheDocument();
+    expect(screen.getByText('actions.deactivate')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText('View'));
+    fireEvent.click(screen.getByText('actions.view'));
     expect(handlers.onView).toHaveBeenCalledWith(mockClients[0]);
   });
 
   it('shows Reactivate for inactive clients', () => {
     render(<ClientTable clients={mockClients} {...handlers} />);
 
-    const actionButtons = screen.getAllByLabelText('Actions');
+    const actionButtons = screen.getAllByLabelText('actions.actions');
     fireEvent.click(actionButtons[1]);
 
-    expect(screen.getByText('Reactivate')).toBeInTheDocument();
+    expect(screen.getByText('actions.reactivate')).toBeInTheDocument();
   });
 });

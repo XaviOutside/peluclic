@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import Avatar from '@/components/atoms/Avatar';
 import Spinner from '@/components/atoms/Spinner';
 import Pagination from '@/components/molecules/Pagination';
@@ -112,11 +113,14 @@ export default function DataTable<T>({
   loading = false,
   error = null,
   onRetry,
-  emptyMessage = 'No items found.',
+  emptyMessage,
   showHeader = true,
   className = '',
   pagination,
 }: DataTableProps<T>) {
+  const { t } = useTranslation('common');
+  const resolvedEmptyMessage = emptyMessage ?? t('empty.noItems');
+
   /* ── Loading state ── */
   if (loading && data.length === 0) {
     return (
@@ -147,7 +151,7 @@ export default function DataTable<T>({
             className="rounded-md bg-primary-container px-4 py-2 text-label-md font-headline text-on-primary-container transition-colors hover:brightness-110"
             data-testid="datatable-retry"
           >
-            Try Again
+            {t('actions.tryAgain')}
           </button>
         )}
       </div>
@@ -164,7 +168,7 @@ export default function DataTable<T>({
         <span className="material-symbols-outlined text-4xl text-outline mb-3" aria-hidden="true">
           search_off
         </span>
-        <p className="text-body-md text-on-surface-variant">{emptyMessage}</p>
+        <p className="text-body-md text-on-surface-variant">{resolvedEmptyMessage}</p>
       </div>
     );
   }
@@ -192,7 +196,7 @@ export default function DataTable<T>({
             </div>
           ))}
           {hasActions && (
-            <div className={`${actionSpan} text-right`}>Actions</div>
+            <div className={`${actionSpan} text-right`}>{t('actions.actions')}</div>
           )}
         </div>
       )}

@@ -1,0 +1,58 @@
+{
+  "list": {
+    "title": "Lista de Clientes"
+  },
+  "column": {
+    "client": "Cliente",
+    "contact": "Contacto",
+    "notes": "Notas",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "form": {
+    "label": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "phone": "Teléfono",
+      "secondaryPhone": "Teléfono secundario",
+      "address": "Dirección",
+      "notes": "Notas"
+    },
+    "placeholder": {
+      "name": "Nombre completo del cliente",
+      "email": "cliente@ejemplo.com",
+      "phone": "+52 (555) 123-4567",
+      "secondaryPhone": "+52 (555) 987-6543",
+      "address": "Calle Principal 123, Ciudad",
+      "notes": "Preferencias, información médica, etc."
+    },
+    "submit": {
+      "create": "Crear Cliente",
+      "update": "Actualizar Cliente"
+    }
+  },
+  "deactivate": {
+    "title": "Desactivar cliente",
+    "message": "¿Estás seguro de que deseas desactivar a {{name}}?",
+    "success": "{{name}} desactivado.",
+    "error": "Error al desactivar."
+  },
+  "detail": {
+    "notFound": "Cliente no encontrado",
+    "notFoundMessage": "El cliente que buscas no existe o ha sido eliminado.",
+    "loadError": "Error al cargar el cliente",
+    "pets": "Mascotas",
+    "addPet": "Añadir mascota",
+    "servicesByPet": "Servicios por mascota",
+    "linkService": "Vincular un servicio",
+    "noLinkedServices": "Sin servicios vinculados",
+    "selectService": "Seleccionar un servicio",
+    "selectServicePlaceholder": "— Seleccionar un servicio —",
+    "noAvailableServices": "No hay servicios disponibles para vincular.",
+    "link": "Vincular",
+    "linkedServices": "Servicios Vinculados",
+    "actionFailed": "Acción fallida",
+    "createFail": "Error al crear el cliente. Intenta de nuevo.",
+    "updateFail": "Error al actualizar el cliente. Intenta de nuevo."
+  }
+}

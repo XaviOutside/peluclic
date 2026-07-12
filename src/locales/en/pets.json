@@ -1,0 +1,80 @@
+{
+  "list": {
+    "title": "Pet List"
+  },
+  "column": {
+    "pet": "Pet",
+    "species": "Species",
+    "breed": "Breed",
+    "status": "Status"
+  },
+  "form": {
+    "label": {
+      "name": "Name",
+      "species": "Species",
+      "breed": "Breed",
+      "sex": "Sex",
+      "dateOfBirth": "Date of Birth",
+      "weight": "Weight (kg)",
+      "notes": "Notes",
+      "client": "Client"
+    },
+    "placeholder": {
+      "name": "Pet name",
+      "species": "e.g. Dog, Cat, Bird",
+      "breed": "e.g. Golden Retriever, Siamese",
+      "weight": "e.g. 12.5",
+      "notes": "Medical notes, allergies, etc."
+    },
+    "submit": {
+      "create": "Create Pet",
+      "update": "Update Pet"
+    }
+  },
+  "deactivate": {
+    "title": "Deactivate pet",
+    "message": "Are you sure you want to deactivate {{name}}?",
+    "success": "{{name}} deactivated.",
+    "error": "Error deactivating."
+  },
+  "detail": {
+    "speciesBreed": "Species / Breed",
+    "sex": "Sex",
+    "dateOfBirth": "Date of Birth",
+    "weight": "Weight",
+    "weightUnit": "{{weight}} kg",
+    "notes": "Notes",
+    "client": "Client",
+    "clientNumber": "Client #{{id}}",
+    "created": "Created",
+    "updated": "Updated",
+    "notFound": "Pet not found",
+    "notFoundMessage": "The pet you are looking for does not exist or has been removed.",
+    "loadError": "Error loading pet",
+    "editNotFound": "The pet you are trying to edit does not exist.",
+    "linkedServices": "Linked Services",
+    "noLinkedServices": "No linked services",
+    "linkService": "Link a Service",
+    "selectService": "Select a service",
+    "selectServicePlaceholder": "— Select a service —",
+    "noAvailableServices": "No available services to link.",
+    "link": "Link",
+    "actionFailed": "Action failed",
+    "reactivateUnavailable": "Reactivation is not yet available. This pet remains inactive.",
+    "unlinkFail": "Unlink failed",
+    "loadServicesFail": "Failed to load services",
+    "linkFail": "Link failed",
+    "createFail": "Failed to create pet. Please try again.",
+    "updateFail": "Failed to update pet. Please try again.",
+    "loadClientsFail": "Failed to load clients",
+    "deactivatePet": "Deactivate Pet",
+    "deletePet": "Delete Pet",
+    "deactivateMessage": "Are you sure you want to deactivate {{name}}?",
+    "deleteMessage": "Are you sure you want to delete {{name}}?"
+  },
+  "sex": {
+    "male": "Male",
+    "female": "Female",
+    "unknown": "Unknown"
+  }
+}

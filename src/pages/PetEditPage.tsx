@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { usePet } from '@/hooks/usePet';
 import { useUpdatePet } from '@/hooks/usePetMutations';
 import { listClients } from '@/services/client';
@@ -14,21 +15,19 @@ import type { FieldErrors } from '@/utils/validation';
 export default function PetEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation(['pets', 'common']);
   const petId = id ? Number(id) : undefined;
 
   const { pet, isLoading, error } = usePet(petId);
   const updateMutation = useUpdatePet();
 
-  // Client options for the pet form dropdown
   const [clientOptions, setClientOptions] = useState<SelectOption[]>([]);
   const [clientsLoading, setClientsLoading] = useState(false);
   const [clientsError, setClientsError] = useState<string | null>(null);
 
-  // Form error states
   const [serverErrors, setServerErrors] = useState<FieldErrors | null>(null);
   const [generalError, setGeneralError] = useState<string | null>(null);
 
-  // Fetch active clients for the owner dropdown, but only after pet loads successfully
   useEffect(() => {
     if (isLoading || error || !pet) return;
 
@@ -49,7 +48,7 @@ export default function PetEditPage() {
       } catch (err) {
         if (cancelled) return;
         const message =
-          err instanceof Error ? err.message : 'Failed to load clients';
+          err instanceof Error ? err.message : t('detail.loadClientsFail');
         setClientsError(message);
       } finally {
         if (!cancelled) {
@@ -63,7 +62,7 @@ export default function PetEditPage() {
     return () => {
       cancelled = true;
     };
-  }, [pet, isLoading, error]);
+  }, [pet, isLoading, error, t]);
 
   async function handleSubmit(data: PetFormData) {
     if (!pet) return;
@@ -89,13 +88,12 @@ export default function PetEditPage() {
         setServerErrors(httpErr.fieldErrors);
       } else {
         setGeneralError(
-          httpErr.message || 'Failed to update pet. Please try again.',
+          httpErr.message || t('detail.updateFail'),
         );
       }
     }
   }
 
-  // Loading state — only show spinner while pet is loading, not during clients fetch
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -104,7 +102,6 @@ export default function PetEditPage() {
     );
   }
 
-  // Loading state for clients (pet is loaded, waiting for client list)
   if (clientsLoading && !clientsError) {
     return (
       <div className="flex justify-center py-16">
@@ -113,7 +110,6 @@ export default function PetEditPage() {
     );
   }
 
-  // Error / not found — covers pet errors and client fetch errors
   if (error || !pet || clientsError) {
     const displayError = clientsError || error;
     const isNotFound =
@@ -125,14 +121,14 @@ export default function PetEditPage() {
       <div className="rounded-lg border border-gray-200 bg-white p-8 text-center shadow-sm">
         {isNotFound && !clientsError ? (
           <>
-            <h2 className="text-lg font-semibold text-gray-900">Pet not found</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('detail.notFound')}</h2>
             <p className="mt-2 text-sm text-gray-500">
-              The pet you are trying to edit does not exist.
+              {t('detail.editNotFound')}
             </p>
           </>
         ) : (
           <>
-            <h2 className="text-lg font-semibold text-red-800">Error loading pet</h2>
+            <h2 className="text-lg font-semibold text-red-800">{t('detail.loadError')}</h2>
             <p className="mt-2 text-sm text-red-600">{displayError}</p>
           </>
         )}
@@ -142,7 +138,7 @@ export default function PetEditPage() {
           className="mt-6"
           onClick={() => navigate('/pets')}
         >
-          &larr; Back to pets
+          {t('common:actions.backToList')}
         </Button>
       </div>
     );
@@ -151,13 +147,13 @@ export default function PetEditPage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900">Edit Pet</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{t('common:actions.updatePet')}</h1>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate(`/pets/${pet.id}`)}
         >
-          &larr; Back
+          {t('common:actions.backToList')}
         </Button>
       </div>
 
