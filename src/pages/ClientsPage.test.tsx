@@ -55,14 +55,16 @@ function renderPage() {
 }
 
 describe('ClientsPage', () => {
-  it('renders four columns with headers', () => {
+  it('renders three columns with headers', () => {
     renderPage();
 
     // Column headers may appear in both desktop header row and mobile card labels
     expect(screen.getByText('Cliente')).toBeInTheDocument();
     expect(screen.getAllByText('Contacto').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Estado').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Último servicio').length).toBeGreaterThan(0);
+
+    // "Último servicio" column no longer exists — date moved inside Cliente column
+    expect(screen.queryAllByText('Último servicio')).toHaveLength(0);
   });
 
   it('renders client name in bold with muted numeric ID', () => {
@@ -76,10 +78,14 @@ describe('ClientsPage', () => {
     expect(screen.getByText('#42')).toBeInTheDocument();
   });
 
-  it('renders last service date in DD/MM/YYYY format', () => {
+  it('renders last service date in DD/MM/YYYY format within Cliente column', () => {
     renderPage();
 
-    expect(screen.getByText('15/06/2026')).toBeInTheDocument();
+    // Date now lives inside the Cliente column block with muted styling
+    const dateElement = screen.getByText('15/06/2026');
+    expect(dateElement).toBeInTheDocument();
+    expect(dateElement.className).toContain('text-on-surface-variant');
+    expect(dateElement.className).toContain('text-sm');
   });
 
   it('renders em dash for null last service date', () => {
