@@ -274,7 +274,7 @@ describe('PetDetailPage — linked services', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(linkedServices),
+      json: () => Promise.resolve({ data: linkedServices, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     renderPage();
@@ -299,7 +299,7 @@ describe('PetDetailPage — linked services', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     renderPage();
@@ -341,7 +341,7 @@ describe('PetDetailPage — linked services', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     renderPage();
@@ -359,7 +359,7 @@ describe('PetDetailPage — linked services', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(unlinkedServices),
+      json: () => Promise.resolve({ data: unlinkedServices, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     await waitFor(() => {

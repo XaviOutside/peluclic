@@ -1,6 +1,7 @@
 import { Client } from '../domain/Client';
 import { IClientRepository } from '../domain/IClientRepository';
 import { ClientValidationError } from '../domain/ClientErrors';
+import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
@@ -14,7 +15,7 @@ export interface ListClientsParams {
 export class ListClientsUseCase {
   constructor(private readonly repository: IClientRepository) {}
 
-  async execute(params: ListClientsParams): Promise<Client[]> {
+  async execute(params: ListClientsParams): Promise<PaginatedResult<Client>> {
     const page = params.page ?? DEFAULT_PAGE;
     const rawLimit = params.limit ?? DEFAULT_LIMIT;
 

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import Avatar from '@/components/atoms/Avatar';
 import Spinner from '@/components/atoms/Spinner';
+import Pagination from '@/components/molecules/Pagination';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -45,6 +46,13 @@ export interface CrossRefAction<T> {
   disabled?: (row: T) => boolean;
 }
 
+export interface DataTablePaginationProps {
+  page: number;
+  totalPages: number;
+  totalItems: number;
+  onPageChange: (page: number) => void;
+}
+
 export interface DataTableProps<T> {
   /** Array of items to display */
   data: T[];
@@ -74,6 +82,8 @@ export interface DataTableProps<T> {
   showHeader?: boolean;
   /** Extra class on the root element */
   className?: string;
+  /** Optional pagination controls rendered in footer */
+  pagination?: DataTablePaginationProps;
 }
 
 /* ------------------------------------------------------------------ */
@@ -105,6 +115,7 @@ export default function DataTable<T>({
   emptyMessage = 'No items found.',
   showHeader = true,
   className = '',
+  pagination,
 }: DataTableProps<T>) {
   /* ── Loading state ── */
   if (loading && data.length === 0) {
@@ -298,6 +309,18 @@ export default function DataTable<T>({
           </div>
         ))}
       </div>
+
+      {/* ── Pagination footer ── */}
+      {pagination && (
+        <div className="px-4 py-3" data-testid="datatable-pagination">
+          <Pagination
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            total={pagination.totalItems}
+            onPageChange={pagination.onPageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }

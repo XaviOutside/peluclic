@@ -1,6 +1,7 @@
 import { Service } from '../domain/Service';
 import { IServiceRepository, FindAllParams } from '../domain/IServiceRepository';
 import { ValidationError } from '@api/shared/domain/errors';
+import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
@@ -15,7 +16,7 @@ export interface ListServicesParams {
 export class ListServicesUseCase {
   constructor(private readonly repository: IServiceRepository) {}
 
-  async execute(params: ListServicesParams): Promise<Service[]> {
+  async execute(params: ListServicesParams): Promise<PaginatedResult<Service>> {
     const page = params.page ?? DEFAULT_PAGE;
     const rawLimit = params.limit ?? DEFAULT_LIMIT;
 

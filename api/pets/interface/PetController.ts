@@ -140,8 +140,11 @@ export class PetController {
         ? parseInt(req.query['clientId'] as string, 10)
         : undefined;
 
-      const pets = await this.listPetsUseCase.execute({ page, limit, clientId });
-      res.status(200).json(pets.map(toPetResponseDto));
+      const result = await this.listPetsUseCase.execute({ page, limit, clientId });
+      res.status(200).json({
+        data: result.data.map(toPetResponseDto),
+        meta: result.meta,
+      });
     } catch (err) {
       handleError(err, res);
     }

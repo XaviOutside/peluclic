@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Pet } from '@/types/pet';
-import { listPets } from '@/services/pet';
+import { listPets, searchPets } from '@/services/pet';
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
 
 interface UsePetsState {
   pets: Pet[];
@@ -9,6 +10,8 @@ interface UsePetsState {
   page: number;
   limit: number;
   clientId: number | undefined;
+  totalCount: number;
+  totalPages: number;
 }
 
 export function usePets(initialClientId?: number) {
@@ -17,8 +20,10 @@ export function usePets(initialClientId?: number) {
     isLoading: true,
     error: null,
     page: 1,
-    limit: 20,
+    limit: DEFAULT_PAGE_SIZE,
     clientId: initialClientId,
+    totalCount: 0,
+    totalPages: 0,
   });
   const fetchIdRef = useRef(0);
 
@@ -31,11 +36,14 @@ export function usePets(initialClientId?: number) {
     }));
 
     try {
-      const data = await listPets(page, 20, clientId);
+      const result = await listPets(page, DEFAULT_PAGE_SIZE, clientId);
       if (id === fetchIdRef.current) {
         setState((prev) => ({
           ...prev,
-          pets: data,
+          pets: result.data,
+          page: result.meta.page,
+          totalCount: result.meta.total,
+          totalPages: result.meta.totalPages,
           isLoading: false,
           error: null,
         }));
@@ -54,6 +62,68 @@ export function usePets(initialClientId?: number) {
     }
   }, []);
 
+  const search = useCallback(async (query: string) => {
+    const id = ++fetchIdRef.current;
+    setState((prev) => ({
+      ...prev,
+      isLoading: true,
+      error: null,
+      page: 1, // search resets page to 1
+    }));
+
+    if (!query.trim()) {
+      // Empty query — revert to list with page reset
+      try {
+        const result = await listPets(1, DEFAULT_PAGE_SIZE, state.clientId);
+        if (id === fetchIdRef.current) {
+          setState((prev) => ({
+            ...prev,
+            pets: result.data,
+            page: 1,
+            totalCount: result.meta.total,
+            totalPages: result.meta.totalPages,
+            isLoading: false,
+            error: null,
+          }));
+        }
+      } catch (err) {
+        if (id === fetchIdRef.current) {
+          const message =
+            err instanceof Error ? err.message : 'Failed to load pets';
+          setState((prev) => ({
+            ...prev,
+            pets: [],
+            isLoading: false,
+            error: message,
+          }));
+        }
+      }
+    } else {
+      try {
+        const data = await searchPets(query);
+        if (id === fetchIdRef.current) {
+          setState((prev) => ({
+            ...prev,
+            pets: data,
+            isLoading: false,
+            error: null,
+          }));
+        }
+      } catch (err) {
+        if (id === fetchIdRef.current) {
+          const message =
+            err instanceof Error ? err.message : 'Search failed';
+          setState((prev) => ({
+            ...prev,
+            pets: [],
+            isLoading: false,
+            error: message,
+          }));
+        }
+      }
+    }
+  }, [state.clientId]);
+
   const refresh = useCallback(() => {
     fetchPets(state.page, state.clientId);
   }, [fetchPets, state.page, state.clientId]);
@@ -65,6 +135,18 @@ export function usePets(initialClientId?: number) {
     },
     [fetchPets, state.clientId],
   );
+
+  const goToNextPage = useCallback(() => {
+    if (state.page < state.totalPages) {
+      goToPage(state.page + 1);
+    }
+  }, [state.page, state.totalPages, goToPage]);
+
+  const goToPreviousPage = useCallback(() => {
+    if (state.page > 1) {
+      goToPage(state.page - 1);
+    }
+  }, [state.page, goToPage]);
 
   const setClientId = useCallback(
     (id: number | undefined) => {
@@ -86,8 +168,15 @@ export function usePets(initialClientId?: number) {
     page: state.page,
     limit: state.limit,
     clientId: state.clientId,
+    totalCount: state.totalCount,
+    totalPages: state.totalPages,
+    hasNextPage: state.page < state.totalPages,
+    hasPreviousPage: state.page > 1,
     refresh,
     goToPage,
+    goToNextPage,
+    goToPreviousPage,
     setClientId,
+    search,
   };
 }

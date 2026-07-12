@@ -111,7 +111,7 @@ describe('PetCreatePage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 200, totalPages: 1 } }),
     });
 
     renderPage();
@@ -138,7 +138,7 @@ describe('PetCreatePage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 200, totalPages: 1 } }),
     });
     mockFetch.mockResolvedValueOnce({
       ok: true,
@@ -163,7 +163,7 @@ describe('PetCreatePage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 200, totalPages: 1 } }),
     });
     // Server returns 422 with field-level errors even though client validation passes
     mockFetch.mockResolvedValueOnce({
@@ -198,7 +198,7 @@ describe('PetCreatePage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 200, totalPages: 1 } }),
     });
     mockFetch.mockResolvedValueOnce({
       ok: false,
@@ -225,7 +225,7 @@ describe('PetCreatePage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 200, totalPages: 1 } }),
     });
 
     const user = userEvent.setup();

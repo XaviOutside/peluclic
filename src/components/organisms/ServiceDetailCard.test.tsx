@@ -9,6 +9,7 @@ const activeService: Service = {
   description: 'Complete grooming package',
   durationMinutes: 60,
   price: 50.00,
+  petId: null,
   status: 'active',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',

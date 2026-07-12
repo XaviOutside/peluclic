@@ -1,22 +1,23 @@
 import { http } from '@/services/http';
 import type { Service, CreateServiceInput, UpdateServiceInput } from '@/types/service';
+import type { PaginatedResponse } from '@/types/pagination';
 
 /**
  * Typed fetch wrappers for the /api/v1/services endpoints.
  * All functions return typed responses and throw HttpError on failure.
  */
 
-/** Fetch paginated list of non-deleted services. */
+/** Fetch paginated list of non-deleted services with metadata. */
 export function listServices(
   page = 1,
   limit = 20,
   petId?: number,
-): Promise<Service[]> {
+): Promise<PaginatedResponse<Service>> {
   let url = `/services?page=${page}&limit=${limit}`;
   if (petId !== undefined) {
     url += `&petId=${petId}`;
   }
-  return http<Service[]>(url);
+  return http<PaginatedResponse<Service>>(url);
 }
 
 /** Fetch a single service by ID. */

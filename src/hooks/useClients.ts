@@ -1,12 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Client } from '@/types/client';
 import { listClients, searchClients } from '@/services/client';
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
 
 interface UseClientsState {
   clients: Client[];
   isLoading: boolean;
   error: string | null;
   searchQuery: string;
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
 }
 
 export function useClients() {
@@ -15,20 +20,27 @@ export function useClients() {
     isLoading: true,
     error: null,
     searchQuery: '',
+    page: 1,
+    limit: DEFAULT_PAGE_SIZE,
+    totalCount: 0,
+    totalPages: 0,
   });
   const fetchIdRef = useRef(0);
 
-  const fetchClients = useCallback(async () => {
+  const fetchClients = useCallback(async (page = 1) => {
     const id = ++fetchIdRef.current;
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const data = await listClients();
+      const result = await listClients(page, DEFAULT_PAGE_SIZE);
       // Only update if this is still the latest request
       if (id === fetchIdRef.current) {
         setState((prev) => ({
           ...prev,
-          clients: data,
+          clients: result.data,
+          page: result.meta.page,
+          totalCount: result.meta.total,
+          totalPages: result.meta.totalPages,
           isLoading: false,
           error: null,
         }));
@@ -54,16 +66,20 @@ export function useClients() {
       isLoading: true,
       error: null,
       searchQuery: query,
+      page: 1, // search resets page to 1
     }));
 
     if (!query.trim()) {
-      // Empty query — just list all
+      // Empty query — just list all with page reset
       try {
-        const data = await listClients();
+        const result = await listClients(1, DEFAULT_PAGE_SIZE);
         if (id === fetchIdRef.current) {
           setState((prev) => ({
             ...prev,
-            clients: data,
+            clients: result.data,
+            page: 1,
+            totalCount: result.meta.total,
+            totalPages: result.meta.totalPages,
             isLoading: false,
             error: null,
           }));
@@ -110,9 +126,26 @@ export function useClients() {
     setState((prev) => ({ ...prev, searchQuery: query }));
   }, []);
 
+  const goToPage = useCallback((page: number) => {
+    setState((prev) => ({ ...prev, page }));
+    fetchClients(page);
+  }, [fetchClients]);
+
+  const goToNextPage = useCallback(() => {
+    if (state.page < state.totalPages) {
+      goToPage(state.page + 1);
+    }
+  }, [state.page, state.totalPages, goToPage]);
+
+  const goToPreviousPage = useCallback(() => {
+    if (state.page > 1) {
+      goToPage(state.page - 1);
+    }
+  }, [state.page, goToPage]);
+
   // Auto-fetch on mount
   useEffect(() => {
-    fetchClients();
+    fetchClients(1);
   }, [fetchClients]);
 
   return {
@@ -120,8 +153,16 @@ export function useClients() {
     isLoading: state.isLoading,
     error: state.error,
     searchQuery: state.searchQuery,
-    fetchClients,
+    page: state.page,
+    totalCount: state.totalCount,
+    totalPages: state.totalPages,
+    hasNextPage: state.page < state.totalPages,
+    hasPreviousPage: state.page > 1,
+    fetchClients: () => fetchClients(state.page),
     search,
     setSearchQuery,
+    goToPage,
+    goToNextPage,
+    goToPreviousPage,
   };
 }

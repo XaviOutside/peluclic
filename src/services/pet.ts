@@ -1,22 +1,23 @@
 import { http } from '@/services/http';
 import type { Pet, CreatePetInput, UpdatePetInput } from '@/types/pet';
+import type { PaginatedResponse } from '@/types/pagination';
 
 /**
  * Typed fetch wrappers for the /api/v1/pets endpoints.
  * All functions return typed responses and throw HttpError on failure.
  */
 
-/** Fetch paginated list of pets, optionally filtered by client. */
+/** Fetch paginated list of pets with metadata, optionally filtered by client. */
 export function listPets(
   page = 1,
   limit = 20,
   clientId?: number,
-): Promise<Pet[]> {
+): Promise<PaginatedResponse<Pet>> {
   let url = `/pets?page=${page}&limit=${limit}`;
   if (clientId !== undefined) {
     url += `&clientId=${clientId}`;
   }
-  return http<Pet[]>(url);
+  return http<PaginatedResponse<Pet>>(url);
 }
 
 /** Fetch a single pet by ID. */

@@ -139,18 +139,25 @@ describe('PrismaServiceRepository', () => {
   });
 
   describe('findAll', () => {
-    it('returns paginated, non-deleted services', async () => {
+    it('returns paginated, non-deleted services with metadata', async () => {
       const s1 = await seedService({ name: 'Service A', price: 1000 });
       const s2 = await seedService({ name: 'Service B', price: 2000 });
       const deleted = await seedService({ name: 'Deleted', price: 500, deletedAt: new Date() });
       serviceIds.push(s1.id, s2.id, deleted.id);
 
-      const results = await repo.findAll({ page: 1, limit: 50 });
+      const result = await repo.findAll({ page: 1, limit: 50 });
 
-      const ids = results.map((s) => s.id);
+      const ids = result.data.map((s) => s.id);
       expect(ids).toContain(s1.id);
       expect(ids).toContain(s2.id);
       expect(ids).not.toContain(deleted.id);
+
+      // Metadata assertions
+      expect(result.meta.page).toBe(1);
+      expect(result.meta.limit).toBe(50);
+      expect(result.meta.total).toBeGreaterThanOrEqual(2);
+      expect(result.meta.totalPages).toBeGreaterThanOrEqual(1);
+      expect(result.meta.totalPages).toBe(Math.ceil(result.meta.total / result.meta.limit));
     });
 
     it('respects page and limit for pagination', async () => {
@@ -161,22 +168,28 @@ describe('PrismaServiceRepository', () => {
       const page1 = await repo.findAll({ page: 1, limit: 1 });
       const page2 = await repo.findAll({ page: 2, limit: 1 });
 
-      expect(page1.length).toBeLessThanOrEqual(1);
-      expect(page2.length).toBeLessThanOrEqual(1);
+      expect(page1.data.length).toBeLessThanOrEqual(1);
+      expect(page2.data.length).toBeLessThanOrEqual(1);
+      expect(page1.meta.page).toBe(1);
+      expect(page1.meta.limit).toBe(1);
+      expect(page2.meta.page).toBe(2);
     });
 
-    it('filters by petId when provided', async () => {
+    it('filters by petId when provided and count matches data', async () => {
       const linked = await seedService({ name: 'Linked', price: 1000, petId: 5 });
       const unlinked = await seedService({ name: 'Unlinked', price: 2000, petId: null });
       const other = await seedService({ name: 'Other Pet', price: 3000, petId: 7 });
       serviceIds.push(linked.id, unlinked.id, other.id);
 
-      const results = await repo.findAll({ page: 1, limit: 50, petId: 5 });
+      const result = await repo.findAll({ page: 1, limit: 50, petId: 5 });
 
-      const ids = results.map((s) => s.id);
+      const ids = result.data.map((s) => s.id);
       expect(ids).toContain(linked.id);
       expect(ids).not.toContain(unlinked.id);
       expect(ids).not.toContain(other.id);
+
+      // Count should match filtered data length
+      expect(result.meta.total).toBe(result.data.length);
     });
   });
 

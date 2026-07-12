@@ -1,6 +1,7 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
 import { Client, CreateClientInput, UpdateClientInput } from '../domain/Client';
 import { IClientRepository } from '../domain/IClientRepository';
+import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
 
 /**
  * Prisma implementation of IClientRepository.
@@ -51,17 +52,29 @@ export class PrismaClientRepository implements IClientRepository {
     return row !== null;
   }
 
-  async findAll(page: number, limit: number): Promise<Client[]> {
+  async findAll(page: number, limit: number): Promise<PaginatedResult<Client>> {
     const skip = (page - 1) * limit;
+    const where = { deletedAt: null };
 
-    const rows = await prisma.client.findMany({
-      where: { deletedAt: null },
-      skip,
-      take: limit,
-      orderBy: { id: 'asc' },
-    });
+    const [rows, total] = await Promise.all([
+      prisma.client.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { id: 'asc' },
+      }),
+      prisma.client.count({ where }),
+    ]);
 
-    return rows.map((row) => this.mapToClient(row));
+    return {
+      data: rows.map((row) => this.mapToClient(row)),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async update(id: number, data: UpdateClientInput): Promise<Client> {

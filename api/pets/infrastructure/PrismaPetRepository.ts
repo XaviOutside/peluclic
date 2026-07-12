@@ -1,6 +1,7 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
 import { Pet, CreatePetInput, UpdatePetInput, PET_STATUS } from '../domain/Pet';
 import { IPetRepository } from '../domain/IPetRepository';
+import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
 
 /**
  * Prisma implementation of IPetRepository.
@@ -55,33 +56,57 @@ export class PrismaPetRepository implements IPetRepository {
     return row !== null;
   }
 
-  async findAll(page: number, limit: number): Promise<Pet[]> {
+  async findAll(page: number, limit: number): Promise<PaginatedResult<Pet>> {
     const skip = (page - 1) * limit;
+    const where = { deletedAt: null };
 
-    const rows = await prisma.pet.findMany({
-      where: { deletedAt: null },
-      skip,
-      take: limit,
-      orderBy: { id: 'asc' },
-    });
+    const [rows, total] = await Promise.all([
+      prisma.pet.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { id: 'asc' },
+      }),
+      prisma.pet.count({ where }),
+    ]);
 
-    return rows.map((row) => this.mapToPet(row));
+    return {
+      data: rows.map((row) => this.mapToPet(row)),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
-  async findAllByClientId(clientId: number, page: number, limit: number): Promise<Pet[]> {
+  async findAllByClientId(clientId: number, page: number, limit: number): Promise<PaginatedResult<Pet>> {
     const skip = (page - 1) * limit;
+    const where = {
+      client_id: clientId,
+      deletedAt: null,
+    };
 
-    const rows = await prisma.pet.findMany({
-      where: {
-        client_id: clientId,
-        deletedAt: null,
+    const [rows, total] = await Promise.all([
+      prisma.pet.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { id: 'asc' },
+      }),
+      prisma.pet.count({ where }),
+    ]);
+
+    return {
+      data: rows.map((row) => this.mapToPet(row)),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
-      skip,
-      take: limit,
-      orderBy: { id: 'asc' },
-    });
-
-    return rows.map((row) => this.mapToPet(row));
+    };
   }
 
   async update(id: number, data: UpdatePetInput): Promise<Pet> {

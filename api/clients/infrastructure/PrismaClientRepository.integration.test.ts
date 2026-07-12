@@ -117,18 +117,41 @@ describe('PrismaClientRepository', () => {
   });
 
   describe('findAll', () => {
-    it('returns paginated results and excludes soft-deleted clients', async () => {
+    it('returns paginated results with metadata and excludes soft-deleted clients', async () => {
       const active1 = await seedClient({ name: 'Active One', email: 'active1@example.com' });
       const active2 = await seedClient({ name: 'Active Two', email: 'active2@example.com' });
       const deleted = await seedClient({ name: 'Deleted', email: 'deleted@example.com', deletedAt: new Date() });
       createdIds.push(active1.id, active2.id, deleted.id);
 
-      const results = await repo.findAll(1, 50);
+      const result = await repo.findAll(1, 50);
 
-      const ids = results.map((c) => c.id);
+      const ids = result.data.map((c) => c.id);
       expect(ids).toContain(active1.id);
       expect(ids).toContain(active2.id);
       expect(ids).not.toContain(deleted.id);
+
+      // Metadata assertions
+      expect(result.meta.page).toBe(1);
+      expect(result.meta.limit).toBe(50);
+      expect(result.meta.total).toBeGreaterThanOrEqual(2);
+      expect(result.meta.totalPages).toBeGreaterThanOrEqual(1);
+      expect(result.meta.totalPages).toBe(Math.ceil(result.meta.total / result.meta.limit));
+    });
+
+    it('returns metadata.total matching count query (excludes deleted)', async () => {
+      const active1 = await seedClient({ name: 'CountOne', email: 'c1@example.com' });
+      const active2 = await seedClient({ name: 'CountTwo', email: 'c2@example.com' });
+      const deleted = await seedClient({ name: 'CountDel', email: 'cd@example.com', deletedAt: new Date() });
+      createdIds.push(active1.id, active2.id, deleted.id);
+
+      const result = await repo.findAll(1, 50);
+
+      // total should reflect only non-deleted clients
+      expect(result.meta.total).toBeGreaterThanOrEqual(2);
+      // Each client is in data
+      expect(result.data.map((c) => c.id)).toContain(active1.id);
+      expect(result.data.map((c) => c.id)).toContain(active2.id);
+      expect(result.data.map((c) => c.id)).not.toContain(deleted.id);
     });
 
     it('respects page and limit for pagination', async () => {
@@ -139,9 +162,13 @@ describe('PrismaClientRepository', () => {
       const page1 = await repo.findAll(1, 1);
       const page2 = await repo.findAll(2, 1);
 
-      // Each page should return at most 1 result
-      expect(page1.length).toBeLessThanOrEqual(1);
-      expect(page2.length).toBeLessThanOrEqual(1);
+      // Each page should return at most 1 data item
+      expect(page1.data.length).toBeLessThanOrEqual(1);
+      expect(page2.data.length).toBeLessThanOrEqual(1);
+      expect(page1.meta.page).toBe(1);
+      expect(page1.meta.limit).toBe(1);
+      expect(page2.meta.page).toBe(2);
+      expect(page2.meta.limit).toBe(1);
     });
   });
 

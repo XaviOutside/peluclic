@@ -27,6 +27,10 @@ export default function ClientsPage() {
     searchQuery,
     search,
     setSearchQuery,
+    page,
+    totalCount,
+    totalPages,
+    goToPage,
   } = useClients();
   const deactivateMutation = useDeactivateClient();
 
@@ -220,6 +224,7 @@ export default function ClientsPage() {
         error={error}
         onRetry={fetchClients}
         emptyMessage="No hay clientes registrados."
+        pagination={totalPages > 1 ? { page, totalPages, totalItems: totalCount, onPageChange: goToPage } : undefined}
       />
 
       {/* ── Confirm dialog ── */}

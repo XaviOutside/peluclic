@@ -94,8 +94,8 @@ export default function PetDetailPage() {
     setLinkModalLoading(true);
     setActionError(null);
     try {
-      const all = await listServices(1, 200);
-      setUnlinkedServices(all.filter((s) => s.petId === null));
+      const result = await listServices(1, 200);
+      setUnlinkedServices(result.data.filter((s) => s.petId === null));
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load services';
       setActionError(message);

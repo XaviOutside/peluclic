@@ -1,6 +1,7 @@
 import { Pet } from '../domain/Pet';
 import { IPetRepository } from '../domain/IPetRepository';
 import { PetValidationError } from '../domain/PetErrors';
+import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
@@ -15,7 +16,7 @@ export interface ListPetsParams {
 export class ListPetsUseCase {
   constructor(private readonly repository: IPetRepository) {}
 
-  async execute(params: ListPetsParams): Promise<Pet[]> {
+  async execute(params: ListPetsParams): Promise<PaginatedResult<Pet>> {
     const page = params.page ?? DEFAULT_PAGE;
     const rawLimit = params.limit ?? DEFAULT_LIMIT;
 

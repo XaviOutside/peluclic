@@ -175,7 +175,7 @@ describe('PrismaPetRepository', () => {
   });
 
   describe('findAll', () => {
-    it('returns paginated, non-deleted pets', async () => {
+    it('returns paginated, non-deleted pets with metadata', async () => {
       const client = await seedClient({ name: 'PagOwner', email: 'pagowner@example.com' });
       clientIds.push(client.id);
 
@@ -184,12 +184,18 @@ describe('PrismaPetRepository', () => {
       const deleted = await seedPet({ client_id: client.id, name: 'Deleted', species: 'Bird', deletedAt: new Date() });
       petIds.push(p1.id, p2.id, deleted.id);
 
-      const results = await repo.findAll(1, 50);
+      const result = await repo.findAll(1, 50);
 
-      const ids = results.map((p) => p.id);
+      const ids = result.data.map((p) => p.id);
       expect(ids).toContain(p1.id);
       expect(ids).toContain(p2.id);
       expect(ids).not.toContain(deleted.id);
+
+      // Metadata assertions
+      expect(result.meta.page).toBe(1);
+      expect(result.meta.limit).toBe(50);
+      expect(result.meta.total).toBeGreaterThanOrEqual(2);
+      expect(result.meta.totalPages).toBeGreaterThanOrEqual(1);
     });
 
     it('respects page and limit for pagination', async () => {
@@ -203,13 +209,16 @@ describe('PrismaPetRepository', () => {
       const page1 = await repo.findAll(1, 1);
       const page2 = await repo.findAll(2, 1);
 
-      expect(page1.length).toBeLessThanOrEqual(1);
-      expect(page2.length).toBeLessThanOrEqual(1);
+      expect(page1.data.length).toBeLessThanOrEqual(1);
+      expect(page2.data.length).toBeLessThanOrEqual(1);
+      expect(page1.meta.page).toBe(1);
+      expect(page1.meta.limit).toBe(1);
+      expect(page2.meta.page).toBe(2);
     });
   });
 
   describe('findAllByClientId', () => {
-    it('returns only pets belonging to the given client', async () => {
+    it('returns only pets belonging to the given client with metadata', async () => {
       const owner = await seedClient({ name: 'SpecOwner', email: 'specowner@example.com' });
       const other = await seedClient({ name: 'Other', email: 'other@example.com' });
       clientIds.push(owner.id, other.id);
@@ -218,11 +227,16 @@ describe('PrismaPetRepository', () => {
       const theirs = await seedPet({ client_id: other.id, name: 'Theirs', species: 'Cat' });
       petIds.push(mine.id, theirs.id);
 
-      const results = await repo.findAllByClientId(owner.id, 1, 20);
+      const result = await repo.findAllByClientId(owner.id, 1, 20);
 
-      const ids = results.map((p) => p.id);
+      const ids = result.data.map((p) => p.id);
       expect(ids).toContain(mine.id);
       expect(ids).not.toContain(theirs.id);
+
+      // Metadata assertions
+      expect(result.meta.page).toBe(1);
+      expect(result.meta.limit).toBe(20);
+      expect(result.meta.total).toBeGreaterThanOrEqual(1);
     });
 
     it('excludes soft-deleted pets', async () => {
@@ -233,9 +247,9 @@ describe('PrismaPetRepository', () => {
       const deleted = await seedPet({ client_id: owner.id, name: 'Deleted', species: 'Cat', deletedAt: new Date() });
       petIds.push(active.id, deleted.id);
 
-      const results = await repo.findAllByClientId(owner.id, 1, 20);
+      const result = await repo.findAllByClientId(owner.id, 1, 20);
 
-      const ids = results.map((p) => p.id);
+      const ids = result.data.map((p) => p.id);
       expect(ids).toContain(active.id);
       expect(ids).not.toContain(deleted.id);
     });

@@ -23,7 +23,7 @@ export default function PetsPage() {
   const clientIdParam = searchParams.get('clientId');
   const initialClientId = clientIdParam ? parseInt(clientIdParam, 10) : undefined;
 
-  const { pets, isLoading, error, refresh } = usePets(initialClientId);
+  const { pets, isLoading, error, refresh, page, totalCount, totalPages, goToPage } = usePets(initialClientId);
 
   const deactivateMutation = useDeactivatePet();
 
@@ -182,6 +182,7 @@ export default function PetsPage() {
         error={error}
         onRetry={refresh}
         emptyMessage="No hay mascotas registradas."
+        pagination={totalPages > 1 ? { page, totalPages, totalItems: totalCount, onPageChange: goToPage } : undefined}
       />
 
       {/* ── Confirm dialog ── */}

@@ -128,15 +128,34 @@ describe('POST /api/v1/clients', () => {
 });
 
 describe('GET /api/v1/clients', () => {
-  it('returns 200 with paginated list', async () => {
-    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce([domainClient]);
+  it('returns 200 with paginated list in { data, meta } shape', async () => {
+    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      data: [domainClient],
+      meta: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    });
 
     const res = await request(makeApp()).get('/api/v1/clients');
 
     expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body[0]).toMatchObject(expectedDto);
-    expect(res.body[0]).not.toHaveProperty('deletedAt');
+    expect(res.body).toHaveProperty('data');
+    expect(res.body).toHaveProperty('meta');
+    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(res.body.data[0]).toMatchObject(expectedDto);
+    expect(res.body.data[0]).not.toHaveProperty('deletedAt');
+    expect(res.body.meta).toEqual({ total: 1, page: 1, limit: 20, totalPages: 1 });
+  });
+
+  it('respects page and limit query params', async () => {
+    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      data: [],
+      meta: { total: 0, page: 2, limit: 10, totalPages: 0 },
+    });
+
+    const res = await request(makeApp()).get('/api/v1/clients?page=2&limit=10');
+
+    expect(res.status).toBe(200);
+    expect(res.body.meta.page).toBe(2);
+    expect(res.body.meta.limit).toBe(10);
   });
 });
 

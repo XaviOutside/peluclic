@@ -1,6 +1,7 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
 import { Service, CreateServiceInput, UpdateServiceInput } from '../domain/Service';
 import { IServiceRepository, FindAllParams } from '../domain/IServiceRepository';
+import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
 
 /**
  * Prisma implementation of IServiceRepository.
@@ -51,7 +52,7 @@ export class PrismaServiceRepository implements IServiceRepository {
     return row !== null;
   }
 
-  async findAll(params: FindAllParams): Promise<Service[]> {
+  async findAll(params: FindAllParams): Promise<PaginatedResult<Service>> {
     const skip = (params.page - 1) * params.limit;
 
     const where: Record<string, unknown> = { deletedAt: null };
@@ -59,14 +60,25 @@ export class PrismaServiceRepository implements IServiceRepository {
       where['petId'] = params.petId;
     }
 
-    const rows = await prisma.service.findMany({
-      where,
-      skip,
-      take: params.limit,
-      orderBy: { id: 'asc' },
-    });
+    const [rows, total] = await Promise.all([
+      prisma.service.findMany({
+        where,
+        skip,
+        take: params.limit,
+        orderBy: { id: 'asc' },
+      }),
+      prisma.service.count({ where }),
+    ]);
 
-    return rows.map((row) => this.mapToService(row));
+    return {
+      data: rows.map((row) => this.mapToService(row)),
+      meta: {
+        total,
+        page: params.page,
+        limit: params.limit,
+        totalPages: Math.ceil(total / params.limit),
+      },
+    };
   }
 
   async update(id: number, data: UpdateServiceInput): Promise<Service> {

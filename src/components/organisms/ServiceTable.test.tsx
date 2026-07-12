@@ -9,6 +9,7 @@ const mockService: Service = {
   description: 'Complete grooming',
   durationMinutes: 60,
   price: 50.00,
+  petId: null,
   status: 'active',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',

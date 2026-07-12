@@ -183,18 +183,27 @@ describe('GET /api/v1/services/search', () => {
 });
 
 describe('GET /api/v1/services', () => {
-  it('returns 200 with paginated services', async () => {
-    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce([domainService]);
+  it('returns 200 with paginated services in { data, meta } shape', async () => {
+    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      data: [domainService],
+      meta: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    });
 
     const res = await request(makeApp()).get('/api/v1/services');
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveLength(1);
-    expect(res.body[0]).toEqual(expectedDto);
+    expect(res.body).toHaveProperty('data');
+    expect(res.body).toHaveProperty('meta');
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0]).toEqual(expectedDto);
+    expect(res.body.meta).toEqual({ total: 1, page: 1, limit: 20, totalPages: 1 });
   });
 
   it('passes page and limit query params', async () => {
-    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      data: [],
+      meta: { total: 0, page: 2, limit: 10, totalPages: 0 },
+    });
 
     await request(makeApp()).get('/api/v1/services?page=2&limit=10');
 
@@ -202,7 +211,10 @@ describe('GET /api/v1/services', () => {
   });
 
   it('passes petId query param to list use case', async () => {
-    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+    (mockList.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      data: [],
+      meta: { total: 0, page: 1, limit: 20, totalPages: 0 },
+    });
 
     await request(makeApp()).get('/api/v1/services?petId=5');
 

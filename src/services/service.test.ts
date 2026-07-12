@@ -45,11 +45,14 @@ afterEach(() => {
 
 describe('listServices', () => {
   it('fetches paginated services with default params', async () => {
-    mockFetch(200, [mockService]);
+    const response = { data: [mockService], meta: { total: 1, page: 1, limit: 20, totalPages: 1 } };
+    mockFetch(200, response);
 
     const result = await listServices();
 
-    expect(result).toEqual([mockService]);
+    expect(result).toEqual(response);
+    expect(result.data).toEqual([mockService]);
+    expect(result.meta.total).toBe(1);
     expect(fetch).toHaveBeenCalledWith(
       '/api/v1/services?page=1&limit=20',
       expect.objectContaining({ headers: expect.any(Object) }),
@@ -57,7 +60,8 @@ describe('listServices', () => {
   });
 
   it('passes custom page and limit', async () => {
-    mockFetch(200, []);
+    const response = { data: [], meta: { total: 0, page: 2, limit: 10, totalPages: 0 } };
+    mockFetch(200, response);
 
     await listServices(2, 10);
 
@@ -68,7 +72,8 @@ describe('listServices', () => {
   });
 
   it('appends petId to URL when provided', async () => {
-    mockFetch(200, [mockService]);
+    const response = { data: [mockService], meta: { total: 1, page: 1, limit: 20, totalPages: 1 } };
+    mockFetch(200, response);
 
     await listServices(1, 20, 5);
 
@@ -79,7 +84,8 @@ describe('listServices', () => {
   });
 
   it('does not include petId in URL when omitted', async () => {
-    mockFetch(200, []);
+    const response = { data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } };
+    mockFetch(200, response);
 
     await listServices(1, 20);
 

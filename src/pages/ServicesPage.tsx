@@ -38,6 +38,10 @@ export default function ServicesPage() {
     error: hookError,
     refresh,
     deleteService,
+    page,
+    totalCount,
+    totalPages,
+    goToPage,
   } = useServices({ petId });
 
   /* Search state */
@@ -244,6 +248,7 @@ export default function ServicesPage() {
         error={displayError}
         onRetry={refresh}
         emptyMessage="No hay servicios registrados."
+        pagination={totalPages > 1 ? { page, totalPages, totalItems: totalCount, onPageChange: goToPage } : undefined}
       />
 
       {/* ── Confirm dialog ── */}

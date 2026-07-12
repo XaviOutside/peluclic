@@ -115,7 +115,7 @@ describe('PetEditPage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     renderPage();
@@ -150,7 +150,7 @@ describe('PetEditPage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     // Update pet
     mockFetch.mockResolvedValueOnce({
@@ -187,7 +187,7 @@ describe('PetEditPage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     // Update returns 422
     mockFetch.mockResolvedValueOnce({
@@ -226,7 +226,7 @@ describe('PetEditPage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     // Update returns 500
     mockFetch.mockResolvedValueOnce({
@@ -258,7 +258,7 @@ describe('PetEditPage', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     const user = userEvent.setup();

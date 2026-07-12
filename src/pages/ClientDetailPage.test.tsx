@@ -77,18 +77,18 @@ describe('ClientDetailPage — embedded pet list', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockPets),
+      json: () => Promise.resolve({ data: mockPets, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     // Per-pet service list calls (PetServiceCard fetches services for each pet)
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     renderPage();
@@ -115,7 +115,7 @@ describe('ClientDetailPage — embedded pet list', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     renderPage();
@@ -138,7 +138,7 @@ describe('ClientDetailPage — embedded pet list', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     renderPage();
@@ -163,7 +163,7 @@ describe('ClientDetailPage — embedded pet list', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     renderPage();

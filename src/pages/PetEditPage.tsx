@@ -37,9 +37,9 @@ export default function PetEditPage() {
 
     async function fetchClients() {
       try {
-        const clients = await listClients(1, 200);
+        const result = await listClients(1, 200);
         if (cancelled) return;
-        const activeOptions: SelectOption[] = clients
+        const activeOptions: SelectOption[] = result.data
           .filter((c) => c.status === 'active')
           .map((c) => ({
             value: String(c.id),

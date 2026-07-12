@@ -30,11 +30,11 @@ beforeEach(() => {
 });
 
 describe('usePets', () => {
-  it('starts in loading state', () => {
+  it('starts in loading state with pagination defaults', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     const { result } = renderHook(() => usePets());
@@ -42,13 +42,14 @@ describe('usePets', () => {
     expect(result.current.pets).toEqual([]);
     expect(result.current.error).toBeNull();
     expect(result.current.page).toBe(1);
+    expect(result.current.totalCount).toBe(0);
   });
 
-  it('fetches and returns pets on mount', async () => {
+  it('fetches and returns pets on mount with metadata', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockPets),
+      json: () => Promise.resolve({ data: mockPets, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     const { result } = renderHook(() => usePets());
@@ -58,6 +59,8 @@ describe('usePets', () => {
     expect(result.current.pets).toEqual(mockPets);
     expect(result.current.error).toBeNull();
     expect(result.current.page).toBe(1);
+    expect(result.current.totalCount).toBe(2);
+    expect(result.current.totalPages).toBe(1);
   });
 
   it('handles fetch failure', async () => {
@@ -79,12 +82,12 @@ describe('usePets', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockPets),
+      json: () => Promise.resolve({ data: mockPets, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([samplePet]),
+      json: () => Promise.resolve({ data: [samplePet], meta: { total: 1, page: 3, limit: 20, totalPages: 1 } }),
     });
 
     const { result } = renderHook(() => usePets());
@@ -107,12 +110,12 @@ describe('usePets', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockPets),
+      json: () => Promise.resolve({ data: mockPets, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([samplePet]),
+      json: () => Promise.resolve({ data: [samplePet], meta: { total: 1, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     const { result } = renderHook(() => usePets());
@@ -136,12 +139,12 @@ describe('usePets', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockPets),
+      json: () => Promise.resolve({ data: mockPets, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([samplePet]),
+      json: () => Promise.resolve({ data: [samplePet], meta: { total: 1, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     const { result } = renderHook(() => usePets());

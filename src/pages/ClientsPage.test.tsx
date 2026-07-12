@@ -55,9 +55,17 @@ vi.mock('@/hooks/useClients', () => ({
     isLoading: false,
     error: null,
     searchQuery: '',
+    page: 1,
+    totalCount: 2,
+    totalPages: 1,
+    hasNextPage: false,
+    hasPreviousPage: false,
     fetchClients: vi.fn(),
     search: vi.fn(),
     setSearchQuery: vi.fn(),
+    goToPage: vi.fn(),
+    goToNextPage: vi.fn(),
+    goToPreviousPage: vi.fn(),
   }),
 }));
 

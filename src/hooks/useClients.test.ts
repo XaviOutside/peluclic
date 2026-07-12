@@ -15,24 +15,26 @@ beforeEach(() => {
 });
 
 describe('useClients', () => {
-  it('starts in loading state', () => {
+  it('starts in loading state with pagination defaults', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     const { result } = renderHook(() => useClients());
     expect(result.current.isLoading).toBe(true);
     expect(result.current.clients).toEqual([]);
     expect(result.current.error).toBeNull();
+    expect(result.current.totalCount).toBe(0);
+    expect(result.current.totalPages).toBe(0);
   });
 
-  it('fetches and returns clients on mount', async () => {
+  it('fetches and returns clients on mount with pagination metadata', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
 
     const { result } = renderHook(() => useClients());
@@ -41,6 +43,9 @@ describe('useClients', () => {
 
     expect(result.current.clients).toEqual(mockClients);
     expect(result.current.error).toBeNull();
+    expect(result.current.totalCount).toBe(2);
+    expect(result.current.totalPages).toBe(1);
+    expect(result.current.hasPreviousPage).toBe(false);
   });
 
   it('handles fetch failure', async () => {
@@ -63,7 +68,7 @@ describe('useClients', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(mockClients),
+      json: () => Promise.resolve({ data: mockClients, meta: { total: 2, page: 1, limit: 20, totalPages: 1 } }),
     });
     // Second call: search
     mockFetch.mockResolvedValueOnce({

@@ -99,8 +99,11 @@ export class ClientController {
       const page = req.query['page'] ? parseInt(req.query['page'] as string, 10) : undefined;
       const limit = req.query['limit'] ? parseInt(req.query['limit'] as string, 10) : undefined;
 
-      const clients = await this.listClientsUseCase.execute({ page, limit });
-      res.status(200).json(clients.map(toClientResponseDto));
+      const result = await this.listClientsUseCase.execute({ page, limit });
+      res.status(200).json({
+        data: result.data.map(toClientResponseDto),
+        meta: result.meta,
+      });
     } catch (err) {
       handleError(err, res);
     }

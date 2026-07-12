@@ -106,8 +106,11 @@ export class ServiceController {
       const limit = req.query['limit'] ? parseInt(req.query['limit'] as string, 10) : undefined;
       const petId = req.query['petId'] ? parseInt(req.query['petId'] as string, 10) : undefined;
 
-      const services = await this.listServicesUseCase.execute({ page, limit, petId });
-      res.status(200).json(services.map(toServiceResponseDto));
+      const result = await this.listServicesUseCase.execute({ page, limit, petId });
+      res.status(200).json({
+        data: result.data.map(toServiceResponseDto),
+        meta: result.meta,
+      });
     } catch (err) {
       handleError(err, res);
     }

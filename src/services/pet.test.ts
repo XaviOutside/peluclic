@@ -32,16 +32,21 @@ const samplePet = {
 };
 
 describe('listPets', () => {
-  it('returns parsed pet array on success', async () => {
-    const pets = [samplePet];
+  it('returns paginated response with data and meta on success', async () => {
+    const response = {
+      data: [samplePet],
+      meta: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    };
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(pets),
+      json: () => Promise.resolve(response),
     });
 
     const result = await listPets();
-    expect(result).toEqual(pets);
+    expect(result).toEqual(response);
+    expect(result.data).toEqual([samplePet]);
+    expect(result.meta.total).toBe(1);
     expect(mockFetch).toHaveBeenCalledWith(
       '/api/v1/pets?page=1&limit=20',
       expect.anything(),
@@ -52,7 +57,7 @@ describe('listPets', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 2, limit: 10, totalPages: 0 } }),
     });
 
     await listPets(2, 10);
@@ -66,7 +71,7 @@ describe('listPets', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve([]),
+      json: () => Promise.resolve({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
     });
 
     await listPets(1, 20, 10);

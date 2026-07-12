@@ -18,18 +18,23 @@ beforeEach(() => {
 });
 
 describe('listClients', () => {
-  it('returns parsed client array on success', async () => {
-    const clients = [
-      { id: 1, name: 'Alice', email: 'alice@example.com', phone: '555-0101', phone2: null, address: null, status: 'active', notes: null, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
-    ];
+  it('returns paginated response with data and meta on success', async () => {
+    const response = {
+      data: [
+        { id: 1, name: 'Alice', email: 'alice@example.com', phone: '555-0101', phone2: null, address: null, status: 'active', notes: null, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
+      ],
+      meta: { total: 1, page: 1, limit: 20, totalPages: 1 },
+    };
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => Promise.resolve(clients),
+      json: () => Promise.resolve(response),
     });
 
     const result = await listClients();
-    expect(result).toEqual(clients);
+    expect(result).toEqual(response);
+    expect(result.data).toHaveLength(1);
+    expect(result.meta.total).toBe(1);
     expect(mockFetch).toHaveBeenCalledWith(
       '/api/v1/clients?page=1&limit=20',
       expect.anything(),

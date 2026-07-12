@@ -29,15 +29,26 @@ vi.mock('@/services/service');
 
 const mockedApi = vi.mocked(serviceApi);
 
+/** Helper to build a paginated response for tests */
+function paginated(data: Service[], overrides: Partial<{ total: number; page: number; limit: number }> = {}) {
+  const total = overrides.total ?? data.length;
+  const limit = overrides.limit ?? 20;
+  return { data, meta: { total, page: overrides.page ?? 1, limit, totalPages: Math.ceil(total / limit) } };
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
   // Default: list returns 2 services
-  (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValue([mockService, mockService2]);
+  (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValue(paginated([mockService, mockService2], { total: 2 }));
 });
 
 describe('useServices', () => {
   describe('initial fetch', () => {
-    it('loads services on mount', async () => {
+    it('loads services on mount with pagination metadata', async () => {
+      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+        paginated([mockService, mockService2], { total: 2 }),
+      );
+
       const { result } = renderHook(() => useServices());
 
       expect(result.current.isLoading).toBe(true);
@@ -48,6 +59,8 @@ describe('useServices', () => {
 
       expect(result.current.services).toEqual([mockService, mockService2]);
       expect(result.current.error).toBeNull();
+      expect(result.current.totalCount).toBe(2);
+      expect(result.current.totalPages).toBe(1);
     });
 
     it('sets error state on fetch failure', async () => {
@@ -156,7 +169,7 @@ describe('useServices', () => {
 
   describe('petId filtering', () => {
     it('passes petId to listServices when provided', async () => {
-      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([mockService]);
+      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce(paginated([mockService]));
 
       const { result } = renderHook(() => useServices({ petId: 5 }));
 
@@ -166,7 +179,7 @@ describe('useServices', () => {
     });
 
     it('calls listServices without petId when not provided', async () => {
-      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([mockService, mockService2]);
+      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce(paginated([mockService, mockService2], { total: 2 }));
 
       const { result } = renderHook(() => useServices());
 
@@ -177,8 +190,8 @@ describe('useServices', () => {
 
     it('re-fetches when petId changes', async () => {
       (mockedApi.listServices as ReturnType<typeof vi.fn>)
-        .mockResolvedValueOnce([mockService])
-        .mockResolvedValueOnce([mockService2]);
+        .mockResolvedValueOnce(paginated([mockService]))
+        .mockResolvedValueOnce(paginated([mockService2]));
 
       const { result, rerender } = renderHook(
         ({ petId }) => useServices({ petId }),
@@ -203,7 +216,7 @@ describe('useServices', () => {
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
       vi.clearAllMocks();
-      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([mockService]);
+      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce(paginated([mockService]));
 
       await act(async () => {
         result.current.refresh();
@@ -215,7 +228,7 @@ describe('useServices', () => {
     });
 
     it('handles goToPage', async () => {
-      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
+      (mockedApi.listServices as ReturnType<typeof vi.fn>).mockResolvedValueOnce(paginated([]));
 
       const { result } = renderHook(() => useServices());
 

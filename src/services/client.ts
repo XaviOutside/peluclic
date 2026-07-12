@@ -1,14 +1,15 @@
 import { http } from '@/services/http';
 import type { Client, CreateClientDto, UpdateClientDto } from '@/types/client';
+import type { PaginatedResponse } from '@/types/pagination';
 
 /**
  * Typed fetch wrappers for the /api/v1/clients endpoints.
  * All functions return typed responses and throw HttpError on failure.
  */
 
-/** Fetch paginated list of clients. */
-export function listClients(page = 1, limit = 20): Promise<Client[]> {
-  return http<Client[]>(`/clients?page=${page}&limit=${limit}`);
+/** Fetch paginated list of clients with metadata. */
+export function listClients(page = 1, limit = 20): Promise<PaginatedResponse<Client>> {
+  return http<PaginatedResponse<Client>>(`/clients?page=${page}&limit=${limit}`);
 }
 
 /** Fetch a single client by ID. */

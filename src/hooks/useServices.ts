@@ -9,6 +9,7 @@ import {
   deleteService as apiDelete,
   searchServices,
 } from '@/services/service';
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
 
 interface UseServicesState {
   services: Service[];
@@ -17,6 +18,8 @@ interface UseServicesState {
   error: string | null;
   page: number;
   limit: number;
+  totalCount: number;
+  totalPages: number;
 }
 
 const DEFAULT_PAGE = 1;
@@ -36,7 +39,9 @@ export function useServices(options: UseServicesOptions = {}) {
     isLoading: true,
     error: null,
     page: DEFAULT_PAGE,
-    limit: 20,
+    limit: DEFAULT_PAGE_SIZE,
+    totalCount: 0,
+    totalPages: 0,
   });
   const fetchIdRef = useRef(0);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,11 +51,14 @@ export function useServices(options: UseServicesOptions = {}) {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const data = await listServices(page, limit, petId);
+      const result = await listServices(page, limit, petId);
       if (id === fetchIdRef.current) {
         setState((prev) => ({
           ...prev,
-          services: data,
+          services: result.data,
+          page: result.meta.page,
+          totalCount: result.meta.total,
+          totalPages: result.meta.totalPages,
           isLoading: false,
           error: null,
         }));
@@ -80,6 +88,18 @@ export function useServices(options: UseServicesOptions = {}) {
     [fetchList, state.limit],
   );
 
+  const goToNextPage = useCallback(() => {
+    if (state.page < state.totalPages) {
+      goToPage(state.page + 1);
+    }
+  }, [state.page, state.totalPages, goToPage]);
+
+  const goToPreviousPage = useCallback(() => {
+    if (state.page > 1) {
+      goToPage(state.page - 1);
+    }
+  }, [state.page, goToPage]);
+
   const search = useCallback(
     (query: string) => {
       if (searchTimerRef.current) {
@@ -87,14 +107,14 @@ export function useServices(options: UseServicesOptions = {}) {
       }
 
       if (!query.trim()) {
-        // Revert to list view
-        fetchList(1, 20);
+        // Revert to list view, reset page to 1
+        fetchList(1, DEFAULT_PAGE_SIZE);
         return;
       }
 
       searchTimerRef.current = setTimeout(async () => {
         const id = ++fetchIdRef.current;
-        setState((prev) => ({ ...prev, isLoading: true, error: null }));
+        setState((prev) => ({ ...prev, isLoading: true, error: null, page: 1 }));
 
         try {
           const data = await searchServices(query);
@@ -228,7 +248,7 @@ export function useServices(options: UseServicesOptions = {}) {
 
   // Auto-fetch on mount
   useEffect(() => {
-    fetchList(DEFAULT_PAGE, 20);
+    fetchList(DEFAULT_PAGE, DEFAULT_PAGE_SIZE);
   }, [fetchList]);
 
   return {
@@ -238,10 +258,16 @@ export function useServices(options: UseServicesOptions = {}) {
     error: state.error,
     page: state.page,
     limit: state.limit,
+    totalCount: state.totalCount,
+    totalPages: state.totalPages,
+    hasNextPage: state.page < state.totalPages,
+    hasPreviousPage: state.page > 1,
     search,
     fetchService,
     refresh,
     goToPage,
+    goToNextPage,
+    goToPreviousPage,
     createService: handleCreateService,
     updateService: handleUpdateService,
     deactivateService: handleDeactivateService,
