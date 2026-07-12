@@ -60,6 +60,7 @@ export default function ClientDetailCard({
           <DetailRow label="Phone" value={client.phone} />
           <DetailRow label="Secondary Phone" value={client.phone2} />
           <DetailRow label="Address" value={client.address} />
+          <DetailRow label="Notes" value={client.notes} />
           <DetailRow label="Created" value={formatDate(client.createdAt)} />
           <DetailRow label="Updated" value={formatDate(client.updatedAt)} />
         </dl>

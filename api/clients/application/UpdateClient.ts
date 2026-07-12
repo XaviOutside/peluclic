@@ -13,7 +13,7 @@ export class UpdateClientUseCase {
     }
 
     // Explicitly exclude status — status changes only via DeactivateClient
-    const { name, email, phone, phone2, address } = input;
+    const { name, email, phone, phone2, address, notes } = input;
     const updateData: Omit<UpdateClientInput, 'status'> = {};
 
     if (name !== undefined) updateData.name = name;
@@ -21,6 +21,7 @@ export class UpdateClientUseCase {
     if (phone !== undefined) updateData.phone = phone;
     if (phone2 !== undefined) updateData.phone2 = phone2;
     if (address !== undefined) updateData.address = address;
+    if (notes !== undefined) updateData.notes = notes;
 
     return this.repository.update(id, updateData);
   }

@@ -13,4 +13,6 @@ export interface CreateClientDto {
   phone2?: string;
   /** Physical address — optional */
   address?: string;
+  /** Notes — optional */
+  notes?: string;
 }

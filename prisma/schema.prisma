@@ -21,6 +21,7 @@ model Client {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt       DateTime? @map("deleted_at")
   lastServiceDate DateTime? @map("last_service_date") @db.Date
+  notes          String?   @db.Text
 
   @@fulltext([name, email])
   @@map("clients")

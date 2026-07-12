@@ -18,6 +18,7 @@ export interface Client {
   address: string | null;
   status: ClientStatus;
   lastServiceDate: Date | null;
+  notes: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -29,6 +30,7 @@ export interface CreateClientInput {
   phone: string;
   phone2?: string | null;
   address?: string | null;
+  notes?: string | null;
 }
 
 export interface UpdateClientInput {
@@ -37,6 +39,7 @@ export interface UpdateClientInput {
   phone?: string;
   phone2?: string | null;
   address?: string | null;
+  notes?: string | null;
   /** Only set by DeactivateClient use case — not exposed via UpdateClientDto */
   status?: ClientStatus;
 }

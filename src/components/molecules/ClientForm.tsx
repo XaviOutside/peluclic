@@ -10,6 +10,7 @@ export interface ClientFormData {
   phone: string;
   phone2: string;
   address: string;
+  notes: string;
 }
 
 export interface ClientFormProps {
@@ -25,6 +26,7 @@ const emptyForm: ClientFormData = {
   phone: '',
   phone2: '',
   address: '',
+  notes: '',
 };
 
 export default function ClientForm({
@@ -68,7 +70,7 @@ export default function ClientForm({
     // Validate all fields on submit
     const errors = validateClientForm(formData);
     setFieldErrors(errors);
-    setTouched(new Set(['name', 'email', 'phone', 'phone2', 'address']));
+    setTouched(new Set(['name', 'email', 'phone', 'phone2', 'address', 'notes']));
 
     if (!isValid(errors)) return;
 
@@ -133,6 +135,15 @@ export default function ClientForm({
         onBlur={() => handleBlur('address')}
         error={getFieldError('address')}
         placeholder="123 Main St, City"
+      />
+
+      <Input
+        label="Notes"
+        value={formData.notes}
+        onChange={(e) => handleChange('notes', e.target.value)}
+        onBlur={() => handleBlur('notes')}
+        error={getFieldError('notes')}
+        placeholder="Preferences, medical info, etc."
       />
 
       <div className="flex justify-end gap-3 pt-2">

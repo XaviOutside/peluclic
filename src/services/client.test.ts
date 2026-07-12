@@ -20,7 +20,7 @@ beforeEach(() => {
 describe('listClients', () => {
   it('returns parsed client array on success', async () => {
     const clients = [
-      { id: 1, name: 'Alice', email: 'alice@example.com', phone: '555-0101', phone2: null, address: null, status: 'active', createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
+      { id: 1, name: 'Alice', email: 'alice@example.com', phone: '555-0101', phone2: null, address: null, status: 'active', notes: null, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
     ];
     mockFetch.mockResolvedValueOnce({
       ok: true,
@@ -45,7 +45,7 @@ describe('listClients', () => {
 
 describe('getClient', () => {
   it('fetches a single client by id', async () => {
-    const client = { id: 42, name: 'Bob', email: 'bob@example.com', phone: '555-0102', phone2: null, address: null, status: 'active', createdAt: '', updatedAt: '' };
+    const client = { id: 42, name: 'Bob', email: 'bob@example.com', phone: '555-0102', phone2: null, address: null, status: 'active', notes: null, createdAt: '', updatedAt: '' };
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -74,7 +74,7 @@ describe('getClient', () => {
 describe('createClient', () => {
   it('posts data and returns created client', async () => {
     const dto = { name: 'New', email: 'new@example.com', phone: '555-0103' };
-    const created = { id: 1, ...dto, phone2: null, address: null, status: 'active', createdAt: '', updatedAt: '' };
+    const created = { id: 1, ...dto, phone2: null, address: null, status: 'active', notes: null, createdAt: '', updatedAt: '' };
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 201,
@@ -93,7 +93,7 @@ describe('createClient', () => {
 describe('updateClient', () => {
   it('puts data and returns updated client', async () => {
     const dto = { name: 'Updated' };
-    const updated = { id: 1, name: 'Updated', email: 'a@b.com', phone: '555-0100', phone2: null, address: null, status: 'active', createdAt: '', updatedAt: '' };
+    const updated = { id: 1, name: 'Updated', email: 'a@b.com', phone: '555-0100', phone2: null, address: null, status: 'active', notes: null, createdAt: '', updatedAt: '' };
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -128,7 +128,7 @@ describe('deleteClient', () => {
 
 describe('reactivateClient', () => {
   it('patches reactivate endpoint', async () => {
-    const client = { id: 1, name: 'A', email: 'a@b.com', phone: '555', phone2: null, address: null, status: 'active', createdAt: '', updatedAt: '' };
+    const client = { id: 1, name: 'A', email: 'a@b.com', phone: '555', phone2: null, address: null, status: 'active', notes: null, createdAt: '', updatedAt: '' };
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -146,7 +146,7 @@ describe('reactivateClient', () => {
 
 describe('deactivateClient', () => {
   it('patches deactivate endpoint', async () => {
-    const client = { id: 1, name: 'A', email: 'a@b.com', phone: '555', phone2: null, address: null, status: 'inactive', createdAt: '', updatedAt: '' };
+    const client = { id: 1, name: 'A', email: 'a@b.com', phone: '555', phone2: null, address: null, status: 'inactive', notes: null, createdAt: '', updatedAt: '' };
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,

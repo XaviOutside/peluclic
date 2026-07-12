@@ -3,8 +3,8 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { useClients } from './useClients';
 
 const mockClients = [
-  { id: 1, name: 'Alice', email: 'alice@example.com', phone: '555-0101', phone2: null, address: null, status: 'active', lastServiceDate: null, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
-  { id: 2, name: 'Bob', email: 'bob@example.com', phone: '555-0102', phone2: null, address: null, status: 'inactive', lastServiceDate: null, createdAt: '2024-01-02T00:00:00Z', updatedAt: '2024-01-02T00:00:00Z' },
+  { id: 1, name: 'Alice', email: 'alice@example.com', phone: '555-0101', phone2: null, address: null, status: 'active', lastServiceDate: null, notes: null, createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
+  { id: 2, name: 'Bob', email: 'bob@example.com', phone: '555-0102', phone2: null, address: null, status: 'inactive', lastServiceDate: null, notes: null, createdAt: '2024-01-02T00:00:00Z', updatedAt: '2024-01-02T00:00:00Z' },
 ];
 
 const mockFetch = vi.fn();

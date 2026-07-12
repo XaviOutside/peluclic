@@ -85,8 +85,10 @@ export default function ClientsPage() {
       span: 'sm:col-span-5',
     },
     {
-      header: 'Estado',
-      render: (c) => <StatusBadge status={c.status} />,
+      header: 'Notas',
+      render: (c) => (
+        <span className="line-clamp-2 text-sm text-on-surface-variant" title={c.notes ?? undefined}>{c.notes || '—'}</span>
+      ),
       span: 'sm:col-span-2',
       mobileVisible: false,
     },

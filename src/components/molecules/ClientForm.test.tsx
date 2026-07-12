@@ -50,6 +50,7 @@ describe('ClientForm', () => {
         phone: '+1 (555) 123-4567',
         phone2: '',
         address: '123 Main St',
+        notes: '',
       });
     });
   });

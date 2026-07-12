@@ -14,4 +14,6 @@ export interface UpdateClientDto {
   phone2?: string | null;
   /** Updated address — optional, null to clear */
   address?: string | null;
+  /** Updated notes — optional, null to clear */
+  notes?: string | null;
 }

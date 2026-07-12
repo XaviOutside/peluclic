@@ -19,6 +19,7 @@ export interface Client {
   address: string | null;
   status: ClientStatus;
   lastServiceDate: string | null;
+  notes: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -30,6 +31,7 @@ export interface CreateClientDto {
   phone: string;
   phone2?: string;
   address?: string;
+  notes?: string;
 }
 
 /** Payload for updating an existing client. All fields optional. */
@@ -39,6 +41,7 @@ export interface UpdateClientDto {
   phone?: string;
   phone2?: string | null;
   address?: string | null;
+  notes?: string | null;
 }
 
 /* PaginatedResponse<T> and ApiError moved to @/shared/types. */

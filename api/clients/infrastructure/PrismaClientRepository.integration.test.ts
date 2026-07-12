@@ -20,6 +20,8 @@ async function seedClient(overrides: Partial<{
   phone2: string | null;
   address: string | null;
   status: number;
+  notes: string | null;
+  lastServiceDate: Date | null;
   deletedAt: Date | null;
 }> = {}): Promise<Client> {
   const row = await prisma.client.create({
@@ -42,6 +44,8 @@ async function seedClient(overrides: Partial<{
     phone2: row.phone2,
     address: row.address,
     status: row.status as 0 | 1,
+    lastServiceDate: row.lastServiceDate ?? null,
+    notes: row.notes ?? null,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
     deletedAt: row.deletedAt,

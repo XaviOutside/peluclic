@@ -31,6 +31,7 @@ const domainClient = {
   address: null,
   status: 1 as const,
   lastServiceDate: null,
+  notes: null,
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
   updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   deletedAt: null,
@@ -46,6 +47,7 @@ const expectedDto = {
   address: null,
   status: 'active',
   lastServiceDate: null,
+  notes: null,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
 };

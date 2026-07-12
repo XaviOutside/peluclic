@@ -31,6 +31,7 @@ export default function ClientEditPage() {
         phone: data.phone,
         phone2: data.phone2 || null,
         address: data.address || null,
+        notes: data.notes || null,
       });
       if (updated) {
         navigate(`/clients/${client.id}`);
@@ -103,6 +104,7 @@ export default function ClientEditPage() {
             phone: client.phone,
             phone2: client.phone2 ?? '',
             address: client.address ?? '',
+            notes: client.notes ?? '',
           }}
           onSubmit={handleSubmit}
           isLoading={updateMutation.isLoading}

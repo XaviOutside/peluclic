@@ -21,6 +21,7 @@ export class PrismaClientRepository implements IClientRepository {
         phone: data.phone,
         phone2: data.phone2 ?? null,
         address: data.address ?? null,
+        notes: data.notes ?? null,
         // status defaults to 1 (active) via schema default
       },
     });
@@ -71,6 +72,7 @@ export class PrismaClientRepository implements IClientRepository {
     if (data.phone !== undefined) updatePayload['phone'] = data.phone;
     if (data.phone2 !== undefined) updatePayload['phone2'] = data.phone2;
     if (data.address !== undefined) updatePayload['address'] = data.address;
+    if (data.notes !== undefined) updatePayload['notes'] = data.notes;
     if (data.status !== undefined) updatePayload['status'] = data.status;
 
     const row = await prisma.client.update({
@@ -99,12 +101,13 @@ export class PrismaClientRepository implements IClientRepository {
       address: string | null;
       status: number;
       last_service_date: Date | null;
+      notes: string | null;
       created_at: Date;
       updated_at: Date;
       deleted_at: Date | null;
     }>>`
       SELECT id, name, email, phone, phone2, address, status,
-             last_service_date, created_at, updated_at, deleted_at
+             last_service_date, notes, created_at, updated_at, deleted_at
       FROM clients
       WHERE MATCH(name, email) AGAINST(${sanitizedQuery} IN BOOLEAN MODE)
         AND deleted_at IS NULL
@@ -120,6 +123,7 @@ export class PrismaClientRepository implements IClientRepository {
       address: row.address,
       status: row.status as 0 | 1,
       lastServiceDate: row.last_service_date,
+      notes: row.notes,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       deletedAt: row.deleted_at,
@@ -139,6 +143,7 @@ export class PrismaClientRepository implements IClientRepository {
     address: string | null;
     status: number;
     last_service_date?: Date | null;
+    notes?: string | null;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
@@ -152,6 +157,7 @@ export class PrismaClientRepository implements IClientRepository {
       address: row.address,
       status: row.status as 0 | 1,
       lastServiceDate: row.last_service_date ?? null,
+      notes: row.notes ?? null,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       deletedAt: row.deletedAt,

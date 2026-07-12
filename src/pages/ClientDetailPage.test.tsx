@@ -13,6 +13,8 @@ const mockClient = {
   phone2: null,
   address: '123 Main St',
   status: 'active' as const,
+  lastServiceDate: null,
+  notes: null,
   createdAt: '2024-01-01T00:00:00.000Z',
   updatedAt: '2024-01-01T00:00:00.000Z',
 };

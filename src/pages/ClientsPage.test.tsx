@@ -15,6 +15,7 @@ const mockClientWithAllFields: Client = {
   phone2: '555-1002',
   address: 'Calle Mayor 12',
   status: 'active',
+  notes: null,
   lastServiceDate: '2026-06-15',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
@@ -28,6 +29,7 @@ const mockClientMinimal: Client = {
   phone2: null,
   address: null,
   status: 'active',
+  notes: null,
   lastServiceDate: null,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
@@ -61,6 +63,7 @@ describe('ClientsPage', () => {
     // Column headers may appear in both desktop header row and mobile card labels
     expect(screen.getByText('Cliente')).toBeInTheDocument();
     expect(screen.getAllByText('Contacto').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Notas').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Estado').length).toBeGreaterThan(0);
 
     // "Último servicio" column no longer exists — date moved inside Cliente column
@@ -91,7 +94,8 @@ describe('ClientsPage', () => {
   it('renders em dash for null last service date', () => {
     renderPage();
 
-    expect(screen.getByText('—')).toBeInTheDocument();
+    // Both null lastServiceDate and null notes render '—'
+    expect(screen.getAllByText('—').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders expanded contact details with phone2 and address when present', () => {

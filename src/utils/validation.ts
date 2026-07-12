@@ -55,6 +55,7 @@ export interface ClientFormData {
   phone: string;
   phone2: string;
   address: string;
+  notes: string;
 }
 
 /**

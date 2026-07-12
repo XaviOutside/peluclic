@@ -126,13 +126,14 @@ export class ClientController {
     }
 
     try {
-      const { name, email, phone, phone2, address } = body;
+      const { name, email, phone, phone2, address, notes } = body;
       const client = await this.updateClientUseCase.execute(id, {
         name,
         email,
         phone,
         phone2,
         address,
+        notes,
       });
       res.status(200).json(toClientResponseDto(client));
     } catch (err) {
