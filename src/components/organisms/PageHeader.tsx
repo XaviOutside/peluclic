@@ -9,6 +9,8 @@ export interface PageHeaderProps {
   searchValue?: string;
   /** Called when search value changes */
   onSearchChange?: (value: string) => void;
+  /** Called when explicit search is triggered (Enter key or button click) */
+  onSearchSubmit?: () => void;
   /** Primary action button */
   action?: ReactNode;
   /** Additional class names */
@@ -21,6 +23,7 @@ export default function PageHeader({
   searchPlaceholder,
   searchValue,
   onSearchChange,
+  onSearchSubmit,
   action,
   className = '',
   hideSearch = false,
@@ -33,12 +36,33 @@ export default function PageHeader({
       data-testid="page-header"
     >
       {!hideSearch && (
-        <div className="flex-1 w-full max-w-md">
-          <SearchInput
-            value={searchValue}
-            onValueChange={onSearchChange}
-            placeholder={searchPlaceholder ?? t('actions.search')}
-          />
+        <div className="flex-1 w-full max-w-md flex items-center gap-2">
+          <div className="flex-1">
+            <SearchInput
+              value={searchValue}
+              onValueChange={onSearchChange}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && onSearchSubmit) {
+                  e.preventDefault();
+                  onSearchSubmit();
+                }
+              }}
+              placeholder={searchPlaceholder ?? t('actions.search')}
+            />
+          </div>
+          {onSearchSubmit && (
+            <button
+              type="button"
+              onClick={onSearchSubmit}
+              data-testid="search-submit"
+              className="flex-shrink-0 rounded-lg border border-outline-variant bg-surface p-2 text-outline hover:bg-surface-container-highest hover:text-on-surface transition-colors duration-150 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+              aria-label={t('actions.search')}
+            >
+              <span className="material-symbols-outlined text-xl" aria-hidden="true">
+                search
+              </span>
+            </button>
+          )}
         </div>
       )}
       {action && (

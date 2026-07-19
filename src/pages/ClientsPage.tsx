@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { Client } from '@/types/client';
@@ -46,17 +46,50 @@ export default function ClientsPage() {
   }
 
   /* ── Search ── */
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const handleSearchChange = useCallback(
-    (query: string) => {
-      setSearchQuery(query);
-      if (!query.trim()) {
-        fetchClients();
-      } else {
-        search(query);
+    (value: string) => {
+      setSearchQuery(value);
+
+      // Clear previous debounce timer
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+
+      const trimmed = value.trim();
+
+      // 3-char gate: < 3 chars → don't search, keep current list
+      if (trimmed.length < 3) {
+        // Empty query → re-fetch all clients (normal list view)
+        if (!trimmed) {
+          fetchClients();
+        }
+        // Short non-empty query → do nothing, keep current results
+        return;
       }
+
+      // >= 3 chars → debounce 300ms then search
+      debounceRef.current = setTimeout(() => {
+        search(value);
+      }, 300);
     },
     [search, setSearchQuery, fetchClients],
   );
+
+  /** Explicit submit (Enter key or search button click) — bypasses debounce. */
+  const handleSearchSubmit = useCallback(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    const trimmed = searchQuery.trim();
+
+    if (!trimmed) {
+      fetchClients();
+    } else if (trimmed.length < 3) {
+      // Gate: short query → don't search, keep current state
+      return;
+    } else {
+      search(searchQuery);
+    }
+  }, [searchQuery, search, fetchClients]);
 
   /* ── Column defs ── */
   const columns: ColumnConfig<Client>[] = [
@@ -182,6 +215,7 @@ export default function ClientsPage() {
         searchPlaceholder={t('common:actions.searchClients')}
         searchValue={searchQuery}
         onSearchChange={handleSearchChange}
+        onSearchSubmit={handleSearchSubmit}
         action={
           <Button
             variant="primary"

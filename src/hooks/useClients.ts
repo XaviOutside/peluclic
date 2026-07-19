@@ -143,6 +143,17 @@ export function useClients() {
     }
   }, [state.page, goToPage]);
 
+  /** Clear search results without making an API call (3-char gate). */
+  const clearSearchResults = useCallback((query: string) => {
+    setState((prev) => ({
+      ...prev,
+      clients: [],
+      searchQuery: query,
+      isLoading: false,
+      error: null,
+    }));
+  }, []);
+
   // Auto-fetch on mount
   useEffect(() => {
     fetchClients(1);
@@ -161,6 +172,7 @@ export function useClients() {
     fetchClients: () => fetchClients(state.page),
     search,
     setSearchQuery,
+    clearSearchResults,
     goToPage,
     goToNextPage,
     goToPreviousPage,
