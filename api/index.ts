@@ -40,6 +40,11 @@ import { SoftDeleteServiceUseCase } from './services/application/SoftDeleteServi
 import { SearchServicesUseCase } from './services/application/SearchServices';
 import { ServiceController } from './services/interface/ServiceController';
 import { createServiceRouter } from './services/interface/serviceRouter';
+import { PrismaSettingsRepository } from './settings/infrastructure/PrismaSettingsRepository';
+import { GetSettingsUseCase } from './settings/application/GetSettings';
+import { UpdateSettingsUseCase } from './settings/application/UpdateSettings';
+import { SettingsController } from './settings/interface/SettingsController';
+import { createSettingsRouter } from './settings/interface/settingsRouter';
 
 // Validate required environment variables at startup (skip in test environment)
 if (process.env['NODE_ENV'] !== 'test' && !process.env['DATABASE_URL']) {
@@ -127,6 +132,14 @@ const serviceController = new ServiceController(
   new SearchServicesUseCase(serviceRepository),
 );
 app.use('/api/v1/services', createServiceRouter(serviceController));
+
+// Settings bounded context — wire dependencies
+const settingsRepository = new PrismaSettingsRepository();
+const settingsController = new SettingsController(
+  new GetSettingsUseCase(settingsRepository),
+  new UpdateSettingsUseCase(settingsRepository),
+);
+app.use('/api/v1/settings', createSettingsRouter(settingsController));
 
 // 404 handler — must be last route
 app.use((_req: Request, res: Response) => {
