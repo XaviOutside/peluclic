@@ -76,6 +76,7 @@ conventions:
       - clients
       - pets
       - services
+      - settings
     shared_modules:
       - shared/domain (BaseEntity, errors)
       - shared/infrastructure (Prisma client)
@@ -115,5 +116,7 @@ completed_sdd_cycles:
     status: archived
 
 active_sdd_changes:
+  - id: company-settings
+    phase: apply
   - id: petmanager
     phase: explore

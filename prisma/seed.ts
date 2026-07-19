@@ -392,6 +392,18 @@ async function main() {
   const allServices = [...services, ...createdExtraServices];
   console.log(`✅ ${createdExtraServices.length} extra services created (${allServices.length} total)`);
 
+  /* ── Company Settings (singleton) ── */
+  const settings = await prisma.companySettings.create({
+    data: {
+      companyName: 'Bark & Bubbles',
+      workdays: [1, 2, 3, 4, 5],
+      workStartTime: '09:00',
+      workEndTime: '17:00',
+      defaultLang: 0,
+    },
+  });
+  console.log(`✅ Company settings created (id=${settings.id})`);
+
   /* ── Summary ── */
   console.log('\n📊 Seed complete!');
   console.log(`   ${allClients.length} clients (2 inactive)`);
