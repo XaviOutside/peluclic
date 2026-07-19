@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/molecules/LanguageSwitcher';
 import { getSettings } from '@/services/settings';
@@ -29,6 +29,7 @@ const linkBaseClasses =
 
 export default function Sidebar() {
   const { t } = useTranslation('common');
+  const navigate = useNavigate();
   const [companyName, setCompanyName] = useState<string | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [tagline, setTagline] = useState<string | null>(null);
@@ -55,6 +56,13 @@ export default function Sidebar() {
       cancelled = true;
     };
   }, []);
+
+  const handleNewAppointment = () => {
+    // Dispatch event for AppointmentsPage to open the modal,
+    // then navigate to /calendar if not already there
+    window.dispatchEvent(new CustomEvent('open-appointment-modal'));
+    navigate('/calendar');
+  };
 
   return (
     <nav className="fixed left-0 top-0 z-40 hidden h-full w-64 flex-col border-r border-outline-variant bg-surface-container p-4 md:flex">
@@ -84,7 +92,10 @@ export default function Sidebar() {
       </div>
 
       {/* New Appointment CTA */}
-      <button className="mb-6 flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 font-label text-label-md text-on-primary shadow-sm transition-colors hover:bg-surface-tint">
+      <button
+        onClick={handleNewAppointment}
+        className="mb-6 flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 font-label text-label-md text-on-primary shadow-sm transition-colors hover:bg-surface-tint"
+      >
         <span
           className="material-symbols-outlined"
           style={{ fontVariationSettings: "'FILL' 1" }}

@@ -17,6 +17,7 @@ import ServiceCreatePage from '@/pages/ServiceCreatePage';
 import ServiceDetailPage from '@/pages/ServiceDetailPage';
 import ServiceEditPage from '@/pages/ServiceEditPage';
 import SettingsPage from '@/pages/SettingsPage';
+import AppointmentsPage from '@/pages/AppointmentsPage';
 
 function NotFoundPage() {
   const { t } = useTranslation('common');
@@ -60,6 +61,7 @@ export default function App() {
         <Route path="/services/new" element={<ServiceCreatePage />} />
         <Route path="/services/:id" element={<ServiceDetailPage />} />
         <Route path="/services/:id/edit" element={<ServiceEditPage />} />
+        <Route path="/calendar" element={<AppointmentsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>
 
