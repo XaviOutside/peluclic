@@ -23,7 +23,6 @@ model Client {
   lastServiceDate DateTime? @map("last_service_date") @db.Date
   notes          String?   @db.Text
 
-  @@fulltext([name, email])
   @@map("clients")
 }
 
@@ -42,7 +41,6 @@ model Pet {
   updatedAt   DateTime  @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
 
-  @@fulltext([name, breed, notes])
   @@map("pets")
 }
 
