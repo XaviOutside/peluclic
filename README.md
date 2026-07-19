@@ -1,4 +1,4 @@
-# pfmaster — Plataforma gestión peluquerías caninas (Peluclic)
+# Peluclic — Plataforma gestión peluquerías caninas
 
 Plataforma de gestión integral para peluquerías caninas. Gestiona clientes, mascotas, servicios de peluquería y citas con un calendario semanal, búsqueda full-text y multi-idioma (EN/ES).
 
