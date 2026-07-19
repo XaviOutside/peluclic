@@ -7,11 +7,14 @@ const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Returns the Monday 00:00:00.000 UTC of the week containing `date`.
+ * If `date` is a Sunday, returns the NEXT Monday (prefer future over past week).
  */
 export function getWeekStart(date: Date): Date {
   const d = new Date(date);
   const day = d.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
-  const diff = day === 0 ? -6 : 1 - day; // Monday offset
+  // Monday offset: Monday=0, Tuesday=-1, ..., Sunday=-6 (→ next Monday)
+  // For Sunday, go forward 1 day to next Monday. For other days, go back to Monday.
+  const diff = day === 0 ? 1 : 1 - day;
   d.setUTCDate(d.getUTCDate() + diff);
   d.setUTCHours(0, 0, 0, 0);
   return d;

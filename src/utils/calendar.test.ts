@@ -35,11 +35,11 @@ describe('getWeekStart', () => {
     expect(result.toISOString()).toBe('2026-07-20T00:00:00.000Z');
   });
 
-  it('returns previous Monday for a Sunday', () => {
+  it('returns next Monday for a Sunday', () => {
     const sunday = new Date('2026-07-26T10:00:00.000Z');
     const result = getWeekStart(sunday);
 
-    expect(result.toISOString()).toBe('2026-07-20T00:00:00.000Z');
+    expect(result.toISOString()).toBe('2026-07-27T00:00:00.000Z');
   });
 
   it('crosses month boundary correctly', () => {
@@ -70,11 +70,11 @@ describe('getWeekEnd', () => {
     expect(sunday.toISOString()).toBe('2026-07-26T23:59:59.999Z');
   });
 
-  it('returns same date for a Sunday', () => {
+  it('returns following Sunday for a Sunday', () => {
     const sunday = new Date('2026-07-26T10:00:00.000Z');
     const result = getWeekEnd(sunday);
 
-    expect(result.toISOString()).toBe('2026-07-26T23:59:59.999Z');
+    expect(result.toISOString()).toBe('2026-08-02T23:59:59.999Z');
   });
 });
 
