@@ -5,6 +5,7 @@ import { GetClientUseCase } from '../application/GetClient';
 import { ListClientsUseCase } from '../application/ListClients';
 import { UpdateClientUseCase } from '../application/UpdateClient';
 import { DeactivateClientUseCase } from '../application/DeactivateClient';
+import { ReactivateClientUseCase } from '../application/ReactivateClient';
 import { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import { SearchClientsUseCase } from '../application/SearchClients';
 import {
@@ -62,6 +63,7 @@ export class ClientController {
     private readonly listClientsUseCase: ListClientsUseCase,
     private readonly updateClientUseCase: UpdateClientUseCase,
     private readonly deactivateClientUseCase: DeactivateClientUseCase,
+    private readonly reactivateClientUseCase: ReactivateClientUseCase,
     private readonly softDeleteClientUseCase: SoftDeleteClientUseCase,
     private readonly searchClientsUseCase: SearchClientsUseCase,
   ) {}
@@ -156,6 +158,24 @@ export class ClientController {
 
     try {
       const client = await this.deactivateClientUseCase.execute(id);
+      res.status(200).json(toClientResponseDto(client));
+    } catch (err) {
+      handleError(err, res);
+    }
+  }
+
+  async reactivateClient(req: Request, res: Response): Promise<void> {
+    const rawId = String(req.params['id'] ?? '');
+    const id = parsePositiveInt(rawId);
+
+    if (id === null) {
+      logger.warn({ id: req.params['id'] }, 'Invalid client id');
+      res.status(422).json({ error: 'Invalid id — must be a positive integer' });
+      return;
+    }
+
+    try {
+      const client = await this.reactivateClientUseCase.execute(id);
       res.status(200).json(toClientResponseDto(client));
     } catch (err) {
       handleError(err, res);

@@ -15,6 +15,7 @@ import { GetClientUseCase } from './clients/application/GetClient';
 import { ListClientsUseCase } from './clients/application/ListClients';
 import { UpdateClientUseCase } from './clients/application/UpdateClient';
 import { DeactivateClientUseCase } from './clients/application/DeactivateClient';
+import { ReactivateClientUseCase } from './clients/application/ReactivateClient';
 import { SoftDeleteClientUseCase } from './clients/application/SoftDeleteClient';
 import { SearchClientsUseCase } from './clients/application/SearchClients';
 import { ClientController } from './clients/interface/ClientController';
@@ -61,10 +62,10 @@ app.use(cors({
   allowedHeaders: ['Content-Type'],
 }));
 
-// Rate limiting — 100 requests per 15 minutes per IP
+// Rate limiting — 100 reqs/15min per IP in production; relaxed in dev
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: process.env.NODE_ENV === 'production' ? 100 : 10_000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, please try again later' },
@@ -97,6 +98,7 @@ const clientController = new ClientController(
   new ListClientsUseCase(clientRepository),
   new UpdateClientUseCase(clientRepository),
   new DeactivateClientUseCase(clientRepository, petRepository),
+  new ReactivateClientUseCase(clientRepository),
   new SoftDeleteClientUseCase(clientRepository, petRepository),
   new SearchClientsUseCase(clientRepository),
 );

@@ -44,6 +44,11 @@ export function createClientRouter(controller: ClientController): Router {
     controller.deactivateClient(req, res),
   );
 
+  // PATCH  /api/v1/clients/:id/reactivate
+  router.patch('/:id/reactivate', (req: Request, res: Response) =>
+    controller.reactivateClient(req, res),
+  );
+
   // DELETE /api/v1/clients/:id
   router.delete('/:id', (req: Request, res: Response) =>
     controller.deleteClient(req, res),

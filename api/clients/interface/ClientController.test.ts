@@ -18,6 +18,7 @@ import type { GetClientUseCase } from '../application/GetClient';
 import type { ListClientsUseCase } from '../application/ListClients';
 import type { UpdateClientUseCase } from '../application/UpdateClient';
 import type { DeactivateClientUseCase } from '../application/DeactivateClient';
+import type { ReactivateClientUseCase } from '../application/ReactivateClient';
 import type { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import type { SearchClientsUseCase } from '../application/SearchClients';
 
@@ -58,6 +59,7 @@ const mockGet = { execute: vi.fn() } as unknown as GetClientUseCase;
 const mockList = { execute: vi.fn() } as unknown as ListClientsUseCase;
 const mockUpdate = { execute: vi.fn() } as unknown as UpdateClientUseCase;
 const mockDeactivate = { execute: vi.fn() } as unknown as DeactivateClientUseCase;
+const mockReactivate = { execute: vi.fn() } as unknown as ReactivateClientUseCase;
 const mockSoftDelete = { execute: vi.fn() } as unknown as SoftDeleteClientUseCase;
 const mockSearch = { execute: vi.fn() } as unknown as SearchClientsUseCase;
 
@@ -67,6 +69,7 @@ const controller = new ClientController(
   mockList,
   mockUpdate,
   mockDeactivate,
+  mockReactivate,
   mockSoftDelete,
   mockSearch,
 );
