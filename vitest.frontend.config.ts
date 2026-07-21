@@ -6,6 +6,11 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}'],
     exclude: ['node_modules/**'],
     environment: 'jsdom',
+    environmentOptions: {
+      jsdom: {
+        url: 'http://localhost:5173',
+      },
+    },
     setupFiles: ['./src/test-setup.ts'],
   },
   resolve: {
