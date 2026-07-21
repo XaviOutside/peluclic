@@ -1,5 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useStorageMode } from '@/storage/useStorageMode';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SVG Icons — equivalents to Material Symbols in the HTML
@@ -30,10 +31,17 @@ const CutIcon = ({ size = 'md' }: { size?: IconSize }) => (
 const HERO_IMAGE = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCP-2mYS7jEBiaj96KxUzIEoVrDgBH7ztDf1MC8dzTuE96cNVVrENH_iCSrjDJpKi1jGO4opzISofyKXyV7ugm0S7ubPvbRPBx_ZZK_NT1B03uV1UwH56LafVJD9CL4unewK9c0nuSe6B1dQYpsEBy9B5SArfRvP-65qp6hsrk0WSzbKCQ_NlU7msqVJsuKrVeqvPNm8e6jB4cqnSpWaE1dTtc1mnFL3STBfxW7uCCfAa6UtoBT36ame0NharO-z7K24ibIeOPxYu8';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Landing Page — matches pantalla_inicial_desktop.html
+   Landing Page — demo mode entry point
    ═══════════════════════════════════════════════════════════════════════════ */
 export default function LandingPage() {
+  const navigate = useNavigate();
   const { t } = useTranslation('landing');
+  const { setMode } = useStorageMode();
+
+  function handleTryDemo() {
+    setMode('demo');
+    navigate('/clients');
+  }
 
   return (
     <>
@@ -47,18 +55,21 @@ export default function LandingPage() {
             {t('hero.subtitle')}
           </p>
           <div className="flex flex-col gap-4 pt-4 sm:flex-row">
-            <NavLink
-              to="/register"
+            <button
+              onClick={handleTryDemo}
               className="inline-flex w-full items-center justify-center rounded-full bg-primary-container px-8 py-3 text-label-md font-semibold text-on-primary-container transition-colors hover:bg-surface-tint sm:w-auto"
+              type="button"
             >
               {t('hero.cta')}
-            </NavLink>
-            <NavLink
-              to="/services"
-              className="inline-flex w-full items-center justify-center rounded-full bg-secondary-container px-8 py-3 text-label-md font-semibold text-on-secondary-container transition-colors hover:bg-secondary-fixed sm:w-auto"
+            </button>
+            <button
+              disabled
+              className="inline-flex w-full cursor-not-allowed items-center justify-center rounded-full bg-secondary-container px-8 py-3 text-label-md font-semibold text-on-secondary-container opacity-50 sm:w-auto"
+              type="button"
+              title={t('hero.loginComingSoon')}
             >
               {t('hero.demo')}
-            </NavLink>
+            </button>
           </div>
         </div>
         <div className="relative mt-8 h-[400px] overflow-hidden rounded-2xl shadow-xl shadow-primary-container/20 md:mt-0 md:h-[500px]">

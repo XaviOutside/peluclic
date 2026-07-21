@@ -1,65 +1,94 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 import LandingPage from '@/pages/LandingPage';
 
-describe('LandingPage', () => {
-  it('does NOT render inline mobile navigation', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
+const mockNavigate = vi.fn();
+const mockSetMode = vi.fn();
 
-    // Landing page no longer has inline nav — verify those labels aren't present
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+const { mockUseStorageMode } = vi.hoisted(() => ({
+  mockUseStorageMode: vi.fn(),
+}));
+
+vi.mock('@/storage/useStorageMode', () => ({
+  useStorageMode: mockUseStorageMode,
+}));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockNavigate.mockReset();
+  mockSetMode.mockReset();
+  // Default: mode = null (unresolved)
+  mockUseStorageMode.mockReturnValue({
+    mode: null,
+    setMode: mockSetMode,
+    isResolved: false,
+  });
+});
+
+function renderLanding() {
+  return render(
+    <MemoryRouter>
+      <LandingPage />
+    </MemoryRouter>,
+  );
+}
+
+describe('LandingPage', () => {
+  it('renders hero section content', () => {
+    renderLanding();
+    expect(screen.getByText('hero.title')).toBeInTheDocument();
+  });
+
+  it('does NOT render inline mobile navigation', () => {
+    renderLanding();
     expect(screen.queryByText('Home')).not.toBeInTheDocument();
     expect(screen.queryByText('Calendar')).not.toBeInTheDocument();
     expect(screen.queryByText('More')).not.toBeInTheDocument();
   });
 
-  it('CTA links to /register via i18n key', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
-
-    // i18n mock returns the key "hero.cta" for t('hero.cta')
-    const ctaLink = screen.getByRole('link', { name: /hero.cta/i });
-    expect(ctaLink).toHaveAttribute('href', '/register');
-  });
-
-  it('renders hero section content', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
-
-    // i18n mock returns keys as values
-    expect(screen.getByText('hero.title')).toBeInTheDocument();
-  });
-
   it('renders features section', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
-
-    // Feature titles are now i18n keys
+    renderLanding();
     expect(screen.getByText('features.scheduling.title')).toBeInTheDocument();
     expect(screen.getByText('features.clients.title')).toBeInTheDocument();
     expect(screen.getByText('features.pets.title')).toBeInTheDocument();
   });
 
   it('renders footer', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
-
+    renderLanding();
     expect(screen.getByText('footer.copyright')).toBeInTheDocument();
+  });
+
+  it('shows "Try Demo" button', () => {
+    renderLanding();
+    const demoButton = screen.getByRole('button', { name: /hero.cta/i });
+    expect(demoButton).toBeInTheDocument();
+  });
+
+  it('clicking "Try Demo" sets mode to demo and navigates to /clients', async () => {
+    const user = userEvent.setup();
+    renderLanding();
+
+    const demoButton = screen.getByRole('button', { name: /hero.cta/i });
+    await user.click(demoButton);
+
+    expect(mockSetMode).toHaveBeenCalledWith('demo');
+    expect(mockNavigate).toHaveBeenCalledWith('/clients');
+  });
+
+  it('shows disabled "Log In" button', () => {
+    renderLanding();
+    const loginButton = screen.getByRole('button', { name: /hero.demo/i });
+    expect(loginButton).toBeInTheDocument();
+    expect(loginButton).toBeDisabled();
   });
 });

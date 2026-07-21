@@ -2,8 +2,9 @@
   "hero": {
     "title": "Manage your grooming salon with ease.",
     "subtitle": "Pawsitive Manager helps you streamline appointments, track customer preferences, and provide the best care for every pet.",
-    "cta": "Free trial",
-    "demo": "View Demo"
+    "cta": "Try Demo",
+    "demo": "Log In",
+    "loginComingSoon": "Account login coming in a future version. Try the demo to explore all features with sample data."
   },
   "features": {
     "title": "Everything you need to run your salon",

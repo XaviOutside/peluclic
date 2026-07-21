@@ -1,5 +1,6 @@
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route, Navigate, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useStorageMode } from '@/storage/useStorageMode';
 import PublicLayout from '@/components/templates/PublicLayout';
 import DashboardLayout from '@/components/templates/DashboardLayout';
 import LandingPage from '@/pages/LandingPage';
@@ -39,11 +40,18 @@ function NotFoundPage() {
 }
 
 export default function App() {
+  const { isResolved } = useStorageMode();
+
+  // Mode-gate: show landing page until user selects demo or api mode
+  if (!isResolved) {
+    return <LandingPage />;
+  }
+
   return (
     <Routes>
       {/* Public routes — full-width, no sidebar/mobile nav */}
       <Route element={<PublicLayout />}>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Navigate to="/clients" replace />} />
         <Route path="/register" element={<RegisterPage />} />
       </Route>
 

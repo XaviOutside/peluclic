@@ -1,42 +1,58 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from '@/App';
 
+const { mockListClients, mockGetSettings } = vi.hoisted(() => ({
+  mockListClients: vi.fn().mockResolvedValue({ data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } }),
+  mockGetSettings: vi.fn().mockResolvedValue({ companyName: 'Bark & Bubbles', logoUrl: null, tagline: null }),
+}));
+
+vi.mock('@/storage/storageContext', () => ({
+  getStorage: () => ({
+    listClients: mockListClients,
+    getSettings: mockGetSettings,
+  }),
+}));
+
+beforeEach(() => {
+  // Set mode to 'api' so useStorageMode returns isResolved=true
+  localStorage.setItem('pf_demo:mode', 'api');
+});
+
 describe('App routing — public routes', () => {
-  it('renders LandingPage at "/" without Sidebar or MobileNav', () => {
+  it('redirects "/" to "/clients" when mode is resolved', async () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>,
     );
 
-    // Landing page content — i18n mock returns keys as values
-    expect(screen.getByText('hero.title')).toBeInTheDocument();
-
-    // Sidebar must NOT be present on public routes ("Bark & Bubbles" is hardcoded in Sidebar)
-    expect(screen.queryByText('Bark & Bubbles')).not.toBeInTheDocument();
-
-    // MobileNav must NOT be present on public routes (i18n key from MobileNav)
-    expect(screen.queryByText('mobileNav.home')).not.toBeInTheDocument();
+    // Redirected to clients page — client list container visible
+    await waitFor(() => {
+      expect(screen.getByTestId('clients-page')).toBeInTheDocument();
+    });
   });
 });
 
 describe('App routing — dashboard routes', () => {
-  it('renders ClientsPage at "/clients" with Sidebar and MobileNav', () => {
+  it('renders ClientsPage at "/clients" with Sidebar and MobileNav', async () => {
     render(
       <MemoryRouter initialEntries={['/clients']}>
         <App />
       </MemoryRouter>,
     );
 
-    // Dashboard page content — clients page container is visible
-    expect(screen.getByTestId('clients-page')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('clients-page')).toBeInTheDocument();
+    });
 
-    // Sidebar must be present on dashboard routes (logo image is unique to Sidebar)
-    expect(screen.getByAltText('Bark & Bubbles logo')).toBeInTheDocument();
+    // Sidebar is present — verify via the "Bark & Bubbles" company name
+    await waitFor(() => {
+      expect(screen.getByText('Bark & Bubbles')).toBeInTheDocument();
+    });
 
-    // MobileNav must be present on dashboard routes (i18n key from MobileNav)
+    // MobileNav must be present on dashboard routes
     expect(screen.getByText('mobileNav.home')).toBeInTheDocument();
   });
 });
