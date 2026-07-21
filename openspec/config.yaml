@@ -1,9 +1,10 @@
 project:
   name: pfmaster
+  display_name: Peluclic
   description: Pet grooming and care management web application
   repository: https://github.com/XaviOutside/pfmaster
   created: 2026-06-21
-  last_scanned: 2026-07-05
+  last_scanned: 2026-07-21
 
 stack:
   language: TypeScript 5.6.3
@@ -18,11 +19,12 @@ stack:
   dev_environment: Docker Compose (api, app, db)
   detected_markers:
     - package.json with React 19, Express, Prisma, Vitest, Vite
-    - prisma/schema.prisma (MySQL provider, FULLTEXT indexes)
+    - prisma/schema.prisma (MySQL provider, FULLTEXT indexes, 5 models)
     - docker-compose.yml (3 services: api, app, db)
     - vite.config.ts (React + Tailwind plugins)
-    - Clean Architecture bounded contexts: clients/, pets/, services/
+    - Clean Architecture bounded contexts: clients/, pets/, services/, appointments/, settings/, shared/
     - Atomic Design frontend: atoms/, molecules/, organisms/
+    - ESLint v9 flat config (SonarQube, React hooks, TypeScript)
 
 testing:
   runner: Vitest 2.1.3
@@ -33,23 +35,25 @@ testing:
     - layer: API unit
       config: vitest.config.ts
       command: npm test
-      count: 30
+      count: 47 test files
       environment: node
     - layer: API integration
       config: vitest.integration.config.ts
       command: npm run test:integration
-      count: 3
+      count: 3 test files
       environment: node (forks, singleFork, 30s timeout)
       requires: Docker MySQL
     - layer: Frontend
       config: vitest.frontend.config.ts
       command: npm run test:frontend
-      count: 27
+      count: 49 test files
       environment: jsdom
     - layer: E2E
-      framework: Playwright (mandated by AGENTS.md)
-      status: NOT_CONFIGURED
-      command: none
+      framework: Playwright 1.61
+      config: playwright.config.ts
+      command: npx playwright test
+      count: 3 spec files (283 lines)
+      environment: chromium (headed CI)
 
 conventions:
   code_style:
@@ -63,7 +67,14 @@ conventions:
     utilities_hooks: camelCase
     db_columns: snake_case
     api_fields: camelCase
-  linter: NOT_CONFIGURED
+  linter: ESLint v9.39.4 (flat config — eslint.config.mjs)
+  linter_plugins:
+    - "@eslint/js (recommended)"
+    - typescript-eslint (recommended)
+    - sonarjs (recommended — cognitive complexity: 18 backend, 25 frontend)
+    - react-hooks (recommended)
+    - react (recommended)
+    - react-refresh
   formatter: NOT_CONFIGURED
   type_checker: tsc (TypeScript compiler)
   commit_style: conventional
@@ -76,6 +87,7 @@ conventions:
       - clients
       - pets
       - services
+      - appointments
       - settings
     shared_modules:
       - shared/domain (BaseEntity, errors)
@@ -84,6 +96,8 @@ conventions:
       - observability (Pino logger)
     fts_search: MySQL FULLTEXT with MATCH AGAINST IN BOOLEAN MODE
     prices: integer cents
+  adr_dir: docs/adr/
+  adr_count: 1
 
 artifacts:
   proposal_dir: openspec/changes
@@ -96,7 +110,7 @@ persistence:
   mode: hybrid
   engram_enabled: true
   openspec_enabled: true
-  engram_topic_key: sdd-init/pfmaster
+  engram_topic_key: sdd-init/peluclic
   sync_interval: session_close
 
 strict_tdd_mode: true
@@ -114,9 +128,41 @@ completed_sdd_cycles:
   - id: "2026-06-28-link-pet-services"
     title: Link Pet Services
     status: archived
+  - id: "2026-07-11-client-listing-enhancements"
+    title: Client Listing Enhancements (FTS + actions)
+    status: archived
+  - id: "2026-07-11-public-layout-no-sidebar"
+    title: Public Layout without Sidebar
+    status: archived
+  - id: "2026-07-19-appointment-calendar"
+    title: Appointment Calendar (API + Frontend)
+    status: archived
+  - id: "2026-07-19-i18n-literals"
+    title: i18n Literals Extraction
+    status: archived
 
 active_sdd_changes:
   - id: company-settings
     phase: apply
+    description: Company name, work calendar, language preference
+  - id: demo-mode-localstorage
+    phase: apply
+    description: Demo mode persistence via localStorage
   - id: petmanager
     phase: explore
+    description: Pet management enhancements
+  - id: add-client-notes-column
+    phase: apply
+    description: Add notes column to clients table
+  - id: client-fts-search
+    phase: apply
+    description: Full-text search for clients
+  - id: listing-page-actions
+    phase: completed (verify done, pending archive)
+    description: Listing page action buttons
+  - id: listing-pagination
+    phase: apply
+    description: Pagination for listing pages
+  - id: move-last-service-and-contact-fields
+    phase: propose
+    description: Move last service date and contact fields

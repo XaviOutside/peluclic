@@ -148,3 +148,6 @@ node_modules/.prisma/
 # npm allow-scripts cache
 .npmrc-approvals
 .DS_Store
+
+# Master presentation
+Presentation.key
