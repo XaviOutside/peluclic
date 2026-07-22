@@ -4,15 +4,15 @@ import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import LandingPage from '@/pages/LandingPage';
 
-const mockNavigate = vi.fn();
 const mockSetMode = vi.fn();
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
+// Mock window.location.href for full page reload on mode change
+const locationRef = { href: '' };
+beforeEach(() => {
+  Object.defineProperty(window, 'location', {
+    value: locationRef,
+    writable: true,
+  });
 });
 
 const { mockUseStorageMode } = vi.hoisted(() => ({
@@ -25,8 +25,8 @@ vi.mock('@/storage/useStorageMode', () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
-  mockNavigate.mockReset();
   mockSetMode.mockReset();
+  locationRef.href = '';
   // Default: mode = null (unresolved)
   mockUseStorageMode.mockReturnValue({
     mode: null,
@@ -82,13 +82,26 @@ describe('LandingPage', () => {
     await user.click(demoButton);
 
     expect(mockSetMode).toHaveBeenCalledWith('demo');
-    expect(mockNavigate).toHaveBeenCalledWith('/clients');
+    expect(locationRef.href).toBe('/clients');
   });
 
-  it('shows disabled "Log In" button', () => {
+  it('renders LanguageSwitcher in the hero section', () => {
     renderLanding();
+    const langButton = screen.getByRole('button', { name: 'language.switchAria' });
+    expect(langButton).toBeInTheDocument();
+  });
+
+  it('clicking "Log In" sets mode to api and navigates to /clients', async () => {
+    const user = userEvent.setup();
+    renderLanding();
+
     const loginButton = screen.getByRole('button', { name: /hero.demo/i });
     expect(loginButton).toBeInTheDocument();
-    expect(loginButton).toBeDisabled();
+    expect(loginButton).toBeEnabled();
+
+    await user.click(loginButton);
+
+    expect(mockSetMode).toHaveBeenCalledWith('api');
+    expect(locationRef.href).toBe('/clients');
   });
 });

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useStorageMode } from '@/storage/useStorageMode';
+import LanguageSwitcher from '@/components/molecules/LanguageSwitcher';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SVG Icons — equivalents to Material Symbols in the HTML
@@ -49,7 +50,10 @@ export default function LandingPage() {
   return (
     <>
       {/* ── Hero Section ── */}
-      <section className="mx-auto max-w-[--container-max] px-[--spacing-margin-mobile] py-12 md:grid md:grid-cols-2 md:items-center md:gap-12 md:px-[--spacing-margin-desktop] md:py-24">
+      <section className="relative mx-auto max-w-[--container-max] px-[--spacing-margin-mobile] py-12 md:grid md:grid-cols-2 md:items-center md:gap-12 md:px-[--spacing-margin-desktop] md:py-24">
+        <LanguageSwitcher
+          className="absolute top-4 right-4 z-10 w-auto rounded-full px-3 py-1.5 text-sm"
+        />
         <div className="space-y-6">
           <h1 className="text-headline-xl-mobile text-on-surface md:text-headline-xl">
             {t('hero.title')}

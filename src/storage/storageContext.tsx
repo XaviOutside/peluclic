@@ -27,6 +27,7 @@ let _currentStorage: IStorage | null = null;
  * Must only be called AFTER `<StorageModeProvider>` has mounted (i.e. inside
  * an event handler, effect, or hook — never at module top-level in services).
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function getStorage(): IStorage {
   if (!_currentStorage) {
     throw new Error(
@@ -45,6 +46,7 @@ export interface UseStorageResult extends StorageContextValue {
 }
 
 /** React hook — consumes the storage context. */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useStorage(): UseStorageResult {
   const ctx = useContext(StorageContext);
   if (!ctx) {
