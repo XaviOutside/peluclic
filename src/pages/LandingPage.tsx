@@ -138,7 +138,7 @@ export default function LandingPage() {
         </div>
         <div className="flex flex-col gap-4 text-center md:flex-row md:text-left">
           <NavLink to="/privacy" className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100">{t('footer.privacy')}</NavLink>
-          <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">{t('footer.terms')}</a>
+          <NavLink to="/terms" className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100">{t('footer.terms')}</NavLink>
           <a className="text-body-md text-on-surface-variant opacity-80 transition-opacity hover:underline hover:opacity-100" href="#">{t('footer.contact')}</a>
         </div>
       </footer>

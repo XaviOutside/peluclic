@@ -55,5 +55,24 @@
       "title": "4. Contacto",
       "content": "Si tienes alguna pregunta sobre esta Política de Privacidad o el uso de tus datos, contacta con el autor a través de los canales oficiales."
     }
+  },
+  "terms": {
+    "title": "Términos de Servicio",
+    "section1": {
+      "title": "1. Aceptación de los Términos",
+      "content": "Al acceder y usar Peluclic, aceptas quedar vinculado por estos Términos de Servicio. Si no estás de acuerdo con alguna parte de estos términos, debes dejar de usar la aplicación inmediatamente. Estos términos pueden actualizarse en cualquier momento sin previo aviso. El uso continuado de la aplicación después de cualquier cambio constituye la aceptación de los nuevos términos."
+    },
+    "section2": {
+      "title": "2. Uso del Servicio",
+      "content": "Peluclic se proporciona como una herramienta para gestionar negocios de peluquería canina. Aceptas usar la aplicación solo con fines lícitos y de acuerdo con estos términos. Eres responsable de mantener la confidencialidad de los datos que introduzcas y de todas las actividades que ocurran bajo tu uso. El servicio se proporciona 'tal cual', sin garantía alguna, expresa o implícita."
+    },
+    "section3": {
+      "title": "3. Limitación de Responsabilidad",
+      "content": "En ningún caso el autor de Peluclic será responsable de daños directos, indirectos, incidentales, especiales o consecuentes que surjan de o en conexión con el uso o la imposibilidad de usar esta aplicación. Esto incluye, entre otros, la pérdida de datos, pérdida de negocio o interrupción de la actividad comercial, incluso si se hubiera advertido de la posibilidad de tales daños."
+    },
+    "section4": {
+      "title": "4. Terminación",
+      "content": "El autor se reserva el derecho de terminar o suspender el acceso a la aplicación en cualquier momento, sin previo aviso, por cualquier motivo. Al terminar, tu derecho a usar la aplicación cesará inmediatamente. Todas las disposiciones de estos términos que por su naturaleza deban sobrevivir a la terminación, sobrevivirán."
+    }
   }
 }
