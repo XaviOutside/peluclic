@@ -36,5 +36,24 @@
     "title": "Coming Soon",
     "message": "Registration is not yet available. Please check back later.",
     "backHome": "Back to home"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "section1": {
+      "title": "1. Demo Version Disclaimer",
+      "content": "The demo version of Peluclic stores all data locally in your browser using localStorage. No data is transmitted to or stored on any external server. The author of this application is not responsible for any data entered, stored, or lost while using the demo version. By using the demo, you acknowledge that your data resides solely on your device and may be lost if you clear your browser storage."
+    },
+    "section2": {
+      "title": "2. Prohibited Conduct",
+      "content": "Any attempt to steal, scrape, intercept, or exfiltrate data from this application — including but not limited to client information, pet records, appointment data, and service configurations — is strictly prohibited. Any attempt to manipulate, falsify, or impersonate the Peluclic portal, its branding, or its image for fraudulent, deceptive, or unauthorized purposes will be prosecuted to the fullest extent of the law."
+    },
+    "section3": {
+      "title": "3. Intellectual Property",
+      "content": "All content, design, code, and branding associated with Peluclic are the intellectual property of their respective owners. Unauthorized reproduction, distribution, or use of any part of this application without explicit permission is prohibited."
+    },
+    "section4": {
+      "title": "4. Contact",
+      "content": "If you have any questions about this Privacy Policy or the use of your data, please contact the author through the official channels."
+    }
   }
 }

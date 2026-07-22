@@ -36,5 +36,24 @@
     "title": "Próximamente",
     "message": "El registro aún no está disponible. Vuelve pronto.",
     "backHome": "Volver al inicio"
+  },
+  "privacy": {
+    "title": "Política de Privacidad",
+    "section1": {
+      "title": "1. Aviso sobre la Versión Demo",
+      "content": "La versión demo de Peluclic almacena todos los datos localmente en tu navegador mediante localStorage. Ningún dato se transmite ni se almacena en ningún servidor externo. El autor de esta aplicación no se hace responsable de los datos introducidos, almacenados o perdidos durante el uso de la versión demo. Al usar la demo, reconoces que tus datos residen únicamente en tu dispositivo y pueden perderse si borras el almacenamiento de tu navegador."
+    },
+    "section2": {
+      "title": "2. Conducta Prohibida",
+      "content": "Cualquier intento de robar, extraer, interceptar o sustraer datos de esta aplicación — incluidos, entre otros, información de clientes, registros de mascotas, datos de citas y configuraciones de servicios — está estrictamente prohibido. Cualquier intento de manipular, falsificar o suplantar el portal Peluclic, su marca o su imagen con fines fraudulentos, engañosos o no autorizados será perseguido con todo el peso de la ley."
+    },
+    "section3": {
+      "title": "3. Propiedad Intelectual",
+      "content": "Todo el contenido, diseño, código y marca asociados a Peluclic son propiedad intelectual de sus respectivos titulares. Queda prohibida la reproducción, distribución o uso no autorizado de cualquier parte de esta aplicación sin permiso explícito."
+    },
+    "section4": {
+      "title": "4. Contacto",
+      "content": "Si tienes alguna pregunta sobre esta Política de Privacidad o el uso de tus datos, contacta con el autor a través de los canales oficiales."
+    }
   }
 }
