@@ -277,6 +277,7 @@ describe('ApiStorage', () => {
 
       expect(mockFetch).toHaveBeenCalledWith('/api/v1/settings/logo', {
         method: 'POST',
+        headers: expect.any(Object) as Record<string, string>,
         body: expect.any(FormData),
       });
 

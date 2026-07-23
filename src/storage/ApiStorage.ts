@@ -168,8 +168,15 @@ export class ApiStorage implements IStorage {
     const formData = new FormData();
     formData.append('logo', file);
 
+    const token = localStorage.getItem('token');
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch('/api/v1/settings/logo', {
       method: 'POST',
+      headers,
       body: formData,
     });
 

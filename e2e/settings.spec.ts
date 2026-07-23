@@ -11,6 +11,13 @@ import { loginAsAdmin } from './helpers/auth';
  * Run: npx playwright test --grep "settings"
  */
 
+/**
+ * Minimal valid 1×1 white PNG, base64-encoded.
+ * 67 bytes — well under the 1 MB limit.
+ */
+const MINIMAL_PNG_BASE64 =
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
 test.describe('company settings', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page);
@@ -85,5 +92,34 @@ test.describe('company settings', () => {
 
     // Should show the persisted name
     await expect(nameInput).toHaveValue('Paws Palace');
+  });
+
+  test('uploads a logo, saves, and shows it in the preview', async ({ page }) => {
+    // Select a minimal PNG file on the hidden file input.
+    // The input's onChange handler stores the file in React state and shows a preview.
+    const fileInput = page.locator('[data-testid="settings-logo-input"]');
+    await fileInput.setInputFiles({
+      name: 'logo.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(MINIMAL_PNG_BASE64, 'base64'),
+    });
+
+    // After file selection, the preview should show the new logo
+    // (an <img> element inside the preview container)
+    const previewImage = page.locator('img[alt="Logo preview"]');
+    await expect(previewImage).toBeVisible({ timeout: 3000 });
+
+    // Save settings (which includes the logo upload)
+    await page.locator('[data-testid="settings-save"]').click();
+
+    // Success feedback must appear (not error) — logo was uploaded and saved
+    const feedback = page.locator('[data-testid="settings-feedback"]');
+    await expect(feedback).toBeVisible({ timeout: 10000 });
+
+    // Verify it's a success message (green background), not an error (red background)
+    await expect(feedback).toHaveClass(/bg-status-success/);
+
+    // After save, the preview should show the uploaded logo (now persisted from API)
+    await expect(page.locator('img[alt="Company logo"]')).toBeVisible({ timeout: 3000 });
   });
 });
