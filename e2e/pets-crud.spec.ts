@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { loginAsAdmin } from './helpers/auth';
 
 /**
  * E2E tests for pet CRUD operations (list, create, read, update, deactivate).
@@ -10,9 +11,7 @@ test.describe('pets CRUD', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem('pf_demo:mode', 'api');
-    });
+    await loginAsAdmin(page);
   });
 
   test('list — page loads with pet rows visible', async ({ page }) => {
