@@ -151,3 +151,5 @@ node_modules/.prisma/
 
 # Master presentation
 Presentation.key
+playwright-report/
+test-results/
