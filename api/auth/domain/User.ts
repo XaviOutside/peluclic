@@ -19,6 +19,7 @@ export const USER_STATUS = {
 export interface User {
   id: number;
   companyId: number;
+  companyName: string;
   email: string;
   passwordHash: string;
   role: UserRole;

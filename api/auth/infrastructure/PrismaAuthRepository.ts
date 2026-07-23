@@ -22,7 +22,9 @@ export class PrismaAuthRepository implements IAuthRepository {
 
     if (!row) return null;
 
-    return this.mapToUser(row);
+    const company = await prisma.company.findUnique({ where: { id: row.companyId } });
+
+    return this.mapToUser(row, company?.name ?? 'Unknown');
   }
 
   async createSession(
@@ -79,20 +81,24 @@ export class PrismaAuthRepository implements IAuthRepository {
     });
   }
 
-  private mapToUser(row: {
-    id: number;
-    companyId: number;
-    email: string;
-    passwordHash: string;
-    role: number;
-    status: number;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }): User {
+  private mapToUser(
+    row: {
+      id: number;
+      companyId: number;
+      email: string;
+      passwordHash: string;
+      role: number;
+      status: number;
+      createdAt: Date;
+      updatedAt: Date;
+      deletedAt: Date | null;
+    },
+    companyName: string,
+  ): User {
     return {
       id: row.id,
       companyId: row.companyId,
+      companyName,
       email: row.email,
       passwordHash: row.passwordHash,
       role: row.role as User['role'],

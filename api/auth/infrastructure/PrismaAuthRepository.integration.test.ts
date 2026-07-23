@@ -64,6 +64,7 @@ describe('PrismaAuthRepository.findUserByEmail', () => {
     expect(user!.id).toBe(seededUserId);
     expect(user!.email).toBe(testEmail);
     expect(user!.companyId).toBe(seededCompanyId);
+    expect(user!.companyName).toBe('Integration Test Co');
     expect(user!.role).toBe(1);
     expect(user!.passwordHash).toBeDefined();
     expect(user!.createdAt).toBeInstanceOf(Date);

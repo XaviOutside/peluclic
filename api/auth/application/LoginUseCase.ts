@@ -52,7 +52,7 @@ export class LoginUseCase {
         email: user.email,
         role: user.role,
         companyId: user.companyId,
-        companyName: 'Default Company',
+        companyName: user.companyName,
       },
     };
   }
