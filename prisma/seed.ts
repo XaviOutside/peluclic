@@ -116,6 +116,7 @@ async function main() {
   console.log('🌱 Seeding pfmaster database…\n');
 
   /* ── Company & Admin User (idempotent) ── */
+  const SEED_ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL ?? 'admin@peluclic.com';
   const SEED_ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD;
   if (!SEED_ADMIN_PASSWORD) {
     console.warn('⚠️  SEED_ADMIN_PASSWORD not set — default company will be created but no admin user.');
@@ -125,7 +126,7 @@ async function main() {
   console.log(`✅ Company "${company.name}" (id=${company.id}) ready`);
 
   if (SEED_ADMIN_PASSWORD) {
-    const admin = await seedAdminUser(prisma, company.id, 'admin@peluclic.com', SEED_ADMIN_PASSWORD);
+    const admin = await seedAdminUser(prisma, company.id, SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD);
     console.log(`✅ Admin user "${admin.email}" (id=${admin.id}) ready`);
   } else {
     console.log('⚠️  Skipping admin user creation — set SEED_ADMIN_PASSWORD to create the admin user.');

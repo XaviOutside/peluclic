@@ -7,7 +7,7 @@ import { seedCompany, seedAdminUser } from './seed';
 const prisma = new PrismaClient();
 
 const SEED_COMPANY_NAME = 'Bark & Bubbles';
-const SEED_ADMIN_EMAIL = 'admin@peluclic.com';
+const SEED_ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL ?? 'admin@peluclic.com';
 
 describe('seedCompany', () => {
   it('creates the default company when none exists', async () => {

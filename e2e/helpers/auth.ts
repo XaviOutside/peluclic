@@ -1,8 +1,8 @@
 import { type Page, request } from '@playwright/test';
 
-const ADMIN_EMAIL = 'admin@peluclic.com';
-const ADMIN_PASSWORD = 'admin123';
-const API_URL = 'http://localhost:3000';
+const ADMIN_EMAIL = process.env['E2E_ADMIN_EMAIL'] ?? 'admin@peluclic.com';
+const ADMIN_PASSWORD = process.env['E2E_ADMIN_PASSWORD'] ?? 'admin123';
+const API_URL = process.env['E2E_API_URL'] ?? 'http://localhost:3000';
 
 /**
  * Logs in via the API and stores the token in localStorage BEFORE the page loads.
