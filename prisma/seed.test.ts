@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { describe, it, expect } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 
@@ -7,7 +8,11 @@ import { seedCompany, seedAdminUser } from './seed';
 const prisma = new PrismaClient();
 
 const SEED_COMPANY_NAME = 'Bark & Bubbles';
-const SEED_ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL ?? 'admin@peluclic.com';
+const SEED_ADMIN_EMAIL = process.env.SEED_ADMIN_EMAIL;
+
+if (!SEED_ADMIN_EMAIL) {
+  throw new Error('SEED_ADMIN_EMAIL must be set in .env to run seed tests');
+}
 
 describe('seedCompany', () => {
   it('creates the default company when none exists', async () => {

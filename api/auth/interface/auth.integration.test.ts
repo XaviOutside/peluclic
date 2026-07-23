@@ -21,8 +21,14 @@ let app: import('express').Application;
 let request: supertest.SuperTest<supertest.Test>;
 
 // Seed credentials — must match prisma/seed.ts
-const SEED_EMAIL = 'admin@peluclic.com';
-const SEED_PASSWORD = process.env['SEED_ADMIN_PASSWORD'] ?? 'admin123';
+const SEED_EMAIL = process.env['SEED_ADMIN_EMAIL'];
+const SEED_PASSWORD = process.env['SEED_ADMIN_PASSWORD'];
+
+if (!SEED_EMAIL || !SEED_PASSWORD) {
+  throw new Error(
+    'SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD must be set in .env for integration tests',
+  );
+}
 // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- test fixture
 const INVALID_PASSWORD = 'wrongpassword123456';
 
