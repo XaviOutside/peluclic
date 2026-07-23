@@ -3,7 +3,7 @@ import path from 'path';
 
 export default defineConfig({
   test: {
-    include: ['api/**/*.test.ts'],
+    include: ['api/**/*.test.ts', 'prisma/seed.test.ts'],
     exclude: ['api/**/*.integration.test.ts', 'node_modules/**'],
     environment: 'node',
     coverage: {

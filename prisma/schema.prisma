@@ -9,8 +9,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(200)
+  status    Int      @db.TinyInt @default(1) // 0=inactive, 1=active
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("companies")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  companyId    Int       @map("company_id") // ref: companies.id — no FK constraint (per project rules)
+  email        String    @unique @db.VarChar(255)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  role         Int       @db.TinyInt @default(1) // 0=admin, 1=employee
+  status       Int       @db.TinyInt @default(1) // 0=inactive, 1=active
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  @@index([companyId])
+  @@map("users")
+}
+
+model Session {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique @db.VarChar(36)
+  userId    Int       @map("user_id") // ref: users.id — no FK constraint (per project rules)
+  companyId Int       @map("company_id") // ref: companies.id — denormalized, no FK constraint (per project rules)
+  expiresAt DateTime  @map("expires_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
 model Client {
   id        Int       @id @default(autoincrement())
+  companyId Int       @default(1) @map("company_id") // ref: companies.id — no FK constraint (per project rules)
   name      String    @db.VarChar(255)
   email     String    @db.VarChar(255)
   phone     String    @db.VarChar(50)
@@ -23,11 +64,13 @@ model Client {
   lastServiceDate DateTime? @map("last_service_date") @db.Date
   notes          String?   @db.Text
 
+  @@index([companyId])
   @@map("clients")
 }
 
 model Pet {
   id          Int       @id @default(autoincrement())
+  companyId   Int       @default(1) @map("company_id") // ref: companies.id — no FK constraint (per project rules)
   client_id   Int       // ref: clients.id — no FK constraint (per project rules)
   name        String    @db.VarChar(255)
   species     String    @db.VarChar(100)
@@ -41,11 +84,13 @@ model Pet {
   updatedAt   DateTime  @updatedAt @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
 
+  @@index([companyId])
   @@map("pets")
 }
 
 model Service {
   id              Int       @id @default(autoincrement())
+  companyId       Int       @default(1) @map("company_id") // ref: companies.id — no FK constraint (per project rules)
   name            String    @db.VarChar(255)
   description     String?   @db.Text
   durationMinutes Int?      @map("duration_minutes")
@@ -56,6 +101,7 @@ model Service {
   updatedAt       DateTime  @updatedAt @map("updated_at")
   deletedAt       DateTime? @map("deleted_at")
 
+  @@index([companyId])
   @@index([petId])
   @@fulltext([name, description])
   @@map("services")
@@ -63,6 +109,7 @@ model Service {
 
 model Appointment {
   id          Int       @id @default(autoincrement())
+  companyId   Int       @default(1) @map("company_id") // ref: companies.id — no FK constraint (per project rules)
   pet_id      Int       // ref: pets.id — no FK constraint (per project rules)
   client_id   Int       // ref: clients.id — denormalized from pet on create (per project rules)
   scheduledAt DateTime  @map("scheduled_at")
@@ -71,6 +118,7 @@ model Appointment {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
+  @@index([companyId])
   @@index([pet_id])
   @@index([client_id])
   @@index([scheduledAt])
@@ -79,6 +127,7 @@ model Appointment {
 
 model CompanySettings {
   id            Int      @id @default(autoincrement())
+  companyId     Int      @default(1) @map("company_id") // ref: companies.id — no FK constraint (per project rules)
   companyName   String   @map("company_name") @db.VarChar(200)
   tagline       String?  @db.VarChar(100)
   workdays      Json     // array of integers 1–7 (Mon=1, Sun=7)
@@ -88,5 +137,6 @@ model CompanySettings {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
+  @@index([companyId])
   @@map("company_settings")
 }
