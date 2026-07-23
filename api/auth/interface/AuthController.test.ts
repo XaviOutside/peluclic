@@ -69,7 +69,7 @@ describe('POST /api/v1/auth/login', () => {
     const res = await request(makeApp())
       .post('/api/v1/auth/login')
       // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- test fixture
-      .send({ email: 'test@example.com', password: 'admin123456' });
+      .send({ email: 'test@example.com', password: 'test-password-12chars' });
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual(loginResponseDto);
@@ -98,7 +98,7 @@ describe('POST /api/v1/auth/login', () => {
     const res = await request(makeApp())
       .post('/api/v1/auth/login')
       // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- test fixture
-      .send({ email: '', password: 'admin123456' });
+      .send({ email: '', password: 'test-password-12chars' });
 
     expect(res.status).toBe(422);
     expect(res.body).toEqual({ error: 'Email is required' });
@@ -126,7 +126,7 @@ describe('POST /api/v1/auth/login', () => {
     const res = await request(makeApp())
       .post('/api/v1/auth/login')
       // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- test fixture
-      .send({ email: 'test@example.com', password: 'admin123456' });
+      .send({ email: 'test@example.com', password: 'test-password-12chars' });
 
     expect(res.status).toBe(500);
     expect(res.body).toEqual({ error: 'Internal server error' });
