@@ -323,3 +323,93 @@ describe('Error handling', () => {
     expect(res.body).not.toHaveProperty('stack');
   });
 });
+
+// ── Export Client tests (Art. 20 GDPR data portability) ──────────────────────
+
+import { ExportClientUseCase } from '../../clients/application/ExportClient';
+
+const mockExportUseCase = { execute: vi.fn() } as unknown as ExportClientUseCase;
+
+const exportController = new ClientController(
+  mockCreate,
+  mockGet,
+  mockList,
+  mockUpdate,
+  mockDeactivate,
+  mockReactivate,
+  mockSoftDelete,
+  mockSearch,
+  mockExportUseCase,
+);
+
+const makeExportApp = () => {
+  const app = express();
+  app.use(express.json());
+  app.use('/api/v1/clients', createClientRouter(exportController));
+  app.use((_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    res.status(500).json({ error: 'Internal server error' });
+  });
+  return app;
+};
+
+describe('GET /api/v1/clients/:id/export', () => {
+  const mockExportResponse = {
+    exportedAt: '2026-07-25T12:00:00.000Z',
+    dataSubject: {
+      client: expectedDto,
+      pets: [],
+      appointments: [],
+      services: [],
+    },
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns 200 with structured JSON export', async () => {
+    (mockExportUseCase.execute as ReturnType<typeof vi.fn>).mockImplementation(() =>
+      Promise.resolve(mockExportResponse),
+    );
+
+    const res = await request(makeExportApp()).get('/api/v1/clients/42/export');
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('exportedAt');
+    expect(res.body).toHaveProperty('dataSubject');
+    expect(res.body.dataSubject).toHaveProperty('client');
+    expect(res.body.dataSubject).toHaveProperty('pets');
+    expect(res.body.dataSubject).toHaveProperty('appointments');
+    expect(res.body.dataSubject).toHaveProperty('services');
+    expect(res.body.dataSubject.client.id).toBe(1);
+  });
+
+  it('returns 404 when client not found', async () => {
+    (mockExportUseCase.execute as ReturnType<typeof vi.fn>).mockImplementation(() =>
+      Promise.reject(new ClientNotFoundError(999)),
+    );
+
+    const res = await request(makeExportApp()).get('/api/v1/clients/999/export');
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('returns 422 when id is non-numeric', async () => {
+    const res = await request(makeExportApp()).get('/api/v1/clients/abc/export');
+
+    expect(res.status).toBe(422);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('returns 404 for cross-company access (use case rejects)', async () => {
+    (mockExportUseCase.execute as ReturnType<typeof vi.fn>).mockImplementation(() =>
+      Promise.reject(new ClientNotFoundError(42)),
+    );
+
+    const res = await request(makeExportApp()).get('/api/v1/clients/42/export');
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('error');
+  });
+});

@@ -29,6 +29,11 @@ export function createClientRouter(controller: ClientController): Router {
     controller.searchClients(req, res),
   );
 
+  // GET    /api/v1/clients/:id/export  — MUST be declared before /:id
+  router.get('/:id/export', (req: Request, res: Response) =>
+    controller.exportClient(req, res),
+  );
+
   // GET    /api/v1/clients/:id
   router.get('/:id', (req: Request, res: Response) =>
     controller.getClient(req, res),
