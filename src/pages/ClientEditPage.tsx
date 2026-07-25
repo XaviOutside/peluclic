@@ -105,6 +105,7 @@ export default function ClientEditPage() {
             phone2: client.phone2 ?? '',
             address: client.address ?? '',
             notes: client.notes ?? '',
+            consentGivenAt: client.consentGivenAt ?? '',
           }}
           onSubmit={handleSubmit}
           isLoading={updateMutation.isLoading}

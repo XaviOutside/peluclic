@@ -38,6 +38,9 @@ test.describe('clients CRUD', () => {
     await page.getByLabel('Email').fill(`e2e-create-${uniqueSuffix}@test.com`);
     await page.locator('#phone').fill('555-0100');
 
+    // GDPR consent checkbox — required since Art. 7 compliance
+    await page.getByRole('checkbox').check({ force: true });
+
     await page
       .locator('button:has-text("Crear"), button:has-text("Create")')
       .click();
@@ -74,6 +77,15 @@ test.describe('clients CRUD', () => {
 
     const newName = `E2E Updated ${Date.now()}`;
     await page.getByLabel('Name').fill(newName);
+
+    // Ensure GDPR consent checkbox is checked (may be pre-checked for existing clients)
+    const checkbox = page.getByRole('checkbox');
+    if (await checkbox.isVisible()) {
+      const isChecked = await checkbox.isChecked();
+      if (!isChecked) {
+        await checkbox.check({ force: true });
+      }
+    }
 
     await page
       .locator('button:has-text("Actualizar"), button:has-text("Update")')
