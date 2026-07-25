@@ -35,6 +35,7 @@ export interface Appointment {
   scheduledAt: Date;
   status: AppointmentStatus;
   notes: string | null;
+  deletedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,6 +73,7 @@ export function makeAppointment(input: CreateAppointmentInput): Appointment {
     scheduledAt: input.scheduledAt,
     status: APPOINTMENT_STATUS.PENDING,
     notes: input.notes ?? null,
+    deletedAt: null,
     createdAt: now,
     updatedAt: now,
   };

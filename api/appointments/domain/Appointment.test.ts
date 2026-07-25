@@ -12,6 +12,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   APPOINTMENT_STATUS,
+  type Appointment,
   type AppointmentStatus,
   type CreateAppointmentInput,
   makeAppointment,
@@ -157,6 +158,35 @@ describe('validateAppointment', () => {
       notes: 'X'.repeat(MAX_NOTES_LENGTH + 1),
     });
     expect(result.length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+// ─── deletedAt (GDPR soft-delete) ──────────────────────────────────────────────
+
+describe('deletedAt', () => {
+  const baseInput: CreateAppointmentInput = {
+    petId: 7,
+    clientId: 42,
+    scheduledAt: new Date('2026-07-20T14:00:00Z'),
+  };
+
+  it('is null on newly created appointments', () => {
+    const appointment = makeAppointment(baseInput);
+    expect(appointment.deletedAt).toBeNull();
+  });
+
+  it('can be set to a Date when soft-deleted', () => {
+    const appointment = makeAppointment(baseInput);
+    const now = new Date('2026-07-25T12:00:00Z');
+    const withDeletedAt: Appointment = { ...appointment, deletedAt: now };
+    expect(withDeletedAt.deletedAt).toEqual(now);
+    expect(withDeletedAt.deletedAt).toBeInstanceOf(Date);
+  });
+
+  it('has Date | null type when explicitly set to null', () => {
+    const appointment = makeAppointment(baseInput);
+    const withNull: Appointment = { ...appointment, deletedAt: null };
+    expect(withNull.deletedAt).toBeNull();
   });
 });
 

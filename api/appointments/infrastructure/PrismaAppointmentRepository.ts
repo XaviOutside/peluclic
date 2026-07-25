@@ -62,6 +62,7 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
         scheduledAt: string;
         status: number;
         notes: string | null;
+        deletedAt: string | null;
         createdAt: string;
         updatedAt: string;
         pet_name: string;
@@ -75,6 +76,7 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
         a.scheduled_at AS scheduledAt,
         a.status,
         a.notes,
+        a.deleted_at AS deletedAt,
         a.created_at AS createdAt,
         a.updated_at AS updatedAt,
         COALESCE(p.name, '') AS pet_name,
@@ -95,6 +97,7 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
       scheduledAt: new Date(row.scheduledAt),
       status: Number(row.status) as AppointmentDetails['status'],
       notes: row.notes,
+      deletedAt: row.deletedAt ? new Date(row.deletedAt) : null,
       createdAt: new Date(row.createdAt),
       updatedAt: new Date(row.updatedAt),
       petName: row.pet_name,
@@ -135,6 +138,49 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
     return this.mapToAppointment(row);
   }
 
+  async softDelete(id: number): Promise<Appointment> {
+    const row = await prisma.appointment.update({
+      where: { id },
+      data: {
+        status: 3, // CANCELLED
+        deletedAt: new Date(),
+      },
+    });
+
+    return this.mapToAppointment(row);
+  }
+
+  async hardDelete(id: number): Promise<void> {
+    await prisma.appointment.delete({
+      where: { id },
+    });
+  }
+
+  async hardDeleteByPetId(petId: number): Promise<void> {
+    await prisma.appointment.deleteMany({
+      where: { pet_id: petId },
+    });
+  }
+
+  async hardDeleteByClientId(clientId: number): Promise<void> {
+    // Preserves completed appointments (status=2) per GDPR requirements
+    await prisma.appointment.deleteMany({
+      where: {
+        client_id: clientId,
+        status: { not: 2 },
+      },
+    });
+  }
+
+  async findByClientId(clientId: number): Promise<Appointment[]> {
+    const rows = await prisma.appointment.findMany({
+      where: { client_id: clientId },
+      orderBy: { scheduledAt: 'asc' },
+    });
+
+    return rows.map((row) => this.mapToAppointment(row));
+  }
+
   // ── Private mapper ─────────────────────────────────────────────────────────
 
   private mapToAppointment(row: {
@@ -144,6 +190,7 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
     scheduledAt: Date;
     status: number;
     notes: string | null;
+    deletedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
   }): Appointment {
@@ -154,6 +201,7 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
       scheduledAt: row.scheduledAt,
       status: row.status as Appointment['status'],
       notes: row.notes,
+      deletedAt: row.deletedAt,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     };
