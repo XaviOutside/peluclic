@@ -60,5 +60,12 @@
     "actionFailed": "Action failed",
     "createFail": "Failed to create client. Please try again.",
     "updateFail": "Failed to update client. Please try again."
+  },
+  "hardDelete": {
+    "title": "Delete Permanently",
+    "message": "This will permanently delete {{name}} and all associated pets, appointments, and services. This action cannot be undone.",
+    "confirmLabel": "Delete Forever",
+    "success": "{{name}} permanently deleted.",
+    "error": "Error deleting permanently."
   }
 }

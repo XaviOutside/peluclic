@@ -54,7 +54,8 @@
     "createService": "Create Service",
     "tryAgain": "Try Again",
     "unlink": "Unlink",
-    "actions": "Actions"
+    "actions": "Actions",
+    "deletePermanently": "Delete Permanently"
   },
   "status": {
     "active": "Active",
