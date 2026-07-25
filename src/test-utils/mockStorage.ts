@@ -20,7 +20,7 @@ import type { IStorage } from '@/storage/IStorage';
  */
 export function createMockStorage(): Record<keyof IStorage, ReturnType<typeof vi.fn>> {
   return {
-    // Clients (8)
+    // Clients (9)
     listClients: vi.fn(),
     getClient: vi.fn(),
     createClient: vi.fn(),
@@ -29,6 +29,7 @@ export function createMockStorage(): Record<keyof IStorage, ReturnType<typeof vi
     reactivateClient: vi.fn(),
     deactivateClient: vi.fn(),
     searchClients: vi.fn(),
+    exportClient: vi.fn(),
 
     // Pets (7)
     listPets: vi.fn(),

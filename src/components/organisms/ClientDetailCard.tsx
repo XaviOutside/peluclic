@@ -10,11 +10,10 @@ export interface ClientDetailCardProps {
   onDeactivate: () => void;
   onReactivate: () => void;
   onBack: () => void;
-  onHardDelete?: () => void;
+  onExport?: () => void;
   deactivateLoading?: boolean;
   reactivateLoading?: boolean;
-  hardDeleteLoading?: boolean;
-  isAdmin?: boolean;
+  exportLoading?: boolean;
 }
 
 interface DetailRowProps {
@@ -40,11 +39,10 @@ export default function ClientDetailCard({
   onDeactivate,
   onReactivate,
   onBack,
-  onHardDelete,
+  onExport,
   deactivateLoading = false,
   reactivateLoading = false,
-  hardDeleteLoading = false,
-  isAdmin = false,
+  exportLoading = false,
 }: ClientDetailCardProps) {
   const { t } = useTranslation('common');
   const notProvided = t('detail.notProvided');
@@ -79,6 +77,11 @@ export default function ClientDetailCard({
 
       {/* Actions */}
       <div className="flex flex-col gap-2 border-t border-outline-variant bg-surface-container px-6 py-4 sm:flex-row sm:justify-end">
+        {onExport && (
+          <Button variant="secondary" onClick={onExport} loading={exportLoading}>
+            Export Data
+          </Button>
+        )}
         {client.status === 'active' ? (
           <Button variant="danger" onClick={onDeactivate} loading={deactivateLoading}>
             {t('actions.deactivate')}
@@ -91,11 +94,6 @@ export default function ClientDetailCard({
         <Button variant="secondary" onClick={onEdit}>
           {t('actions.edit')}
         </Button>
-        {isAdmin && onHardDelete && (
-          <Button variant="danger" onClick={onHardDelete} loading={hardDeleteLoading}>
-            {t('actions.deletePermanently')}
-          </Button>
-        )}
       </div>
     </div>
   );

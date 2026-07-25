@@ -187,6 +187,17 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
 
   // ── Private mapper ─────────────────────────────────────────────────────────
 
+  async findByClientId(clientId: number): Promise<Appointment[]> {
+    const rows = await prisma.appointment.findMany({
+      where: {
+        client_id: clientId,
+      },
+      orderBy: { id: 'asc' },
+    });
+
+    return rows.map((row) => this.mapToAppointment(row));
+  }
+
   private mapToAppointment(row: {
     id: number;
     pet_id: number;

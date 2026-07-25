@@ -8,7 +8,7 @@ import { DeactivateClientUseCase } from '../application/DeactivateClient';
 import { ReactivateClientUseCase } from '../application/ReactivateClient';
 import { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import { SearchClientsUseCase } from '../application/SearchClients';
-import { HardDeleteClientUseCase } from '../application/HardDeleteClient';
+import { ExportClientUseCase } from '../application/ExportClient';
 import {
   ClientNotFoundError,
   ClientValidationError,
@@ -67,21 +67,13 @@ export class ClientController {
     private readonly reactivateClientUseCase: ReactivateClientUseCase,
     private readonly softDeleteClientUseCase: SoftDeleteClientUseCase,
     private readonly searchClientsUseCase: SearchClientsUseCase,
-    private readonly hardDeleteClientUseCase: HardDeleteClientUseCase,
+    private readonly exportClientUseCase?: ExportClientUseCase,
   ) {}
 
   async createClient(req: Request, res: Response): Promise<void> {
     try {
       const body = req.body as CreateClientDto;
-      const client = await this.createClientUseCase.execute({
-        name: body.name,
-        email: body.email,
-        phone: body.phone,
-        phone2: body.phone2,
-        address: body.address,
-        notes: body.notes,
-        consentGivenAt: new Date(body.consentGivenAt),
-      });
+      const client = await this.createClientUseCase.execute(body);
       res.status(201).json(toClientResponseDto(client));
     } catch (err) {
       handleError(err, res);
@@ -227,19 +219,25 @@ export class ClientController {
     }
   }
 
-  async hardDeleteClient(req: Request, res: Response): Promise<void> {
+  async exportClient(req: Request, res: Response): Promise<void> {
+    if (!this.exportClientUseCase) {
+      res.status(501).json({ error: 'Export not available' });
+      return;
+    }
+
     const rawId = String(req.params['id'] ?? '');
     const id = parsePositiveInt(rawId);
 
     if (id === null) {
-      logger.warn({ id: req.params['id'] }, 'Invalid client id');
+      logger.warn({ id: req.params['id'] }, 'Invalid client id for export');
       res.status(422).json({ error: 'Invalid id — must be a positive integer' });
       return;
     }
 
     try {
-      await this.hardDeleteClientUseCase.execute(id);
-      res.status(204).send();
+      const companyId = req.companyId;
+      const exportData = await this.exportClientUseCase.execute(id, companyId);
+      res.status(200).json(exportData);
     } catch (err) {
       handleError(err, res);
     }
