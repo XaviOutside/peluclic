@@ -96,4 +96,11 @@ describe('ClientForm', () => {
     const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
     expect(submitBtn).toBeDisabled();
   });
+
+  it('displays Art. 9 sensitive data warning near notes field', () => {
+    render(<ClientForm onSubmit={vi.fn()} />);
+
+    // Warning should be visible near the notes field
+    expect(screen.getByText('form.warning.sensitiveData')).toBeInTheDocument();
+  });
 });

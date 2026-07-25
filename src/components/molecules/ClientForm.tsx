@@ -150,6 +150,8 @@ export default function ClientForm({
         placeholder={t('form.placeholder.notes')}
       />
 
+      <p className="text-xs text-on-surface-variant/70 italic">{t('form.warning.sensitiveData')}</p>
+
       <div className="flex justify-end gap-3 pt-2">
         <Button type="submit" variant="primary" loading={isLoading}>
           {isEdit ? t('form.submit.update') : t('form.submit.create')}

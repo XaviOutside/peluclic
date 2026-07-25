@@ -29,6 +29,9 @@
     "submit": {
       "create": "Create Client",
       "update": "Update Client"
+    },
+    "warning": {
+      "sensitiveData": "⚠️ Notes may contain health data. Avoid storing sensitive personal data (Art. 9 GDPR)."
     }
   },
   "deactivate": {
