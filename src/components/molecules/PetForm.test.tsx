@@ -186,4 +186,12 @@ describe('PetForm', () => {
       expect(screen.getByText(nameKey)).toBeInTheDocument();
     });
   });
+
+  it('displays Art. 9 sensitive data warning near notes field', () => {
+    render(
+      <PetForm onSubmit={vi.fn()} clientOptions={mockClientOptions} />,
+    );
+
+    expect(screen.getByText('form.warning.sensitiveData')).toBeInTheDocument();
+  });
 });

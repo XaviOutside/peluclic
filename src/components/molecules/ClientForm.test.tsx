@@ -104,6 +104,7 @@ describe('ClientForm', () => {
     expect(submitBtn).toBeDisabled();
   });
 
+<<<<<<< HEAD
   it('renders mandatory GDPR consent checkbox with label', () => {
     render(<ClientForm onSubmit={vi.fn()} />);
 
@@ -163,5 +164,12 @@ describe('ClientForm', () => {
     // Verify consentGivenAt is a valid ISO 8601 string
     const callArgs = onSubmit.mock.calls[0][0];
     expect(() => new Date(callArgs.consentGivenAt)).not.toThrow();
+=======
+  it('displays Art. 9 sensitive data warning near notes field', () => {
+    render(<ClientForm onSubmit={vi.fn()} />);
+
+    // Warning should be visible near the notes field
+    expect(screen.getByText('form.warning.sensitiveData')).toBeInTheDocument();
+>>>>>>> feat/gdpr-transparency-pii-dpa
   });
 });

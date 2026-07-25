@@ -39,22 +39,66 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "section1": {
-      "title": "1. Demo Version Disclaimer",
-      "content": "The demo version of Peluclic stores all data locally in your browser using localStorage. No data is transmitted to or stored on any external server. The author of this application is not responsible for any data entered, stored, or lost while using the demo version. By using the demo, you acknowledge that your data resides solely on your device and may be lost if you clear your browser storage."
-    },
-    "section2": {
-      "title": "2. Prohibited Conduct",
-      "content": "Any attempt to steal, scrape, intercept, or exfiltrate data from this application — including but not limited to client information, pet records, appointment data, and service configurations — is strictly prohibited. Any attempt to manipulate, falsify, or impersonate the Peluclic portal, its branding, or its image for fraudulent, deceptive, or unauthorized purposes will be prosecuted to the fullest extent of the law."
-    },
-    "section3": {
-      "title": "3. Intellectual Property",
-      "content": "All content, design, code, and branding associated with Peluclic are the intellectual property of their respective owners. Unauthorized reproduction, distribution, or use of any part of this application without explicit permission is prohibited."
-    },
-    "section4": {
-      "title": "4. Contact",
-      "content": "If you have any questions about this Privacy Policy or the use of your data, please contact the author through the official channels."
-    }
+    "sections": [
+      {
+        "title": "1. Data Controller",
+        "content": "Peluclic Grooming Solutions is the data controller responsible for the processing of your personal data. You can contact us through the official channels listed on our website for any privacy-related inquiries."
+      },
+      {
+        "title": "2. Purpose of Processing",
+        "content": "We process personal data — including client names, contact details, pet information, and appointment records — exclusively for the purpose of managing and operating your pet grooming business. No data is used for unrelated purposes, profiling, or commercial exploitation."
+      },
+      {
+        "title": "3. Legal Basis for Processing",
+        "content": "The processing of personal data is based on the performance of a contract (the provision of grooming services), compliance with legal obligations, and — where applicable — your explicit consent. You may withdraw consent at any time without affecting the lawfulness of prior processing."
+      },
+      {
+        "title": "4. Categories of Personal Data",
+        "content": "The categories of data we process include: identification data (name), contact data (email, phone, address), pet-related data (species, breed, health notes), and service data (appointment history, service preferences). We do not collect special categories of data under Article 9 GDPR unless voluntarily provided in free-text notes."
+      },
+      {
+        "title": "5. Data Recipients",
+        "content": "Your personal data is accessible only to authorized personnel within your grooming business. We do not sell, rent, or share personal data with third parties for marketing purposes. Data may be disclosed to competent authorities when required by applicable law."
+      },
+      {
+        "title": "6. Data Retention",
+        "content": "We retain personal data only for as long as necessary to fulfill the purposes for which it was collected, or as required by applicable law. Inactive client records and historical appointments are automatically deleted according to our retention schedule. You may request earlier deletion via your ARCO rights."
+      },
+      {
+        "title": "7. Your ARCO Rights",
+        "content": "Under the GDPR, you have the right to Access your personal data, Rectify inaccurate information, Cancel (delete) your data, and Object to certain processing activities. To exercise any of these rights, please contact the data controller through the provided communication channels. We will respond within one month."
+      },
+      {
+        "title": "8. Right to Withdraw Consent",
+        "content": "Where processing is based on your consent, you have the right to withdraw it at any time. Withdrawal does not affect the lawfulness of processing carried out before the withdrawal. To withdraw consent, contact the data controller."
+      },
+      {
+        "title": "9. Right to Lodge a Complaint",
+        "content": "If you believe that the processing of your personal data violates the GDPR, you have the right to lodge a complaint with a supervisory authority — in particular in the EU member state of your habitual residence, place of work, or place of the alleged infringement."
+      },
+      {
+        "title": "10. Data Portability (Art. 20)",
+        "content": "You have the right to receive the personal data concerning you in a structured, commonly used, and machine-readable format (JSON). You may also request that this data be transmitted directly to another controller where technically feasible. Use the \"Export Data\" function available in your client profile."
+      },
+      {
+        "title": "11. International Data Transfers",
+        "content": "Your personal data is stored and processed exclusively within the European Economic Area (EEA). We do not transfer personal data to third countries or international organizations. If this changes, we will implement appropriate safeguards and update this policy accordingly."
+      },
+      {
+        "title": "12. Automated Decision-Making",
+        "content": "Peluclic does not use automated decision-making or profiling that produces legal effects concerning you or similarly significantly affects you. All significant decisions regarding your data and services are made by human operators."
+      },
+      {
+        "title": "13. Data Processing Agreement (DPA)",
+        "content": "For businesses that require a formal Data Processing Agreement, a template DPA is available in our documentation. This agreement defines the roles, scope, data categories, subprocessors, security measures, and breach notification procedures in compliance with Article 28 GDPR.",
+        "link": "docs/DPA.md",
+        "linkText": "View Data Processing Agreement"
+      },
+      {
+        "title": "14. Contact",
+        "content": "If you have any questions about this Privacy Policy or wish to exercise your data protection rights, please contact the data controller through the official channels listed on our website."
+      }
+    ]
   },
   "terms": {
     "title": "Terms of Service",

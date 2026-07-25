@@ -171,6 +171,8 @@ export default function PetForm({
         placeholder={t('form.placeholder.notes')}
       />
 
+      <p className="text-xs text-on-surface-variant/70 italic">{t('form.warning.sensitiveData')}</p>
+
       <Select
         label={t('form.label.client')}
         options={clientOptions}
