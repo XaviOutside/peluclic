@@ -24,6 +24,7 @@ import type { CreateAppointmentUseCase } from '../application/CreateAppointment'
 import type { GetAppointmentUseCase } from '../application/GetAppointment';
 import type { ListAppointmentsUseCase } from '../application/ListAppointments';
 import type { UpdateAppointmentUseCase } from '../application/UpdateAppointment';
+import type { CancelAppointmentUseCase } from '../application/CancelAppointment';
 
 /** Stable domain appointment fixture */
 const domainAppointment: Appointment = {
@@ -56,12 +57,14 @@ const mockCreate = { execute: vi.fn() } as unknown as CreateAppointmentUseCase;
 const mockGet = { execute: vi.fn() } as unknown as GetAppointmentUseCase;
 const mockList = { execute: vi.fn(), executeWithDetails: vi.fn() } as unknown as ListAppointmentsUseCase;
 const mockUpdate = { execute: vi.fn() } as unknown as UpdateAppointmentUseCase;
+const mockCancel = { execute: vi.fn() } as unknown as CancelAppointmentUseCase;
 
 const controller = new AppointmentController(
   mockCreate,
   mockGet,
   mockList,
   mockUpdate,
+  mockCancel,
 );
 
 const makeApp = () => {
@@ -349,22 +352,40 @@ describe('PATCH /api/v1/appointments/:id', () => {
 // ── DELETE /api/v1/appointments/:id (cancel) ──────────────────────────────
 
 describe('DELETE /api/v1/appointments/:id', () => {
-  it('returns 200 with cancelled appointment', async () => {
-    const cancelled: Appointment = { ...domainAppointment, status: APPOINTMENT_STATUS.CANCELLED };
-    (mockUpdate.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce(cancelled);
+  it('returns 200 with soft-deleted appointment (status=3, deletedAt set)', async () => {
+    const now = new Date('2026-07-25T12:00:00.000Z');
+    const cancelled: Appointment = {
+      ...domainAppointment,
+      status: APPOINTMENT_STATUS.CANCELLED,
+      deletedAt: now,
+    };
+    (mockCancel.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce(cancelled);
 
     const res = await request(makeApp()).delete('/api/v1/appointments/1');
 
     expect(res.status).toBe(200);
     expect(res.body.status).toBe(3);
+    // Verify the cancel use case (not the update use case) was called
+    expect(mockCancel.execute).toHaveBeenCalledWith(1);
   });
 
   it('returns 404 when appointment not found', async () => {
-    (mockUpdate.execute as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+    (mockCancel.execute as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
       new AppointmentNotFoundError(999),
     );
 
     const res = await request(makeApp()).delete('/api/v1/appointments/999');
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('returns 404 when appointment is already cancelled (soft-deleted)', async () => {
+    (mockCancel.execute as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new AppointmentNotFoundError(1),
+    );
+
+    const res = await request(makeApp()).delete('/api/v1/appointments/1');
 
     expect(res.status).toBe(404);
     expect(res.body).toHaveProperty('error');

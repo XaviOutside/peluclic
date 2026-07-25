@@ -30,6 +30,7 @@ function makeAppt(overrides: Partial<Appointment> = {}): Appointment {
     scheduledAt: baseScheduledAt,
     status: APPOINTMENT_STATUS.PENDING,
     notes: null,
+    deletedAt: null,
     createdAt: new Date('2026-07-19T17:00:00Z'),
     updatedAt: new Date('2026-07-19T17:00:00Z'),
     ...overrides,
@@ -41,8 +42,14 @@ function makeRepo(): IAppointmentRepository {
     create: vi.fn(),
     findById: vi.fn(),
     findByDateRange: vi.fn(),
+    findByDateRangeWithDetails: vi.fn(),
     existsByPetAndTime: vi.fn().mockResolvedValue(false),
     update: vi.fn(),
+    softDelete: vi.fn(),
+    hardDelete: vi.fn(),
+    hardDeleteByPetId: vi.fn(),
+    hardDeleteByClientId: vi.fn(),
+    findByClientId: vi.fn(),
   };
 }
 
@@ -122,6 +129,36 @@ describe('UpdateAppointmentUseCase', () => {
   it('rejects notes update on a completed appointment', async () => {
     const completed = makeAppt({ status: APPOINTMENT_STATUS.COMPLETED });
     vi.mocked(repo.findById).mockResolvedValue(completed);
+
+    await expect(
+      useCase.execute(3, { notes: 'New notes' }),
+    ).rejects.toThrow(AppointmentValidationError);
+  });
+
+  // ── Cancelled (soft-deleted) → immutable ──────────────────────────────────
+
+  it('rejects edit to a soft-deleted appointment (deletedAt != null)', async () => {
+    const cancelled = makeAppt({
+      status: APPOINTMENT_STATUS.CANCELLED,
+      deletedAt: new Date('2026-07-24T10:00:00Z'),
+    });
+    vi.mocked(repo.findById).mockResolvedValue(cancelled);
+
+    await expect(
+      useCase.execute(3, { status: APPOINTMENT_STATUS.CONFIRMED }),
+    ).rejects.toThrow(AppointmentValidationError);
+
+    await expect(
+      useCase.execute(3, { status: APPOINTMENT_STATUS.CONFIRMED }),
+    ).rejects.toThrow('cancelled appointments cannot be modified');
+  });
+
+  it('rejects notes update on a soft-deleted appointment', async () => {
+    const cancelled = makeAppt({
+      status: APPOINTMENT_STATUS.CANCELLED,
+      deletedAt: new Date('2026-07-24T10:00:00Z'),
+    });
+    vi.mocked(repo.findById).mockResolvedValue(cancelled);
 
     await expect(
       useCase.execute(3, { notes: 'New notes' }),
