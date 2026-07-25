@@ -1,33 +1,27 @@
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+interface PrivacySection {
+  title: string;
+  content: string;
+}
+
 export default function PrivacyPage() {
   const { t } = useTranslation('landing');
+
+  const sections = t('privacy.sections', { returnObjects: true }) as unknown as PrivacySection[];
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
       <h1 className="font-headline text-headline-xl text-on-surface">{t('privacy.title')}</h1>
 
       <div className="mt-8 space-y-6 text-body-md text-on-surface-variant">
-        <section>
-          <h2 className="mb-3 font-headline text-headline-md text-on-surface">{t('privacy.section1.title')}</h2>
-          <p>{t('privacy.section1.content')}</p>
-        </section>
-
-        <section>
-          <h2 className="mb-3 font-headline text-headline-md text-on-surface">{t('privacy.section2.title')}</h2>
-          <p>{t('privacy.section2.content')}</p>
-        </section>
-
-        <section>
-          <h2 className="mb-3 font-headline text-headline-md text-on-surface">{t('privacy.section3.title')}</h2>
-          <p>{t('privacy.section3.content')}</p>
-        </section>
-
-        <section>
-          <h2 className="mb-3 font-headline text-headline-md text-on-surface">{t('privacy.section4.title')}</h2>
-          <p>{t('privacy.section4.content')}</p>
-        </section>
+        {sections.map((section, idx) => (
+          <section key={idx}>
+            <h2 className="mb-3 font-headline text-headline-md text-on-surface">{section.title}</h2>
+            <p>{section.content}</p>
+          </section>
+        ))}
       </div>
 
       <NavLink

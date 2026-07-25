@@ -39,22 +39,64 @@
   },
   "privacy": {
     "title": "Política de Privacidad",
-    "section1": {
-      "title": "1. Aviso sobre la Versión Demo",
-      "content": "La versión demo de Peluclic almacena todos los datos localmente en tu navegador mediante localStorage. Ningún dato se transmite ni se almacena en ningún servidor externo. El autor de esta aplicación no se hace responsable de los datos introducidos, almacenados o perdidos durante el uso de la versión demo. Al usar la demo, reconoces que tus datos residen únicamente en tu dispositivo y pueden perderse si borras el almacenamiento de tu navegador."
-    },
-    "section2": {
-      "title": "2. Conducta Prohibida",
-      "content": "Cualquier intento de robar, extraer, interceptar o sustraer datos de esta aplicación — incluidos, entre otros, información de clientes, registros de mascotas, datos de citas y configuraciones de servicios — está estrictamente prohibido. Cualquier intento de manipular, falsificar o suplantar el portal Peluclic, su marca o su imagen con fines fraudulentos, engañosos o no autorizados será perseguido con todo el peso de la ley."
-    },
-    "section3": {
-      "title": "3. Propiedad Intelectual",
-      "content": "Todo el contenido, diseño, código y marca asociados a Peluclic son propiedad intelectual de sus respectivos titulares. Queda prohibida la reproducción, distribución o uso no autorizado de cualquier parte de esta aplicación sin permiso explícito."
-    },
-    "section4": {
-      "title": "4. Contacto",
-      "content": "Si tienes alguna pregunta sobre esta Política de Privacidad o el uso de tus datos, contacta con el autor a través de los canales oficiales."
-    }
+    "sections": [
+      {
+        "title": "1. Responsable del Tratamiento",
+        "content": "Peluclic Grooming Solutions es el responsable del tratamiento de sus datos personales. Puede contactarnos a través de los canales oficiales indicados en nuestro sitio web para cualquier consulta relacionada con la privacidad."
+      },
+      {
+        "title": "2. Finalidad del Tratamiento",
+        "content": "Tratamos datos personales — incluyendo nombres de clientes, datos de contacto, información de mascotas y registros de citas — exclusivamente para la gestión y operación de su negocio de peluquería canina. Ningún dato se utiliza para fines no relacionados, elaboración de perfiles o explotación comercial."
+      },
+      {
+        "title": "3. Base Jurídica del Tratamiento",
+        "content": "El tratamiento de datos personales se basa en la ejecución de un contrato (la prestación de servicios de peluquería), el cumplimiento de obligaciones legales y, cuando corresponda, su consentimiento explícito. Puede retirar el consentimiento en cualquier momento sin que ello afecte a la licitud del tratamiento previo."
+      },
+      {
+        "title": "4. Categorías de Datos Personales",
+        "content": "Las categorías de datos que tratamos incluyen: datos identificativos (nombre), datos de contacto (correo electrónico, teléfono, dirección), datos de mascotas (especie, raza, notas de salud) y datos de servicios (historial de citas, preferencias de servicio). No recopilamos categorías especiales de datos según el Artículo 9 del RGPD, salvo que se proporcionen voluntariamente en notas de texto libre."
+      },
+      {
+        "title": "5. Destinatarios de los Datos",
+        "content": "Sus datos personales son accesibles únicamente para el personal autorizado dentro de su negocio de peluquería. No vendemos, alquilamos ni compartimos datos personales con terceros con fines de marketing. Los datos pueden ser comunicados a las autoridades competentes cuando lo exija la legislación aplicable."
+      },
+      {
+        "title": "6. Conservación de los Datos",
+        "content": "Conservamos los datos personales solo durante el tiempo necesario para cumplir con las finalidades para las que fueron recopilados, o según lo exija la legislación aplicable. Los registros de clientes inactivos y las citas históricas se eliminan automáticamente según nuestro calendario de conservación. Puede solicitar la eliminación anticipada a través de sus derechos ARCO."
+      },
+      {
+        "title": "7. Sus Derechos ARCO",
+        "content": "Según el RGPD, usted tiene derecho a Acceder a sus datos personales, Rectificar información inexacta, Cancelar (eliminar) sus datos y Oponerse a determinadas actividades de tratamiento. Para ejercer cualquiera de estos derechos, contacte al responsable del tratamiento a través de los canales de comunicación proporcionados. Responderemos en el plazo de un mes."
+      },
+      {
+        "title": "8. Derecho a Retirar el Consentimiento",
+        "content": "Cuando el tratamiento se base en su consentimiento, tiene derecho a retirarlo en cualquier momento. La retirada no afecta a la licitud del tratamiento realizado antes de la retirada. Para retirar el consentimiento, contacte al responsable del tratamiento."
+      },
+      {
+        "title": "9. Derecho a Reclamar ante una Autoridad de Control",
+        "content": "Si considera que el tratamiento de sus datos personales infringe el RGPD, tiene derecho a presentar una reclamación ante una autoridad de control — en particular en el Estado miembro de la UE de su residencia habitual, lugar de trabajo o lugar de la presunta infracción."
+      },
+      {
+        "title": "10. Portabilidad de Datos (Art. 20)",
+        "content": "Tiene derecho a recibir los datos personales que le conciernen en un formato estructurado, de uso común y legible por máquina (JSON). También puede solicitar que estos datos se transmitan directamente a otro responsable del tratamiento cuando sea técnicamente posible. Utilice la función \"Exportar Datos\" disponible en su perfil de cliente."
+      },
+      {
+        "title": "11. Transferencias Internacionales de Datos",
+        "content": "Sus datos personales se almacenan y procesan exclusivamente dentro del Espacio Económico Europeo (EEE). No transferimos datos personales a terceros países ni a organizaciones internacionales. Si esto cambia, implementaremos las garantías adecuadas y actualizaremos esta política en consecuencia."
+      },
+      {
+        "title": "12. Decisiones Automatizadas",
+        "content": "Peluclic no utiliza decisiones automatizadas ni elaboración de perfiles que produzcan efectos jurídicos sobre usted o le afecten significativamente de modo similar. Todas las decisiones significativas sobre sus datos y servicios son tomadas por operadores humanos."
+      },
+      {
+        "title": "13. Acuerdo de Encargo de Tratamiento (DPA)",
+        "content": "Para empresas que requieran un Acuerdo de Encargo de Tratamiento formal, hay disponible una plantilla de DPA en nuestra documentación. Este acuerdo define los roles, alcance, categorías de datos, subencargados, medidas de seguridad y procedimientos de notificación de brechas de seguridad conforme al Artículo 28 del RGPD."
+      },
+      {
+        "title": "14. Contacto",
+        "content": "Si tiene alguna pregunta sobre esta Política de Privacidad o desea ejercer sus derechos de protección de datos, contacte al responsable del tratamiento a través de los canales oficiales indicados en nuestro sitio web."
+      }
+    ]
   },
   "terms": {
     "title": "Términos de Servicio",
