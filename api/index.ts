@@ -17,6 +17,7 @@ import { UpdateClientUseCase } from './clients/application/UpdateClient';
 import { DeactivateClientUseCase } from './clients/application/DeactivateClient';
 import { ReactivateClientUseCase } from './clients/application/ReactivateClient';
 import { SoftDeleteClientUseCase } from './clients/application/SoftDeleteClient';
+import { HardDeleteClientUseCase } from './clients/application/HardDeleteClient';
 import { SearchClientsUseCase } from './clients/application/SearchClients';
 import { ClientController } from './clients/interface/ClientController';
 import { createClientRouter } from './clients/interface/clientRouter';
@@ -141,6 +142,7 @@ app.use('/api/v1', createAuthMiddleware(authRepository));
 const clientRepository = new PrismaClientRepository();
 const petRepository = new PrismaPetRepository();
 const serviceRepository = new PrismaServiceRepository();
+const appointmentRepository = new PrismaAppointmentRepository();
 
 // Clients bounded context — wire dependencies
 const clientController = new ClientController(
@@ -152,6 +154,12 @@ const clientController = new ClientController(
   new ReactivateClientUseCase(clientRepository),
   new SoftDeleteClientUseCase(clientRepository, petRepository),
   new SearchClientsUseCase(clientRepository),
+  new HardDeleteClientUseCase(
+    clientRepository,
+    petRepository,
+    appointmentRepository,
+    serviceRepository,
+  ),
 );
 app.use('/api/v1/clients', createClientRouter(clientController));
 
@@ -180,7 +188,6 @@ const serviceController = new ServiceController(
 app.use('/api/v1/services', createServiceRouter(serviceController));
 
 // Appointments bounded context — wire dependencies
-const appointmentRepository = new PrismaAppointmentRepository();
 const appointmentController = new AppointmentController(
   new CreateAppointmentUseCase(appointmentRepository, petRepository),
   new GetAppointmentUseCase(appointmentRepository),

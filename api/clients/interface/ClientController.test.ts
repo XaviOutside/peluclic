@@ -21,6 +21,7 @@ import type { DeactivateClientUseCase } from '../application/DeactivateClient';
 import type { ReactivateClientUseCase } from '../application/ReactivateClient';
 import type { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import type { SearchClientsUseCase } from '../application/SearchClients';
+import type { HardDeleteClientUseCase } from '../application/HardDeleteClient';
 
 /** Stable domain client fixture — used in multiple tests */
 const domainClient = {
@@ -62,6 +63,7 @@ const mockDeactivate = { execute: vi.fn() } as unknown as DeactivateClientUseCas
 const mockReactivate = { execute: vi.fn() } as unknown as ReactivateClientUseCase;
 const mockSoftDelete = { execute: vi.fn() } as unknown as SoftDeleteClientUseCase;
 const mockSearch = { execute: vi.fn() } as unknown as SearchClientsUseCase;
+const mockHardDelete = { execute: vi.fn() } as unknown as HardDeleteClientUseCase;
 
 const controller = new ClientController(
   mockCreate,
@@ -72,6 +74,7 @@ const controller = new ClientController(
   mockReactivate,
   mockSoftDelete,
   mockSearch,
+  mockHardDelete,
 );
 
 const makeApp = () => {
@@ -79,6 +82,24 @@ const makeApp = () => {
   app.use(express.json());
   app.use('/api/v1/clients', createClientRouter(controller));
   // Generic error boundary for unexpected throws from middleware
+  app.use((_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    res.status(500).json({ error: 'Internal server error' });
+  });
+  return app;
+};
+
+/** Creates an Express app with a middleware that injects req.role for auth testing */
+const makeAppWithRole = (role: number) => {
+  const app = express();
+  app.use(express.json());
+  // Inject role before the client router
+  app.use('/api/v1/clients', (req: Request, _res: Response, next: NextFunction) => {
+    req.role = role;
+    req.companyId = 1;
+    req.userId = 1;
+    next();
+  });
+  app.use('/api/v1/clients', createClientRouter(controller));
   app.use((_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
     res.status(500).json({ error: 'Internal server error' });
   });
@@ -321,5 +342,40 @@ describe('Error handling', () => {
     expect(res.status).toBe(500);
     expect(res.body).toEqual({ error: 'Internal server error' });
     expect(res.body).not.toHaveProperty('stack');
+  });
+});
+
+describe('DELETE /api/v1/clients/:id/hard', () => {
+  it('returns 403 when role is not admin (role !== 0)', async () => {
+    const res = await request(makeAppWithRole(1)).delete('/api/v1/clients/1/hard');
+
+    expect(res.status).toBe(403);
+    expect(res.body).toHaveProperty('error', 'Forbidden');
+  });
+
+  it('returns 204 when admin triggers cascade hard-delete', async () => {
+    (mockHardDelete.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce(undefined);
+
+    const res = await request(makeAppWithRole(0)).delete('/api/v1/clients/1/hard');
+
+    expect(res.status).toBe(204);
+    expect(res.body).toEqual({});
+  });
+
+  it('returns 404 when client not found', async () => {
+    (mockHardDelete.execute as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new ClientNotFoundError(999),
+    );
+
+    const res = await request(makeAppWithRole(0)).delete('/api/v1/clients/999/hard');
+
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 422 when id is non-numeric', async () => {
+    const res = await request(makeAppWithRole(0)).delete('/api/v1/clients/abc/hard');
+
+    expect(res.status).toBe(422);
+    expect(res.body).toHaveProperty('error');
   });
 });
