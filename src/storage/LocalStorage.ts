@@ -199,6 +199,30 @@ export class LocalStorage implements IStorage {
       });
   }
 
+  async hardDeleteClient(id: number): Promise<void> {
+    const allClients = this.readCollection<Storable<Client>>('pf_demo:clients');
+    const idx = allClients.findIndex(c => c.id === id);
+    if (idx === -1) {
+      throw new Error(`Client with id ${id} not found`);
+    }
+    // Cascade: remove related pets, appointments, and services
+    allClients.splice(idx, 1);
+    this.writeCollection('pf_demo:clients', allClients);
+
+    const allPets = this.readCollection<Storable<Pet>>('pf_demo:pets');
+    const clientPetIds = allPets.filter(p => p.clientId === id).map(p => p.id);
+    const remainingPets = allPets.filter(p => p.clientId !== id);
+    this.writeCollection('pf_demo:pets', remainingPets);
+
+    const allAppts = this.readCollection<Storable<Appointment>>('pf_demo:appointments');
+    const remainingAppts = allAppts.filter(a => a.clientId !== id);
+    this.writeCollection('pf_demo:appointments', remainingAppts);
+
+    const allSvcs = this.readCollection<Storable<Service>>('pf_demo:services');
+    const remainingSvcs = allSvcs.filter(s => !s.petId || !clientPetIds.includes(s.petId));
+    this.writeCollection('pf_demo:services', remainingSvcs);
+  }
+
   async exportClient(id: number): Promise<Record<string, unknown>> {
     // In demo mode, construct export from localStorage data
     const client = await this.getClient(id);

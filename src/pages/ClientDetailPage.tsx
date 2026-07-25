@@ -180,6 +180,34 @@ export default function ClientDetailPage() {
     );
   }
 
+  function getConfirmTitle(): string {
+    switch (confirmAction) {
+      case 'deactivate': return t('detail.deactivateTitle');
+      case 'reactivate': return t('detail.reactivateTitle');
+      case 'hardDelete': return t('detail.hardDeleteTitle');
+      default: return '';
+    }
+  }
+
+  function getConfirmMessage(): string {
+    if (!client) return '';
+    switch (confirmAction) {
+      case 'deactivate': return t('detail.deactivateMessage', { name: client.name });
+      case 'reactivate': return t('detail.reactivateMessage', { name: client.name });
+      case 'hardDelete': return t('detail.hardDeleteMessage', { name: client.name });
+      default: return '';
+    }
+  }
+
+  function getConfirmLabel(): string {
+    switch (confirmAction) {
+      case 'deactivate': return t('detail.deactivateLabel');
+      case 'reactivate': return t('detail.reactivateLabel');
+      case 'hardDelete': return t('detail.hardDeleteLabel');
+      default: return '';
+    }
+  }
+
   if (error || !client) {
     const isNotFound =
       error?.toLowerCase().includes('not found') ||
