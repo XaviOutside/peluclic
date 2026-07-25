@@ -11,6 +11,7 @@ export const CLIENT_STATUS = {
 
 export interface Client {
   id: number;
+  companyId: number;
   name: string;
   email: string;
   phone: string;
@@ -19,6 +20,7 @@ export interface Client {
   status: ClientStatus;
   lastServiceDate: Date | null;
   notes: string | null;
+  consentGivenAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
