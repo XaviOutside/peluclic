@@ -7,6 +7,7 @@ import {
   deleteClient,
   reactivateClient,
   deactivateClient,
+  exportClient,
 } from '@/services/client';
 
 interface MutationState {
@@ -76,4 +77,8 @@ export function useReactivateClient() {
 
 export function useDeactivateClient() {
   return useMutation<[number], Client>((id) => deactivateClient(id));
+}
+
+export function useExportClient() {
+  return useMutation<[number], Record<string, unknown>>((id) => exportClient(id));
 }

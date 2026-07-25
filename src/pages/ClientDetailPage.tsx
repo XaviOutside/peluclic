@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { Pet } from '@/types/pet';
 import type { Service } from '@/types/service';
 import { useClient } from '@/hooks/useClient';
-import { useDeactivateClient, useReactivateClient } from '@/hooks/useClientMutations';
+import { useDeactivateClient, useReactivateClient, useExportClient } from '@/hooks/useClientMutations';
 import { usePets } from '@/hooks/usePets';
 import { useServices } from '@/hooks/useServices';
 import ClientDetailCard from '@/components/organisms/ClientDetailCard';
@@ -69,6 +69,7 @@ export default function ClientDetailPage() {
   const { client, isLoading, error, refetch } = useClient(clientId);
   const deactivateMutation = useDeactivateClient();
   const reactivateMutation = useReactivateClient();
+  const exportMutation = useExportClient();
 
   const {
     pets,
@@ -135,6 +136,29 @@ export default function ClientDetailPage() {
     }
   }
 
+  async function handleExport() {
+    if (!client) return;
+
+    try {
+      const data = await exportMutation.mutate(client.id);
+      if (!data) return;
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `client-${client.id}-export-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      // Error handled by mutation state
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -184,8 +208,10 @@ export default function ClientDetailPage() {
         onDeactivate={handleDeactivate}
         onReactivate={handleReactivate}
         onBack={() => navigate('/clients')}
+        onExport={handleExport}
         deactivateLoading={deactivateMutation.isLoading}
         reactivateLoading={reactivateMutation.isLoading}
+        exportLoading={exportMutation.isLoading}
       />
 
       {actionError && (

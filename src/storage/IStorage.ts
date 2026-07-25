@@ -44,6 +44,9 @@ export interface IStorage {
   /** Search clients by query string. */
   searchClients(query: string): Promise<Client[]>;
 
+  /** Export all client data as structured JSON (Art. 20 GDPR). */
+  exportClient(id: number): Promise<Record<string, unknown>>;
+
   /* ========================================================================
    * PETS — 7 methods (matches src/services/pet.ts)
    * ======================================================================== */

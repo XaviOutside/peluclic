@@ -55,3 +55,9 @@ export function searchClients(query: string): Promise<Client[]> {
   const storage = getStorage();
   return storage.searchClients(query);
 }
+
+/** Export all client data as structured JSON (Art. 20 GDPR data portability). */
+export function exportClient(id: number): Promise<Record<string, unknown>> {
+  const storage = getStorage();
+  return storage.exportClient(id);
+}
