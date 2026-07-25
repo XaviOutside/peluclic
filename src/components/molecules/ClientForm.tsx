@@ -12,6 +12,7 @@ export interface ClientFormData {
   phone2: string;
   address: string;
   notes: string;
+  consentGivenAt: string;
 }
 
 export interface ClientFormProps {
@@ -28,6 +29,7 @@ const emptyForm: ClientFormData = {
   phone2: '',
   address: '',
   notes: '',
+  consentGivenAt: '',
 };
 
 export default function ClientForm({
@@ -71,14 +73,26 @@ export default function ClientForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
+    // Set consentGivenAt to current ISO timestamp if checkbox is checked (and not already set)
+    const dataToValidate = {
+      ...formData,
+      consentGivenAt: formData.consentGivenAt || '',
+    };
+
     // Validate all fields on submit
-    const errors = validateClientForm(formData);
+    const errors = validateClientForm(dataToValidate);
     setFieldErrors(errors);
-    setTouched(new Set(['name', 'email', 'phone', 'phone2', 'address', 'notes']));
+    setTouched(new Set(['name', 'email', 'phone', 'phone2', 'address', 'notes', 'consentGivenAt']));
 
     if (!isValid(errors)) return;
 
-    await onSubmit(formData);
+    // Set consent timestamp at submit time
+    const submitData = {
+      ...formData,
+      consentGivenAt: formData.consentGivenAt || new Date().toISOString(),
+    };
+
+    await onSubmit(submitData);
   }
 
   function getFieldError(field: string): string | undefined {
@@ -149,6 +163,25 @@ export default function ClientForm({
         error={getFieldError('notes')}
         placeholder={t('form.placeholder.notes')}
       />
+
+      <div className="space-y-1">
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={!!formData.consentGivenAt}
+            onChange={(e) => handleChange('consentGivenAt', e.target.checked ? new Date().toISOString() : '')}
+            onBlur={() => handleBlur('consentGivenAt')}
+            className="mt-1 h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary"
+            aria-label={t('form.consent.label')}
+          />
+          <span className="text-body-sm text-on-surface-variant mt-0.5">
+            {t('form.consent.label')}
+          </span>
+        </label>
+        {getFieldError('consentGivenAt') && (
+          <p className="text-body-sm text-error" role="alert">{getFieldError('consentGivenAt')}</p>
+        )}
+      </div>
 
       <div className="flex justify-end gap-3 pt-2">
         <Button type="submit" variant="primary" loading={isLoading}>

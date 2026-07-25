@@ -16,6 +16,7 @@ export interface ClientResponseDto {
   status: 'active' | 'inactive';
   lastServiceDate: string | null;
   notes: string | null;
+  consentGivenAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -37,6 +38,9 @@ export function toClientResponseDto(client: Client): ClientResponseDto {
       ? client.lastServiceDate.toISOString().slice(0, 10)
       : null,
     notes: client.notes,
+    consentGivenAt: client.consentGivenAt
+      ? client.consentGivenAt.toISOString()
+      : null,
     createdAt: client.createdAt.toISOString(),
     updatedAt: client.updatedAt.toISOString(),
   };

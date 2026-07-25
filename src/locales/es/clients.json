@@ -18,6 +18,9 @@
       "address": "Dirección",
       "notes": "Notas"
     },
+    "consent": {
+      "label": "Consiento el tratamiento de mis datos personales de acuerdo con el RGPD."
+    },
     "placeholder": {
       "name": "Nombre completo del cliente",
       "email": "cliente@ejemplo.com",
