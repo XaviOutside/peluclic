@@ -60,5 +60,8 @@ export function createMockStorage(): Record<keyof IStorage, ReturnType<typeof vi
     getSettings: vi.fn(),
     updateSettings: vi.fn(),
     uploadLogo: vi.fn(),
+
+    // GDPR (1)
+    hardDeleteClient: vi.fn(),
   };
 }

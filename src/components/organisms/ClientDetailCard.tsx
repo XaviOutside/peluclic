@@ -10,10 +10,11 @@ export interface ClientDetailCardProps {
   onDeactivate: () => void;
   onReactivate: () => void;
   onBack: () => void;
-  onExport?: () => void;
+  onHardDelete?: () => void;
   deactivateLoading?: boolean;
   reactivateLoading?: boolean;
-  exportLoading?: boolean;
+  hardDeleteLoading?: boolean;
+  isAdmin?: boolean;
 }
 
 interface DetailRowProps {
@@ -39,10 +40,11 @@ export default function ClientDetailCard({
   onDeactivate,
   onReactivate,
   onBack,
-  onExport,
+  onHardDelete,
   deactivateLoading = false,
   reactivateLoading = false,
-  exportLoading = false,
+  hardDeleteLoading = false,
+  isAdmin = false,
 }: ClientDetailCardProps) {
   const { t } = useTranslation('common');
   const notProvided = t('detail.notProvided');
@@ -94,6 +96,11 @@ export default function ClientDetailCard({
         <Button variant="secondary" onClick={onEdit}>
           {t('actions.edit')}
         </Button>
+        {isAdmin && onHardDelete && (
+          <Button variant="danger" onClick={onHardDelete} loading={hardDeleteLoading}>
+            {t('actions.deletePermanently')}
+          </Button>
+        )}
       </div>
     </div>
   );

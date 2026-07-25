@@ -17,6 +17,7 @@ export type UpdateAppointmentData = Partial<
  * Business rules:
  * - Appointment MUST exist (404 if not found).
  * - Completed appointments (status=2) CANNOT be modified (422).
+ * - Cancelled (soft-deleted) appointments CANNOT be modified (422).
  * - If scheduled_at changes, re-check double-booking (409).
  */
 export class UpdateAppointmentUseCase {
@@ -36,7 +37,14 @@ export class UpdateAppointmentUseCase {
       );
     }
 
-    // 3. If rescheduling, check for double-booking
+    // 3. Cancelled (soft-deleted) appointments are immutable
+    if (existing.deletedAt !== null) {
+      throw new AppointmentValidationError(
+        'cancelled appointments cannot be modified',
+      );
+    }
+
+    // 4. If rescheduling, check for double-booking
     if (
       data.scheduledAt !== undefined &&
       data.scheduledAt.getTime() !== existing.scheduledAt.getTime()
@@ -52,7 +60,7 @@ export class UpdateAppointmentUseCase {
       }
     }
 
-    // 4. Apply updates
+    // 5. Apply updates
     return this.repository.update(id, data);
   }
 }

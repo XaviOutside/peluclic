@@ -22,6 +22,14 @@ export class CreateClientUseCase {
       throw new ClientValidationError('Phone is required');
     }
 
+    if (input.consentGivenAt === null || input.consentGivenAt === undefined) {
+      throw new ClientValidationError('GDPR consent is required');
+    }
+
+    if (isNaN(input.consentGivenAt.getTime())) {
+      throw new ClientValidationError('GDPR consent must be a valid date');
+    }
+
     return this.repository.create({
       ...input,
       // status defaults to ACTIVE — set by repository/DB default,

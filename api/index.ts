@@ -17,6 +17,7 @@ import { UpdateClientUseCase } from './clients/application/UpdateClient';
 import { DeactivateClientUseCase } from './clients/application/DeactivateClient';
 import { ReactivateClientUseCase } from './clients/application/ReactivateClient';
 import { SoftDeleteClientUseCase } from './clients/application/SoftDeleteClient';
+import { HardDeleteClientUseCase } from './clients/application/HardDeleteClient';
 import { SearchClientsUseCase } from './clients/application/SearchClients';
 import { ExportClientUseCase } from './clients/application/ExportClient';
 import { ClientController } from './clients/interface/ClientController';
@@ -46,6 +47,7 @@ import { CreateAppointmentUseCase } from './appointments/application/CreateAppoi
 import { GetAppointmentUseCase } from './appointments/application/GetAppointment';
 import { ListAppointmentsUseCase } from './appointments/application/ListAppointments';
 import { UpdateAppointmentUseCase } from './appointments/application/UpdateAppointment';
+import { CancelAppointmentUseCase } from './appointments/application/CancelAppointment';
 import { AppointmentController } from './appointments/interface/AppointmentController';
 import { createAppointmentRouter } from './appointments/interface/appointmentRouter';
 import { PrismaSettingsRepository } from './settings/infrastructure/PrismaSettingsRepository';
@@ -153,7 +155,12 @@ const clientController = new ClientController(
   new ReactivateClientUseCase(clientRepository),
   new SoftDeleteClientUseCase(clientRepository, petRepository),
   new SearchClientsUseCase(clientRepository),
-  new ExportClientUseCase(clientRepository, petRepository, appointmentRepository, serviceRepository),
+  new HardDeleteClientUseCase(
+    clientRepository,
+    petRepository,
+    appointmentRepository,
+    serviceRepository,
+  ),
 );
 app.use('/api/v1/clients', createClientRouter(clientController));
 
@@ -187,6 +194,7 @@ const appointmentController = new AppointmentController(
   new GetAppointmentUseCase(appointmentRepository),
   new ListAppointmentsUseCase(appointmentRepository),
   new UpdateAppointmentUseCase(appointmentRepository),
+  new CancelAppointmentUseCase(appointmentRepository),
 );
 app.use('/api/v1/appointments', createAppointmentRouter(appointmentController));
 

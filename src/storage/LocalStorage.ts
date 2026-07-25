@@ -115,6 +115,7 @@ export class LocalStorage implements IStorage {
       status: 'active',
       lastServiceDate: null,
       notes: data.notes ?? null,
+      consentGivenAt: data.consentGivenAt ?? null,
       createdAt: now,
       updatedAt: now,
     };
@@ -160,6 +161,21 @@ export class LocalStorage implements IStorage {
     }
     (found as Storable<Client>).deletedAt = this.now();
     this.writeCollection('pf_demo:clients', all);
+  }
+
+  async hardDeleteClient(id: number): Promise<void> {
+    const clients = this.readCollection<Storable<Client>>('pf_demo:clients');
+    const idx = clients.findIndex(c => c.id === id);
+    if (idx === -1) {
+      throw new Error(`Client with id ${id} not found`);
+    }
+    clients.splice(idx, 1);
+    this.writeCollection('pf_demo:clients', clients);
+
+    // Also remove associated pets
+    const pets = this.readCollection<Storable<Pet>>('pf_demo:pets');
+    const remainingPets = pets.filter(p => p.clientId !== id);
+    this.writeCollection('pf_demo:pets', remainingPets);
   }
 
   async reactivateClient(id: number): Promise<Client> {

@@ -4,6 +4,7 @@
  */
 import { Service, CreateServiceInput, UpdateServiceInput } from './Service';
 import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
+import type { Prisma } from '@prisma/client';
 
 export interface FindAllParams {
   page: number;
@@ -18,6 +19,7 @@ export interface IServiceRepository {
   findAll(params: FindAllParams): Promise<PaginatedResult<Service>>;
   update(id: number, data: UpdateServiceInput): Promise<Service>;
   softDelete(id: number): Promise<void>;
+  hardDeleteByPetId(petId: number, tx?: Prisma.TransactionClient): Promise<void>;
   search(sanitizedQuery: string): Promise<Service[]>;
   /**
    * Sets pet_id = NULL on all non-deleted services linked to the given pet.

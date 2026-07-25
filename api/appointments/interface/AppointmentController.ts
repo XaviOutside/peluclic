@@ -4,7 +4,7 @@ import { CreateAppointmentUseCase } from '../application/CreateAppointment';
 import { GetAppointmentUseCase } from '../application/GetAppointment';
 import { ListAppointmentsUseCase } from '../application/ListAppointments';
 import { UpdateAppointmentUseCase } from '../application/UpdateAppointment';
-import { APPOINTMENT_STATUS } from '../domain/Appointment';
+import { CancelAppointmentUseCase } from '../application/CancelAppointment';
 import type { AppointmentStatus } from '../domain/Appointment';
 import {
   AppointmentNotFoundError,
@@ -58,6 +58,7 @@ export class AppointmentController {
     private readonly getAppointmentUseCase: GetAppointmentUseCase,
     private readonly listAppointmentsUseCase: ListAppointmentsUseCase,
     private readonly updateAppointmentUseCase: UpdateAppointmentUseCase,
+    private readonly cancelAppointmentUseCase: CancelAppointmentUseCase,
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {
@@ -162,9 +163,7 @@ export class AppointmentController {
     }
 
     try {
-      const appointment = await this.updateAppointmentUseCase.execute(id, {
-        status: APPOINTMENT_STATUS.CANCELLED,
-      });
+      const appointment = await this.cancelAppointmentUseCase.execute(id);
       res.status(200).json(toAppointmentResponseDto(appointment));
     } catch (err) {
       handleError(err, res);

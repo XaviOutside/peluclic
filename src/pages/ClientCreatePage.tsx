@@ -27,6 +27,7 @@ export default function ClientCreatePage() {
         phone2: data.phone2 || undefined,
         address: data.address || undefined,
         notes: data.notes || undefined,
+        consentGivenAt: data.consentGivenAt,
       });
       if (client) {
         navigate(`/clients/${client.id}`);

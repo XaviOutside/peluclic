@@ -33,6 +33,7 @@ export interface CreateClientInput {
   phone2?: string | null;
   address?: string | null;
   notes?: string | null;
+  consentGivenAt: Date;
 }
 
 export interface UpdateClientInput {

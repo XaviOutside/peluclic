@@ -39,6 +39,10 @@ export class ApiStorage implements IStorage {
     return http<void>(`/clients/${id}`, { method: 'DELETE' });
   }
 
+  hardDeleteClient(id: number): Promise<void> {
+    return http<void>(`/clients/${id}/hard`, { method: 'DELETE' });
+  }
+
   reactivateClient(id: number): Promise<Client> {
     return http<Client>(`/clients/${id}/reactivate`, { method: 'PATCH' });
   }

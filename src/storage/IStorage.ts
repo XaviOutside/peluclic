@@ -44,8 +44,8 @@ export interface IStorage {
   /** Search clients by query string. */
   searchClients(query: string): Promise<Client[]>;
 
-  /** Export all client data as structured JSON (Art. 20 GDPR). */
-  exportClient(id: number): Promise<Record<string, unknown>>;
+  /** Admin-only cascade hard-delete of a client and all related records. */
+  hardDeleteClient(id: number): Promise<void>;
 
   /* ========================================================================
    * PETS — 7 methods (matches src/services/pet.ts)
