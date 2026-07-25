@@ -24,4 +24,7 @@ export interface IServiceRepository {
    * Called by SoftDeletePetUseCase before soft-deleting a pet.
    */
   unlinkAllByPetId(petId: number): Promise<void>;
+
+  /** Finds all non-deleted services linked to the given pet IDs. */
+  findByPetIds(petIds: number[]): Promise<Service[]>;
 }

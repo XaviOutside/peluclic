@@ -25,4 +25,7 @@ export interface IAppointmentRepository {
 
   /** Updates an existing appointment. Returns the updated entity. */
   update(id: number, data: Partial<Pick<Appointment, 'status' | 'notes' | 'scheduledAt'>>): Promise<Appointment>;
+
+  /** Finds all non-deleted appointments for a given client. */
+  findByClientId(clientId: number): Promise<Appointment[]>;
 }
