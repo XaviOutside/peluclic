@@ -148,6 +148,29 @@ export default function ClientDetailPage() {
     }
   }
 
+  async function handleExport() {
+    if (!client) return;
+
+    try {
+      const data = await exportMutation.mutate(client.id);
+      if (!data) return;
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `client-${client.id}-export-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      // Error handled by mutation state
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -217,6 +240,7 @@ export default function ClientDetailPage() {
         onReactivate={handleReactivate}
         onHardDelete={handleHardDelete}
         onBack={() => navigate('/clients')}
+        onExport={handleExport}
         deactivateLoading={deactivateMutation.isLoading}
         reactivateLoading={reactivateMutation.isLoading}
         hardDeleteLoading={hardDeleteMutation.isLoading}

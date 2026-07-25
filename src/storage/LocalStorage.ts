@@ -214,6 +214,34 @@ export class LocalStorage implements IStorage {
       });
   }
 
+  async exportClient(id: number): Promise<Record<string, unknown>> {
+    // In demo mode, construct export from localStorage data
+    const client = await this.getClient(id);
+    const allPets = this.readCollection<Storable<Pet>>('pf_demo:pets');
+    const allServices = this.readCollection<Storable<Service>>('pf_demo:services');
+    const allAppointments = this.readCollection<Storable<Appointment>>('pf_demo:appointments');
+
+    const pets = this.filterActive(allPets).filter(p => p.clientId === id);
+    const petIds = pets.map(p => p.id);
+
+    const services = this.filterActive(allServices).filter(s =>
+      s.petId !== null && petIds.includes(s.petId),
+    );
+    const appointments = this.filterActive(allAppointments).filter(a =>
+      a.clientId === id,
+    );
+
+    return {
+      exportedAt: this.now(),
+      dataSubject: {
+        client,
+        pets,
+        appointments,
+        services,
+      },
+    };
+  }
+
   /* ========================================================================
    * PETS — 7 methods
    * ======================================================================== */

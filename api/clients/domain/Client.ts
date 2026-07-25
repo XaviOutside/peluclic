@@ -11,6 +11,7 @@ export const CLIENT_STATUS = {
 
 export interface Client {
   id: number;
+  companyId: number;
   name: string;
   email: string;
   phone: string;

@@ -19,6 +19,7 @@ import { ReactivateClientUseCase } from './clients/application/ReactivateClient'
 import { SoftDeleteClientUseCase } from './clients/application/SoftDeleteClient';
 import { HardDeleteClientUseCase } from './clients/application/HardDeleteClient';
 import { SearchClientsUseCase } from './clients/application/SearchClients';
+import { ExportClientUseCase } from './clients/application/ExportClient';
 import { ClientController } from './clients/interface/ClientController';
 import { createClientRouter } from './clients/interface/clientRouter';
 import { PrismaPetRepository } from './pets/infrastructure/PrismaPetRepository';

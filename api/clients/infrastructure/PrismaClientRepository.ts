@@ -198,6 +198,7 @@ export class PrismaClientRepository implements IClientRepository {
    */
   private mapToClient(row: {
     id: number;
+    companyId: number;
     name: string;
     email: string;
     phone: string;
@@ -213,6 +214,7 @@ export class PrismaClientRepository implements IClientRepository {
   }): Client {
     return {
       id: row.id,
+      companyId: row.companyId ?? 1,
       name: row.name,
       email: row.email,
       phone: row.phone,

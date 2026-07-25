@@ -8,6 +8,7 @@ import {
   hardDeleteClient,
   reactivateClient,
   deactivateClient,
+  exportClient,
 } from '@/services/client';
 
 interface MutationState {

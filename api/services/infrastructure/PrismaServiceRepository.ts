@@ -126,6 +126,20 @@ export class PrismaServiceRepository implements IServiceRepository {
     });
   }
 
+  async findByPetIds(petIds: number[]): Promise<Service[]> {
+    if (petIds.length === 0) return [];
+
+    const rows = await prisma.service.findMany({
+      where: {
+        petId: { in: petIds },
+        deletedAt: null,
+      },
+      orderBy: { id: 'asc' },
+    });
+
+    return rows.map((row) => this.mapToService(row));
+  }
+
   async search(sanitizedQuery: string): Promise<Service[]> {
     // $queryRaw with tagged template ensures parameterized binding — no string interpolation
     const rows = await prisma.$queryRaw<Array<{
