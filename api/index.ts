@@ -5,6 +5,8 @@ initSentry();
 import { setupExpressErrorHandler } from '@sentry/node';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
+import path from 'path';
+import { existsSync } from 'fs';
 import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
@@ -134,6 +136,17 @@ const authController = new AuthController(
 // Mount auth routes BEFORE the auth middleware so login/logout are public
 // Rate limit only applies to the auth router (login + logout)
 app.use('/api/v1/auth', authLimiter, createAuthRouter(authController));
+
+// Logo endpoint is public — <img> tags don't send Authorization headers.
+const UPLOADS_DIR = path.resolve('api/uploads');
+app.get('/api/v1/settings/logo', (_req: Request, res: Response) => {
+  const logoPath = path.join(UPLOADS_DIR, 'logo.png');
+  if (!existsSync(logoPath)) {
+    res.status(404).json({ error: 'No logo uploaded' });
+    return;
+  }
+  res.sendFile(logoPath);
+});
 
 // Apply auth middleware AFTER auth routes but BEFORE all business routes.
 // All /api/v1/* routes below this line require a valid session token.
