@@ -109,4 +109,45 @@ test.describe('clients CRUD', () => {
 
     await expect(page.locator('[data-testid="feedback-toast"]')).toBeVisible();
   });
+
+  test('hard-delete — creates client, deletes permanently, confirms redirect', async ({ page }) => {
+    // 1. Create a unique client
+    await page.goto('/clients/new');
+    await page.waitForLoadState('networkidle');
+
+    const uniqueSuffix = Date.now();
+    const testName = `E2E HardDelete ${uniqueSuffix}`;
+
+    await page.getByLabel('Name').fill(testName);
+    await page.getByLabel('Email').fill(`e2e-harddelete-${uniqueSuffix}@test.com`);
+    await page.locator('#phone').fill('555-0200');
+    await page.getByRole('checkbox').check({ force: true });
+
+    await page
+      .locator('button:has-text("Crear"), button:has-text("Create")')
+      .click();
+
+    await expect(page).toHaveURL(/\/clients\/\d+$/);
+    await expect(page.locator('h2:has-text("' + testName + '")')).toBeVisible();
+
+    // 2. Click "Eliminar Permanentemente" button
+    await page
+      .locator('button:has-text("Eliminar Permanentemente"), button:has-text("Delete Permanently")')
+      .click();
+
+    // 3. Verify the confirmation modal appears with correct content
+    const dialog = page.locator('[role="dialog"]');
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('h2:has-text("Eliminar Permanentemente"), h2:has-text("Delete Permanently")')).toBeVisible();
+    await expect(dialog.locator('text=' + testName)).toBeVisible();
+
+    // 4. Confirm the hard deletion
+    await dialog
+      .locator('button:has-text("Eliminar para Siempre"), button:has-text("Delete Forever")')
+      .click();
+
+    // 5. Verify redirect to clients list
+    await expect(page).toHaveURL(/\/clients$/);
+    await page.waitForSelector('[data-testid="clients-page"]');
+  });
 });

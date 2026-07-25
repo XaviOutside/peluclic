@@ -54,6 +54,12 @@ export function createClientRouter(controller: ClientController): Router {
     controller.reactivateClient(req, res),
   );
 
+  // DELETE /api/v1/clients/:id/hard — admin-only cascade hard-delete (GDPR Art. 17)
+  // MUST be declared before /:id to avoid the :id param capturing "hard"
+  router.delete('/:id/hard', (req: Request, res: Response) =>
+    controller.hardDeleteClient(req, res),
+  );
+
   // DELETE /api/v1/clients/:id
   router.delete('/:id', (req: Request, res: Response) =>
     controller.deleteClient(req, res),
