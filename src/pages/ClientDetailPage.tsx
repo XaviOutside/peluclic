@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import type { Pet } from '@/types/pet';
 import type { Service } from '@/types/service';
 import { useClient } from '@/hooks/useClient';
-import { useDeactivateClient, useReactivateClient, useExportClient } from '@/hooks/useClientMutations';
+import { useDeactivateClient, useReactivateClient, useExportClient, useHardDeleteClient } from '@/hooks/useClientMutations';
+import { useUser } from '@/hooks/useUser';
 import { usePets } from '@/hooks/usePets';
 import { useServices } from '@/hooks/useServices';
 import ClientDetailCard from '@/components/organisms/ClientDetailCard';
@@ -70,6 +71,9 @@ export default function ClientDetailPage() {
   const deactivateMutation = useDeactivateClient();
   const reactivateMutation = useReactivateClient();
   const exportMutation = useExportClient();
+  const hardDeleteMutation = useHardDeleteClient();
+  const user = useUser();
+  const isAdmin = user?.role === 'admin';
 
   const {
     pets,
@@ -78,7 +82,7 @@ export default function ClientDetailPage() {
   } = usePets(clientId);
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const [confirmAction, setConfirmAction] = useState<'deactivate' | 'reactivate' | null>(null);
+  const [confirmAction, setConfirmAction] = useState<'deactivate' | 'reactivate' | 'hardDelete' | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const handleViewPet = useCallback(
@@ -111,6 +115,11 @@ export default function ClientDetailPage() {
     setShowConfirm(true);
   }
 
+  function handleHardDelete() {
+    setConfirmAction('hardDelete');
+    setShowConfirm(true);
+  }
+
   async function handleConfirm() {
     if (!client || !confirmAction) return;
     setActionError(null);
@@ -118,8 +127,12 @@ export default function ClientDetailPage() {
     try {
       if (confirmAction === 'deactivate') {
         await deactivateMutation.mutate(client.id);
-      } else {
+      } else if (confirmAction === 'reactivate') {
         await reactivateMutation.mutate(client.id);
+      } else if (confirmAction === 'hardDelete') {
+        await hardDeleteMutation.mutate(client.id);
+        navigate('/clients');
+        return;
       }
       setShowConfirm(false);
       setConfirmAction(null);
@@ -207,10 +220,13 @@ export default function ClientDetailPage() {
         onEdit={handleEdit}
         onDeactivate={handleDeactivate}
         onReactivate={handleReactivate}
+        onHardDelete={handleHardDelete}
         onBack={() => navigate('/clients')}
         onExport={handleExport}
+        isAdmin={isAdmin}
         deactivateLoading={deactivateMutation.isLoading}
         reactivateLoading={reactivateMutation.isLoading}
+        hardDeleteLoading={hardDeleteMutation.isLoading}
         exportLoading={exportMutation.isLoading}
       />
 
@@ -228,16 +244,22 @@ export default function ClientDetailPage() {
         }}
         onConfirm={handleConfirm}
         title={
+          confirmAction === 'hardDelete' ? t('hardDelete.title') :
           confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')
         }
         message={
-          confirmAction === 'deactivate'
-            ? t('deactivate.message', { name: client.name })
-            : t('reactivate.message', { name: client.name })
+          confirmAction === 'hardDelete'
+            ? t('hardDelete.message', { name: client.name })
+            : confirmAction === 'deactivate'
+              ? t('deactivate.message', { name: client.name })
+              : t('reactivate.message', { name: client.name })
         }
-        confirmLabel={confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')}
-        destructive={confirmAction === 'deactivate'}
-        isLoading={deactivateMutation.isLoading || reactivateMutation.isLoading}
+        confirmLabel={
+          confirmAction === 'hardDelete' ? t('hardDelete.confirmLabel') :
+          confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')
+        }
+        destructive={confirmAction === 'deactivate' || confirmAction === 'hardDelete'}
+        isLoading={deactivateMutation.isLoading || reactivateMutation.isLoading || hardDeleteMutation.isLoading}
       />
 
       {/* Embedded pet list */}
