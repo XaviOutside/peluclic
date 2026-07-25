@@ -5,7 +5,6 @@ import { GetAppointmentUseCase } from '../application/GetAppointment';
 import { ListAppointmentsUseCase } from '../application/ListAppointments';
 import { UpdateAppointmentUseCase } from '../application/UpdateAppointment';
 import { CancelAppointmentUseCase } from '../application/CancelAppointment';
-import { APPOINTMENT_STATUS } from '../domain/Appointment';
 import type { AppointmentStatus } from '../domain/Appointment';
 import {
   AppointmentNotFoundError,

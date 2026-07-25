@@ -360,7 +360,7 @@ describe('PrismaAppointmentRepository (integration)', () => {
   // ── findByClientId ────────────────────────────────────────────────────────
 
   it('findByClientId returns all appointments for a client, including soft-deleted', async () => {
-    const a1 = await repo.create({
+    await repo.create({
       petId: TEST_PET_ID,
       clientId: TEST_CLIENT_ID,
       scheduledAt: new Date('2026-07-24T16:00:00Z'),
