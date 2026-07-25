@@ -1,43 +1,18 @@
-# appointment-calendar-frontend Specification
+# Delta for appointment-calendar-frontend
 
-## Purpose
+## RENAMED Requirements
 
-Weekly calendar view at `/calendar` and appointment creation modal. Custom CSS Grid layout with zero external calendar dependencies. Component organization: CalendarWeek (organism), AppointmentCard (molecule), AppointmentModal (organism), DateTimePicker (molecule), ClientSearch (molecule).
+### Requirement: New Appointment Modal → Appointment Modal
 
-## Requirements
+(Migration: update any references from "New Appointment Modal" to "Appointment Modal" in docs and test descriptions)
 
-### Requirement: Weekly Calendar Grid
-
-The calendar MUST render a CSS Grid with 7 columns (Mon–Sun), paginated by ±7 days. Each cell SHALL show hourly time slots constrained to CompanySettings `workdays`/`workStartTime`/`workEndTime`, with fallback Mon–Fri 08:00–18:00. Week navigation SHALL update `?week=` query param.
-
-#### Scenario: Current week display
-
-- GIVEN today is Wednesday July 22, 2026
-- WHEN the `/calendar` page loads
-- THEN the grid header shows Mon July 20 – Sun July 26
-
-#### Scenario: Previous/next week navigation
-
-- GIVEN the calendar shows July 20–26
-- WHEN "Previous" is clicked
-- THEN the grid shows July 13–19
-- AND the URL updates to `?week=2026-07-13`
-
-#### Scenario: Business hours fallback
-
-- GIVEN CompanySettings `workStartTime`/`workEndTime` are null
-- WHEN the calendar renders
-- THEN time slots display 08:00–18:00
-
-#### Scenario: Non-workdays muted
-
-- GIVEN `workdays=[1,2,3,4,5]`
-- WHEN the calendar renders
-- THEN Saturday and Sunday columns are visually dimmed
+## MODIFIED Requirements
 
 ### Requirement: AppointmentCard
 
 Each appointment MUST render as an `AppointmentCard` inside its slot cell, showing pet name, client name, and a status badge. Clicking the card SHALL open the edit modal. Pending (0) and confirmed (1) cards SHALL display a cancel icon button in the top-right corner; clicking the cancel icon SHALL invoke `onCancel(appointment)` without triggering the card's `onClick`. Completed (2) and cancelled (3) cards SHALL NOT display the cancel icon.
+
+(Previously: card only triggered the edit modal on click; no cancel icon existed)
 
 #### Scenario: Card rendered in correct slot
 
@@ -67,6 +42,8 @@ Each appointment MUST render as an `AppointmentCard` inside its slot cell, showi
 ### Requirement: Appointment Modal
 
 The Sidebar "New Appointment" button MUST open the modal in create mode. Clicking an existing appointment card SHALL open the modal in edit mode, pre-filled with the appointment's data, with the pet field locked as readonly. In edit mode, the modal MUST include a status selector dropdown (Pending → Confirmed → Completed). On submit, create mode SHALL POST to `/api/v1/appointments`; edit mode SHALL PATCH to `/api/v1/appointments/:id`. On 409, display "Pet already booked at this time."
+
+(Previously: modal was create-only — no edit mode, no status selector, no PATCH submit)
 
 #### Scenario: Client FTS filters pet list
 
@@ -107,6 +84,8 @@ The Sidebar "New Appointment" button MUST open the modal in create mode. Clickin
 - WHEN the user interacts with the status dropdown
 - THEN options displayed are: Pending, Confirmed, Completed
 - AND the current status is pre-selected
+
+## ADDED Requirements
 
 ### Requirement: Edit Mode Status Guard
 
