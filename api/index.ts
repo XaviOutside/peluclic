@@ -47,6 +47,7 @@ import { CreateAppointmentUseCase } from './appointments/application/CreateAppoi
 import { GetAppointmentUseCase } from './appointments/application/GetAppointment';
 import { ListAppointmentsUseCase } from './appointments/application/ListAppointments';
 import { UpdateAppointmentUseCase } from './appointments/application/UpdateAppointment';
+import { CancelAppointmentUseCase } from './appointments/application/CancelAppointment';
 import { AppointmentController } from './appointments/interface/AppointmentController';
 import { createAppointmentRouter } from './appointments/interface/appointmentRouter';
 import { PrismaSettingsRepository } from './settings/infrastructure/PrismaSettingsRepository';
@@ -188,6 +189,7 @@ const appointmentController = new AppointmentController(
   new GetAppointmentUseCase(appointmentRepository),
   new ListAppointmentsUseCase(appointmentRepository),
   new UpdateAppointmentUseCase(appointmentRepository),
+  new CancelAppointmentUseCase(appointmentRepository),
 );
 app.use('/api/v1/appointments', createAppointmentRouter(appointmentController));
 
