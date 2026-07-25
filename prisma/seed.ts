@@ -48,7 +48,7 @@ export async function seedAdminUser(
       role: 0, // admin
       status: 1, // active
     },
-    update: {}, // no-op — preserve existing row
+    update: { passwordHash: hash }, // always refresh hash to match SEED_ADMIN_PASSWORD
   });
 
   return {
