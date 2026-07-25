@@ -1,4 +1,5 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
+import type { Prisma } from '@prisma/client';
 import { Appointment, AppointmentDetails, CreateAppointmentInput } from '../domain/Appointment';
 import { IAppointmentRepository } from '../domain/IAppointmentRepository';
 
@@ -156,10 +157,13 @@ export class PrismaAppointmentRepository implements IAppointmentRepository {
     });
   }
 
-  async hardDeleteByPetId(petId: number): Promise<void> {
-    await prisma.appointment.deleteMany({
-      where: { pet_id: petId },
-    });
+  async hardDeleteByPetId(petId: number, excludeStatus?: number[], tx?: Prisma.TransactionClient): Promise<void> {
+    const db = tx ?? prisma;
+    const where: Record<string, unknown> = { pet_id: petId };
+    if (excludeStatus && excludeStatus.length > 0) {
+      where['status'] = { notIn: excludeStatus };
+    }
+    await db.appointment.deleteMany({ where });
   }
 
   async hardDeleteByClientId(clientId: number): Promise<void> {

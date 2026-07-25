@@ -60,5 +60,12 @@
     "actionFailed": "Acción fallida",
     "createFail": "Error al crear el cliente. Intenta de nuevo.",
     "updateFail": "Error al actualizar el cliente. Intenta de nuevo."
+  },
+  "hardDelete": {
+    "title": "Eliminar Permanentemente",
+    "message": "Esto eliminará permanentemente a {{name}} y todas sus mascotas, citas y servicios asociados. Esta acción no se puede deshacer.",
+    "confirmLabel": "Eliminar para Siempre",
+    "success": "{{name}} eliminado permanentemente.",
+    "error": "Error al eliminar permanentemente."
   }
 }

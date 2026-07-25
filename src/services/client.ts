@@ -55,3 +55,9 @@ export function searchClients(query: string): Promise<Client[]> {
   const storage = getStorage();
   return storage.searchClients(query);
 }
+
+/** Admin-only cascade hard-delete of a client and all related records. */
+export function hardDeleteClient(id: number): Promise<void> {
+  const storage = getStorage();
+  return storage.hardDeleteClient(id);
+}

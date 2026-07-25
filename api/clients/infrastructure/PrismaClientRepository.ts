@@ -1,4 +1,5 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
+import type { Prisma } from '@prisma/client';
 import { Client, CreateClientInput, UpdateClientInput } from '../domain/Client';
 import { IClientRepository } from '../domain/IClientRepository';
 import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
@@ -101,6 +102,23 @@ export class PrismaClientRepository implements IClientRepository {
       where: { id },
       data: { deletedAt: new Date() },
     });
+  }
+
+  async hardDelete(id: number, tx?: Prisma.TransactionClient): Promise<void> {
+    const db = tx ?? prisma;
+    await db.client.delete({
+      where: { id },
+    });
+  }
+
+  async findByIdIncludeDeleted(id: number): Promise<Client | null> {
+    const row = await prisma.client.findUnique({
+      where: { id },
+    });
+
+    if (!row) return null;
+
+    return this.mapToClient(row);
   }
 
   async search(sanitizedQuery: string): Promise<Client[]> {

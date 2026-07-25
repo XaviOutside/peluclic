@@ -3,6 +3,7 @@
  * Domain types only — no Prisma, no Express, no framework imports.
  */
 import { Appointment, AppointmentDetails, CreateAppointmentInput } from './Appointment';
+import type { Prisma } from '@prisma/client';
 
 export interface IAppointmentRepository {
   /** Persists a new appointment. Returns the created entity with auto-generated id. */
@@ -32,8 +33,8 @@ export interface IAppointmentRepository {
   /** Permanently removes a single appointment row. */
   hardDelete(id: number): Promise<void>;
 
-  /** Permanently removes all appointments for a given pet. */
-  hardDeleteByPetId(petId: number): Promise<void>;
+  /** Permanently removes all appointments for a given pet, optionally preserving certain statuses. */
+  hardDeleteByPetId(petId: number, excludeStatus?: number[], tx?: Prisma.TransactionClient): Promise<void>;
 
   /** Permanently removes all appointments for a given client. Preserves status=2 (completed). */
   hardDeleteByClientId(clientId: number): Promise<void>;
