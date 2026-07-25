@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
+import { sanitizeLogPayload } from '../shared/utils/piiSanitizer';
 
 let initialized = false;
 
@@ -53,7 +54,8 @@ export function createSentryStream(): { write(chunk: string): void } {
 
 function processLogLine(line: string): void {
   try {
-    const log = JSON.parse(line);
+    const raw = JSON.parse(line);
+    const log = sanitizeLogPayload(raw) as Record<string, unknown>;
     const pinoLevel = log.level as number;
     const { hostname, msg, err, ...extra } = log;
     const message: string = typeof msg === 'string' ? msg : JSON.stringify(msg);

@@ -9,6 +9,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { logger } from './observability/logger';
+import { sanitizeUrl } from './shared/utils/piiSanitizer';
 import { PrismaClientRepository } from './clients/infrastructure/PrismaClientRepository';
 import { CreateClientUseCase } from './clients/application/CreateClient';
 import { GetClientUseCase } from './clients/application/GetClient';
@@ -96,7 +97,7 @@ app.use(express.json());
 
 // Request logging middleware
 app.use((req: Request, _res: Response, next: NextFunction) => {
-  logger.info({ method: req.method, url: req.url }, 'incoming request');
+  logger.info({ method: req.method, url: sanitizeUrl(req.url) }, 'incoming request');
   next();
 });
 
