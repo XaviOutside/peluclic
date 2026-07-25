@@ -18,6 +18,9 @@
       "address": "Address",
       "notes": "Notes"
     },
+    "consent": {
+      "label": "I consent to the processing of my personal data in accordance with the GDPR."
+    },
     "placeholder": {
       "name": "Client full name",
       "email": "client@example.com",

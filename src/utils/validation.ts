@@ -114,6 +114,7 @@ export interface ClientFormData {
   phone2: string;
   address: string;
   notes: string;
+  consentGivenAt: string;
 }
 
 /**
@@ -147,6 +148,10 @@ export function validateClientForm(data: ClientFormData): FieldErrors {
     const phone2FormatErr = validatePhone(data.phone2);
     if (phone2FormatErr) errors.phone2 = phone2FormatErr;
   }
+
+  // GDPR consent: must be checked (non-empty consentGivenAt)
+  const consentErr = validateRequired(data.consentGivenAt, 'GDPR consent');
+  if (consentErr) errors.consentGivenAt = consentErr;
 
   return errors;
 }

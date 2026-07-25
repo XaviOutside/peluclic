@@ -28,9 +28,11 @@ describe('ClientForm', () => {
       const nameKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' });
       const emailKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Email' });
       const phoneKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'Phone' });
+      const consentKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'GDPR consent' });
       expect(screen.getByText(nameKey)).toBeInTheDocument();
       expect(screen.getByText(emailKey)).toBeInTheDocument();
       expect(screen.getByText(phoneKey)).toBeInTheDocument();
+      expect(screen.getByText(consentKey)).toBeInTheDocument();
     });
   });
 
@@ -45,6 +47,10 @@ describe('ClientForm', () => {
     await user.type(screen.getByPlaceholderText('form.placeholder.phone'), '+1 (555) 123-4567');
     await user.type(screen.getByPlaceholderText('form.placeholder.address'), '123 Main St');
 
+    // Check the GDPR consent checkbox
+    const consentCheckbox = screen.getByRole('checkbox', { name: /form.consent.label/i });
+    await user.click(consentCheckbox);
+
     const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
     await user.click(submitBtn);
 
@@ -56,6 +62,7 @@ describe('ClientForm', () => {
         phone2: '',
         address: '123 Main St',
         notes: '',
+        consentGivenAt: expect.any(String),
       });
     });
   });
@@ -95,5 +102,66 @@ describe('ClientForm', () => {
 
     const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
     expect(submitBtn).toBeDisabled();
+  });
+
+  it('renders mandatory GDPR consent checkbox with label', () => {
+    render(<ClientForm onSubmit={vi.fn()} />);
+
+    const checkbox = screen.getByRole('checkbox', { name: /form.consent.label/i });
+    expect(checkbox).toBeInTheDocument();
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it('shows validation error when GDPR checkbox is unchecked on submit', async () => {
+    render(<ClientForm onSubmit={vi.fn()} />);
+
+    // Fill in valid data
+    const user = userEvent.setup();
+    await user.type(screen.getByPlaceholderText('form.placeholder.name'), 'Jane Doe');
+    await user.type(screen.getByPlaceholderText('form.placeholder.email'), 'jane@example.com');
+    await user.type(screen.getByPlaceholderText('form.placeholder.phone'), '555-1234');
+
+    const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      // The consent checkbox should trigger a validation error
+      const errorKey = encodeValidationError(VALIDATION_KEYS.required, { field: 'GDPR consent' });
+      expect(screen.getByText(errorKey)).toBeInTheDocument();
+    });
+  });
+
+  it('includes consentGivenAt in submit payload when checkbox is checked', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+
+    render(<ClientForm onSubmit={onSubmit} />);
+
+    await user.type(screen.getByPlaceholderText('form.placeholder.name'), 'Jane Doe');
+    await user.type(screen.getByPlaceholderText('form.placeholder.email'), 'jane@example.com');
+    await user.type(screen.getByPlaceholderText('form.placeholder.phone'), '555-1234');
+
+    // Check the GDPR checkbox
+    const checkbox = screen.getByRole('checkbox', { name: /form.consent.label/i });
+    await user.click(checkbox);
+    expect(checkbox).toBeChecked();
+
+    const submitBtn = screen.getByRole('button', { name: /form.submit.create/i });
+    await user.click(submitBtn);
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Jane Doe',
+          email: 'jane@example.com',
+          phone: '555-1234',
+          consentGivenAt: expect.any(String),
+        }),
+      );
+    });
+
+    // Verify consentGivenAt is a valid ISO 8601 string
+    const callArgs = onSubmit.mock.calls[0][0];
+    expect(() => new Date(callArgs.consentGivenAt)).not.toThrow();
   });
 });

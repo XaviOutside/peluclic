@@ -71,6 +71,8 @@ describe('validateClientForm', () => {
       phone: '',
       phone2: '',
       address: '',
+      notes: '',
+      consentGivenAt: '',
     });
     expect(errors.name).toBe(
       encodeValidationError(VALIDATION_KEYS.required, { field: 'Name' }),
@@ -82,6 +84,9 @@ describe('validateClientForm', () => {
       encodeValidationError(VALIDATION_KEYS.required, { field: 'Phone' }),
     );
     expect(errors.phone2).toBeUndefined();
+    expect(errors.consentGivenAt).toBe(
+      encodeValidationError(VALIDATION_KEYS.required, { field: 'GDPR consent' }),
+    );
   });
 
   it('returns email format error when email is invalid', () => {
@@ -91,6 +96,8 @@ describe('validateClientForm', () => {
       phone: '+1 (555) 123-4567',
       phone2: '',
       address: '',
+      notes: '',
+      consentGivenAt: '2026-07-25T10:00:00Z',
     });
     expect(errors.email).toBe(VALIDATION_KEYS.email);
   });
@@ -102,6 +109,7 @@ describe('validateClientForm', () => {
       phone: '+1 (555) 123-4567',
       phone2: '',
       address: '123 Main St',
+      consentGivenAt: '2026-07-25T10:00:00Z',
     });
     expect(isValid(errors)).toBe(true);
   });
@@ -113,6 +121,8 @@ describe('validateClientForm', () => {
       phone: '+1 (555) 123-4567',
       phone2: 'bad',
       address: '',
+      notes: '',
+      consentGivenAt: '2026-07-25T10:00:00Z',
     });
     expect(errors.phone2).toBe(VALIDATION_KEYS.phone);
   });
