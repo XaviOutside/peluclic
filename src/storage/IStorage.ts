@@ -44,6 +44,9 @@ export interface IStorage {
   /** Search clients by query string. */
   searchClients(query: string): Promise<Client[]>;
 
+  /** Admin-only cascade hard-delete of a client and all related records. */
+  hardDeleteClient(id: number): Promise<void>;
+
   /* ========================================================================
    * PETS — 7 methods (matches src/services/pet.ts)
    * ======================================================================== */

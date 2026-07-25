@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import type { Pet } from '@/types/pet';
 import type { Service } from '@/types/service';
 import { useClient } from '@/hooks/useClient';
-import { useDeactivateClient, useReactivateClient } from '@/hooks/useClientMutations';
+import { useDeactivateClient, useReactivateClient, useHardDeleteClient } from '@/hooks/useClientMutations';
+import { useUser } from '@/hooks/useUser';
 import { usePets } from '@/hooks/usePets';
 import { useServices } from '@/hooks/useServices';
 import ClientDetailCard from '@/components/organisms/ClientDetailCard';
@@ -69,6 +70,9 @@ export default function ClientDetailPage() {
   const { client, isLoading, error, refetch } = useClient(clientId);
   const deactivateMutation = useDeactivateClient();
   const reactivateMutation = useReactivateClient();
+  const hardDeleteMutation = useHardDeleteClient();
+  const user = useUser();
+  const isAdmin = user?.role === 'admin';
 
   const {
     pets,
@@ -77,7 +81,7 @@ export default function ClientDetailPage() {
   } = usePets(clientId);
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const [confirmAction, setConfirmAction] = useState<'deactivate' | 'reactivate' | null>(null);
+  const [confirmAction, setConfirmAction] = useState<'deactivate' | 'reactivate' | 'hardDelete' | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const handleViewPet = useCallback(
@@ -110,6 +114,11 @@ export default function ClientDetailPage() {
     setShowConfirm(true);
   }
 
+  function handleHardDelete() {
+    setConfirmAction('hardDelete');
+    setShowConfirm(true);
+  }
+
   async function handleConfirm() {
     if (!client || !confirmAction) return;
     setActionError(null);
@@ -117,8 +126,12 @@ export default function ClientDetailPage() {
     try {
       if (confirmAction === 'deactivate') {
         await deactivateMutation.mutate(client.id);
-      } else {
+      } else if (confirmAction === 'reactivate') {
         await reactivateMutation.mutate(client.id);
+      } else if (confirmAction === 'hardDelete') {
+        await hardDeleteMutation.mutate(client.id);
+        navigate('/clients');
+        return;
       }
       setShowConfirm(false);
       setConfirmAction(null);
@@ -176,6 +189,25 @@ export default function ClientDetailPage() {
     );
   }
 
+  function getConfirmTitle(): string {
+    if (confirmAction === 'hardDelete') return t('hardDelete.title');
+    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
+    return t('common:actions.reactivate');
+  }
+
+  function getConfirmMessage(): string {
+    if (!client) return '';
+    if (confirmAction === 'hardDelete') return t('hardDelete.message', { name: client.name });
+    if (confirmAction === 'deactivate') return t('deactivate.message', { name: client.name });
+    return t('reactivate.message', { name: client.name });
+  }
+
+  function getConfirmLabel(): string {
+    if (confirmAction === 'hardDelete') return t('hardDelete.confirmLabel');
+    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
+    return t('common:actions.reactivate');
+  }
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <ClientDetailCard
@@ -183,9 +215,12 @@ export default function ClientDetailPage() {
         onEdit={handleEdit}
         onDeactivate={handleDeactivate}
         onReactivate={handleReactivate}
+        onHardDelete={handleHardDelete}
         onBack={() => navigate('/clients')}
         deactivateLoading={deactivateMutation.isLoading}
         reactivateLoading={reactivateMutation.isLoading}
+        hardDeleteLoading={hardDeleteMutation.isLoading}
+        isAdmin={isAdmin}
       />
 
       {actionError && (
@@ -201,17 +236,15 @@ export default function ClientDetailPage() {
           setConfirmAction(null);
         }}
         onConfirm={handleConfirm}
-        title={
-          confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')
+        title={getConfirmTitle()}
+        message={getConfirmMessage()}
+        confirmLabel={getConfirmLabel()}
+        destructive={confirmAction === 'deactivate' || confirmAction === 'hardDelete'}
+        isLoading={
+          deactivateMutation.isLoading ||
+          reactivateMutation.isLoading ||
+          hardDeleteMutation.isLoading
         }
-        message={
-          confirmAction === 'deactivate'
-            ? t('deactivate.message', { name: client.name })
-            : t('reactivate.message', { name: client.name })
-        }
-        confirmLabel={confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')}
-        destructive={confirmAction === 'deactivate'}
-        isLoading={deactivateMutation.isLoading || reactivateMutation.isLoading}
       />
 
       {/* Embedded pet list */}
