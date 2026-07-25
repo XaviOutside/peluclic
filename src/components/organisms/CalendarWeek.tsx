@@ -10,6 +10,8 @@ export interface CalendarWeekProps {
   onPrevWeek: () => void;
   onNextWeek: () => void;
   onAppointmentClick: (appointment: Appointment) => void;
+  /** When provided, enables the cancel action on each card. */
+  onCancelAppointment?: (appointment: Appointment) => void;
   settings: CompanySettings;
 }
 
@@ -24,6 +26,7 @@ export default function CalendarWeek({
   onPrevWeek,
   onNextWeek,
   onAppointmentClick,
+  onCancelAppointment,
   settings,
 }: CalendarWeekProps) {
   const { t } = useTranslation('appointments');
@@ -142,6 +145,7 @@ export default function CalendarWeek({
                       key={appt.id}
                       appointment={appt}
                       onClick={onAppointmentClick}
+                      onCancel={onCancelAppointment}
                     />
                   ))}
                 </div>

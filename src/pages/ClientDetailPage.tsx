@@ -200,10 +200,8 @@ export default function ClientDetailPage() {
   }
 
   function getConfirmLabel(): string {
-    switch (confirmAction) {
-      case 'hardDelete': return t('hardDelete.confirmLabel');
-      default: return '';
-    }
+    if (confirmAction === 'hardDelete') return t('hardDelete.confirmLabel');
+    return '';
   }
 
   if (error || !client) {

@@ -44,7 +44,10 @@
     "notesPlaceholder": "Añadir notas (máx. 500 caracteres)",
     "notesMaxLength": "Las notas no deben superar los 500 caracteres",
     "save": "Guardar Cita",
+    "saveUpdate": "Actualizar",
     "cancel": "Cancelar",
+    "close": "Cerrar",
+    "statusLabel": "Estado",
     "noPetsFound": "No se encontraron mascotas para este cliente",
     "petRequired": "Seleccione una mascota",
     "clientRequired": "Seleccione un cliente",
@@ -61,6 +64,13 @@
     "loadFailed": "Error al cargar las citas. Refresque la página.",
     "doubleBooking": "La mascota ya tiene cita a esta hora.",
     "petNotFound": "Mascota no encontrada.",
-    "notFound": "Cita no encontrada."
+    "notFound": "Cita no encontrada.",
+    "updateFailed": "Error al actualizar la cita. Inténtelo de nuevo.",
+    "cancelFailed": "Error al cancelar la cita. Inténtelo de nuevo."
+  },
+  "cancel": {
+    "title": "Cancelar Cita",
+    "message": "¿Cancelar cita de {{petName}} el {{date}} a las {{time}}?",
+    "confirm": "Sí, cancelarla"
   }
 }

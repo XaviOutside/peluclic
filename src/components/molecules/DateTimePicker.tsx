@@ -8,6 +8,8 @@ export interface DateTimePickerProps {
   onTimeChange: (time: string) => void;
   workStartTime?: string;
   workEndTime?: string;
+  /** When true, both date and time inputs are disabled. */
+  disabled?: boolean;
 }
 
 /**
@@ -22,6 +24,7 @@ export default function DateTimePicker({
   onTimeChange,
   workStartTime = '08:00',
   workEndTime = '18:00',
+  disabled = false,
 }: DateTimePickerProps) {
   const { t } = useTranslation('appointments');
   const slots = getTimeSlots(workStartTime, workEndTime, 30);
@@ -40,7 +43,9 @@ export default function DateTimePicker({
           type="date"
           value={date}
           onChange={(e) => onDateChange(e.target.value)}
-          className="rounded-lg border border-outline-variant bg-surface px-3 py-2 font-body text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+          disabled={disabled}
+          data-testid="appointment-date-input"
+          className="rounded-lg border border-outline-variant bg-surface px-3 py-2 font-body text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50"
         />
       </div>
 
@@ -55,7 +60,8 @@ export default function DateTimePicker({
           id="appointment-time"
           value={time}
           onChange={(e) => onTimeChange(e.target.value)}
-          className="rounded-lg border border-outline-variant bg-surface px-3 py-2 font-body text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+          disabled={disabled}
+          className="rounded-lg border border-outline-variant bg-surface px-3 py-2 font-body text-body-md text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50"
         >
           <option value="" disabled>
             --:--

@@ -7,6 +7,8 @@ import { getSettings } from '@/services/settings';
 import { listAppointments } from '@/services/appointments';
 import CalendarWeek from '@/components/organisms/CalendarWeek';
 import AppointmentModal from '@/components/organisms/AppointmentModal';
+import ConfirmDialog from '@/components/molecules/ConfirmDialog';
+import { useCancelAppointment } from '@/hooks/useAppointmentMutations';
 import { getWeekStart, addWeeks } from '@/utils/calendar';
 
 export default function AppointmentsPage() {
@@ -26,6 +28,11 @@ export default function AppointmentsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
+
+  // Cancel mutation hook
+  const cancelMutation = useCancelAppointment();
 
   // Fetch settings
   useEffect(() => {
@@ -89,13 +96,43 @@ export default function AppointmentsPage() {
   const handlePrevWeek = () => goToWeek(-1);
   const handleNextWeek = () => goToWeek(1);
 
-  const handleAppointmentClick = (_appointment: Appointment) => {
-    // For v1, clicking opens the modal (view-only would be phase 2)
+  const handleAppointmentClick = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
     setIsModalOpen(true);
   };
 
   const handleModalCreated = () => {
     fetchAppointments(weekStart);
+  };
+
+  const handleModalUpdated = () => {
+    fetchAppointments(weekStart);
+  };
+
+  const handleCardCancel = (appointment: Appointment) => {
+    setCancelTarget(appointment);
+  };
+
+  const handleCancelDismiss = () => {
+    setCancelTarget(null);
+  };
+
+  const handleCancelConfirm = async () => {
+    if (!cancelTarget) return;
+
+    try {
+      await cancelMutation.mutate(cancelTarget.id);
+      setCancelTarget(null);
+      fetchAppointments(weekStart);
+    } catch {
+      // Error is handled by the mutation hook (exposed via cancelMutation.error)
+      // Keep the dialog open so the user can retry or dismiss
+    }
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setSelectedAppointment(null);
   };
 
   // Handle "New Appointment" from sidebar — check URL param on mount
@@ -194,6 +231,7 @@ export default function AppointmentsPage() {
           onPrevWeek={handlePrevWeek}
           onNextWeek={handleNextWeek}
           onAppointmentClick={handleAppointmentClick}
+          onCancelAppointment={handleCardCancel}
           settings={activeSettings}
         />
       )}
@@ -201,11 +239,35 @@ export default function AppointmentsPage() {
       {/* ── Modal ── */}
       <AppointmentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleModalClose}
         onCreated={handleModalCreated}
+        onUpdated={handleModalUpdated}
+        appointment={selectedAppointment ?? undefined}
         workStartTime={activeSettings.workStartTime}
         workEndTime={activeSettings.workEndTime}
       />
+
+      {/* ── Cancel ConfirmDialog ── */}
+      {cancelTarget !== null && (
+        <div data-testid="cancel-confirm-dialog">
+          <ConfirmDialog
+            isOpen={true}
+            onClose={handleCancelDismiss}
+            onConfirm={handleCancelConfirm}
+            title={t('appointments:cancel.title')}
+            message={t('appointments:cancel.message', {
+              petName: cancelTarget.petName,
+              date: new Date(cancelTarget.scheduledAt).toLocaleDateString(),
+              time: new Date(cancelTarget.scheduledAt).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              }),
+            })}
+            destructive
+            isLoading={cancelMutation.isLoading}
+          />
+        </div>
+      )}
     </div>
   );
 }
