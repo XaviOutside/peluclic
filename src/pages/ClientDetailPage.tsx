@@ -182,9 +182,9 @@ export default function ClientDetailPage() {
 
   function getConfirmTitle(): string {
     switch (confirmAction) {
-      case 'deactivate': return t('detail.deactivateTitle');
-      case 'reactivate': return t('detail.reactivateTitle');
-      case 'hardDelete': return t('detail.hardDeleteTitle');
+      case 'deactivate': return t('deactivate.title');
+      case 'reactivate': return t('reactivate.title');
+      case 'hardDelete': return t('hardDelete.title');
       default: return '';
     }
   }
@@ -192,18 +192,16 @@ export default function ClientDetailPage() {
   function getConfirmMessage(): string {
     if (!client) return '';
     switch (confirmAction) {
-      case 'deactivate': return t('detail.deactivateMessage', { name: client.name });
-      case 'reactivate': return t('detail.reactivateMessage', { name: client.name });
-      case 'hardDelete': return t('detail.hardDeleteMessage', { name: client.name });
+      case 'deactivate': return t('deactivate.message', { name: client.name });
+      case 'reactivate': return t('reactivate.message', { name: client.name });
+      case 'hardDelete': return t('hardDelete.message', { name: client.name });
       default: return '';
     }
   }
 
   function getConfirmLabel(): string {
     switch (confirmAction) {
-      case 'deactivate': return t('detail.deactivateLabel');
-      case 'reactivate': return t('detail.reactivateLabel');
-      case 'hardDelete': return t('detail.hardDeleteLabel');
+      case 'hardDelete': return t('hardDelete.confirmLabel');
       default: return '';
     }
   }
@@ -255,6 +253,7 @@ export default function ClientDetailPage() {
         reactivateLoading={reactivateMutation.isLoading}
         hardDeleteLoading={hardDeleteMutation.isLoading}
         exportLoading={exportMutation.isLoading}
+        isAdmin={isAdmin}
       />
 
       {actionError && (
