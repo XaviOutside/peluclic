@@ -60,6 +60,10 @@ export class ApiStorage implements IStorage {
     return http<Client[]>(`/clients/search?q=${encoded}`);
   }
 
+  exportClient(id: number): Promise<Record<string, unknown>> {
+    return http<Record<string, unknown>>(`/clients/${id}/export`);
+  }
+
   /* ========================================================================
    * PETS
    * ======================================================================== */

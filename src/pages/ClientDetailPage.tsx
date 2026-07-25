@@ -172,25 +172,6 @@ export default function ClientDetailPage() {
     }
   }
 
-  function getConfirmTitle(): string {
-    if (confirmAction === 'hardDelete') return t('hardDelete.title');
-    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
-    return t('common:actions.reactivate');
-  }
-
-  function getConfirmMessage(): string {
-    if (!client) return '';
-    if (confirmAction === 'hardDelete') return t('hardDelete.message', { name: client.name });
-    if (confirmAction === 'deactivate') return t('deactivate.message', { name: client.name });
-    return t('reactivate.message', { name: client.name });
-  }
-
-  function getConfirmLabel(): string {
-    if (confirmAction === 'hardDelete') return t('hardDelete.confirmLabel');
-    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
-    return t('common:actions.reactivate');
-  }
-
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -242,7 +223,6 @@ export default function ClientDetailPage() {
         onHardDelete={handleHardDelete}
         onBack={() => navigate('/clients')}
         onExport={handleExport}
-        isAdmin={isAdmin}
         deactivateLoading={deactivateMutation.isLoading}
         reactivateLoading={reactivateMutation.isLoading}
         hardDeleteLoading={hardDeleteMutation.isLoading}

@@ -83,6 +83,11 @@ export default function ClientDetailCard({
 
       {/* Actions */}
       <div className="flex flex-col gap-2 border-t border-outline-variant bg-surface-container px-6 py-4 sm:flex-row sm:justify-end">
+        {onExport && (
+          <Button variant="secondary" onClick={onExport} loading={exportLoading}>
+            Export Data
+          </Button>
+        )}
         {client.status === 'active' ? (
           <Button variant="danger" onClick={onDeactivate} loading={deactivateLoading}>
             {t('actions.deactivate')}
