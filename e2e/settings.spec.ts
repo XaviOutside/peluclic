@@ -1,5 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { loginAsAdmin } from './helpers/auth';
+
+const API_URL = process.env['E2E_API_URL'] ?? 'http://localhost:3000';
 
 /**
  * E2E tests for the Settings page.
@@ -121,5 +123,52 @@ test.describe('company settings', () => {
 
     // After save, the preview should show the uploaded logo (now persisted from API)
     await expect(page.locator('img[alt="Company logo"]')).toBeVisible({ timeout: 3000 });
+  });
+
+  test('language — reads defaultLang from settings after login and page reload', async ({ page }) => {
+    // Use the API directly to change language (avoids UI race conditions in parallel tests)
+    const token = await page.evaluate(() => localStorage.getItem('token'));
+
+    // 1. Set language to English via API
+    const api = await request.newContext({ baseURL: API_URL });
+    await api.put('/api/v1/settings', {
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      data: {
+        companyName: 'Bark & Bubbles',
+        tagline: null,
+        workdays: [1, 2, 3, 4, 5],
+        workStartTime: '09:00',
+        workEndTime: '17:00',
+        defaultLang: 0,
+      },
+    });
+    await api.dispose();
+
+    // 2. Reload — initializeLanguage() must read English from settings
+    await page.reload();
+    await page.waitForSelector('[data-testid="settings-page"]');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+
+    // 3. Set language to Spanish via API
+    const api2 = await request.newContext({ baseURL: API_URL });
+    await api2.put('/api/v1/settings', {
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      data: {
+        companyName: 'Bark & Bubbles',
+        tagline: null,
+        workdays: [1, 2, 3, 4, 5],
+        workStartTime: '09:00',
+        workEndTime: '17:00',
+        defaultLang: 1,
+      },
+    });
+    await api2.dispose();
+
+    // 4. Reload — initializeLanguage() must read Spanish from settings
+    await page.reload();
+    await page.waitForSelector('[data-testid="settings-page"]');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es');
   });
 });

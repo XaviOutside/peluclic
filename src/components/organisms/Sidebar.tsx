@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '@/components/molecules/LanguageSwitcher';
 import { getSettings } from '@/services/settings';
 
 interface NavItem {
@@ -154,9 +153,6 @@ export default function Sidebar() {
               </NavLink>
             </li>
           ))}
-          <li>
-            <LanguageSwitcher />
-          </li>
         </ul>
       </div>
     </nav>
