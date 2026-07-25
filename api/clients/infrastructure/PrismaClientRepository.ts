@@ -24,6 +24,7 @@ export class PrismaClientRepository implements IClientRepository {
         phone2: data.phone2 ?? null,
         address: data.address ?? null,
         notes: data.notes ?? null,
+        consentGivenAt: data.consentGivenAt,
         // status defaults to 1 (active) via schema default
       },
     });
@@ -205,6 +206,7 @@ export class PrismaClientRepository implements IClientRepository {
     status: number;
     last_service_date?: Date | null;
     notes?: string | null;
+    consentGivenAt?: Date | null;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
@@ -219,6 +221,7 @@ export class PrismaClientRepository implements IClientRepository {
       status: row.status as 0 | 1,
       lastServiceDate: row.last_service_date ?? null,
       notes: row.notes ?? null,
+      consentGivenAt: row.consentGivenAt ?? null,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       deletedAt: row.deletedAt,

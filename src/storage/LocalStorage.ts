@@ -115,6 +115,7 @@ export class LocalStorage implements IStorage {
       status: 'active',
       lastServiceDate: null,
       notes: data.notes ?? null,
+      consentGivenAt: data.consentGivenAt ?? null,
       createdAt: now,
       updatedAt: now,
     };

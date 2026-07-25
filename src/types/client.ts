@@ -20,6 +20,7 @@ export interface Client {
   status: ClientStatus;
   lastServiceDate: string | null;
   notes: string | null;
+  consentGivenAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,6 +33,7 @@ export interface CreateClientDto {
   phone2?: string;
   address?: string;
   notes?: string;
+  consentGivenAt: string;
 }
 
 /** Payload for updating an existing client. All fields optional. */
