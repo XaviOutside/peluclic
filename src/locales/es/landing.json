@@ -90,7 +90,9 @@
       },
       {
         "title": "13. Acuerdo de Encargo de Tratamiento (DPA)",
-        "content": "Para empresas que requieran un Acuerdo de Encargo de Tratamiento formal, hay disponible una plantilla de DPA en nuestra documentación. Este acuerdo define los roles, alcance, categorías de datos, subencargados, medidas de seguridad y procedimientos de notificación de brechas de seguridad conforme al Artículo 28 del RGPD."
+        "content": "Para empresas que requieran un Acuerdo de Encargo de Tratamiento formal, hay disponible una plantilla de DPA en nuestra documentación. Este acuerdo define los roles, alcance, categorías de datos, subencargados, medidas de seguridad y procedimientos de notificación de brechas de seguridad conforme al Artículo 28 del RGPD.",
+        "link": "docs/DPA.md",
+        "linkText": "Ver Acuerdo de Encargo de Tratamiento"
       },
       {
         "title": "14. Contacto",

@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 interface PrivacySection {
   title: string;
   content: string;
+  link?: string;
+  linkText?: string;
 }
 
 export default function PrivacyPage() {
@@ -20,6 +22,16 @@ export default function PrivacyPage() {
           <section key={idx}>
             <h2 className="mb-3 font-headline text-headline-md text-on-surface">{section.title}</h2>
             <p>{section.content}</p>
+            {section.link && (
+              <a
+                href={section.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex items-center text-primary hover:text-primary-hover underline decoration-primary/40 hover:decoration-primary transition-colors"
+              >
+                {section.linkText ?? section.link}
+              </a>
+            )}
           </section>
         ))}
       </div>

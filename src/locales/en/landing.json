@@ -90,7 +90,9 @@
       },
       {
         "title": "13. Data Processing Agreement (DPA)",
-        "content": "For businesses that require a formal Data Processing Agreement, a template DPA is available in our documentation. This agreement defines the roles, scope, data categories, subprocessors, security measures, and breach notification procedures in compliance with Article 28 GDPR."
+        "content": "For businesses that require a formal Data Processing Agreement, a template DPA is available in our documentation. This agreement defines the roles, scope, data categories, subprocessors, security measures, and breach notification procedures in compliance with Article 28 GDPR.",
+        "link": "docs/DPA.md",
+        "linkText": "View Data Processing Agreement"
       },
       {
         "title": "14. Contact",
