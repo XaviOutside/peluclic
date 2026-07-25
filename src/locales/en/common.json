@@ -55,7 +55,8 @@
     "tryAgain": "Try Again",
     "unlink": "Unlink",
     "actions": "Actions",
-    "deletePermanently": "Delete Permanently"
+    "deletePermanently": "Delete Permanently",
+    "exportData": "Export Data"
   },
   "status": {
     "active": "Active",

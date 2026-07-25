@@ -115,6 +115,7 @@ export class LocalStorage implements IStorage {
       status: 'active',
       lastServiceDate: null,
       notes: data.notes ?? null,
+      consentGivenAt: data.consentGivenAt ?? null,
       createdAt: now,
       updatedAt: now,
     };
@@ -198,31 +199,35 @@ export class LocalStorage implements IStorage {
       });
   }
 
+  async hardDeleteClient(id: number): Promise<void> {
+    const clients = this.readCollection<Storable<Client>>('pf_demo:clients');
+    const idx = clients.findIndex(c => c.id === id);
+    if (idx === -1) throw new Error('Client not found');
+    clients.splice(idx, 1);
+    this.writeCollection('pf_demo:clients', clients);
+
+    // Also hard-delete related pets
+    const pets = this.readCollection<Storable<Pet>>('pf_demo:pets');
+    const remaining = pets.filter(p => p.clientId !== id);
+    this.writeCollection('pf_demo:pets', remaining);
+  }
+
   async exportClient(id: number): Promise<Record<string, unknown>> {
-    // In demo mode, construct export from localStorage data
-    const client = await this.getClient(id);
-    const allPets = this.readCollection<Storable<Pet>>('pf_demo:pets');
-    const allServices = this.readCollection<Storable<Service>>('pf_demo:services');
-    const allAppointments = this.readCollection<Storable<Appointment>>('pf_demo:appointments');
+    const clients = this.readCollection<Storable<Client>>('pf_demo:clients');
+    const client = clients.find(c => c.id === id && !c.deletedAt);
+    if (!client) throw new Error('Client not found');
 
-    const pets = this.filterActive(allPets).filter(p => p.clientId === id);
-    const petIds = pets.map(p => p.id);
+    const pets = this.readCollection<Storable<Pet>>('pf_demo:pets')
+      .filter(p => p.clientId === id && !p.deletedAt);
 
-    const services = this.filterActive(allServices).filter(s =>
-      s.petId !== null && petIds.includes(s.petId),
-    );
-    const appointments = this.filterActive(allAppointments).filter(a =>
-      a.clientId === id,
-    );
+    const services = this.readCollection<Storable<Service>>('pf_demo:services')
+      .filter(s => pets.some(p => p.id === s.petId) && !s.deletedAt);
+
+    const appointments: Record<string, unknown>[] = []; // Appointments not stored in localStorage demo
 
     return {
-      exportedAt: this.now(),
-      dataSubject: {
-        client,
-        pets,
-        appointments,
-        services,
-      },
+      exportedAt: new Date().toISOString(),
+      dataSubject: { client, pets, appointments, services },
     };
   }
 

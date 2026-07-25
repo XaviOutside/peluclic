@@ -172,6 +172,25 @@ export default function ClientDetailPage() {
     }
   }
 
+  function getConfirmTitle(): string {
+    if (confirmAction === 'hardDelete') return t('hardDelete.title');
+    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
+    return t('common:actions.reactivate');
+  }
+
+  function getConfirmMessage(): string {
+    if (!client) return '';
+    if (confirmAction === 'hardDelete') return t('hardDelete.message', { name: client.name });
+    if (confirmAction === 'deactivate') return t('deactivate.message', { name: client.name });
+    return t('reactivate.message', { name: client.name });
+  }
+
+  function getConfirmLabel(): string {
+    if (confirmAction === 'hardDelete') return t('hardDelete.confirmLabel');
+    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
+    return t('common:actions.reactivate');
+  }
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
@@ -243,21 +262,9 @@ export default function ClientDetailPage() {
           setConfirmAction(null);
         }}
         onConfirm={handleConfirm}
-        title={
-          confirmAction === 'hardDelete' ? t('hardDelete.title') :
-          confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')
-        }
-        message={
-          confirmAction === 'hardDelete'
-            ? t('hardDelete.message', { name: client.name })
-            : confirmAction === 'deactivate'
-              ? t('deactivate.message', { name: client.name })
-              : t('reactivate.message', { name: client.name })
-        }
-        confirmLabel={
-          confirmAction === 'hardDelete' ? t('hardDelete.confirmLabel') :
-          confirmAction === 'deactivate' ? t('common:actions.deactivate') : t('common:actions.reactivate')
-        }
+        title={getConfirmTitle()}
+        message={getConfirmMessage()}
+        confirmLabel={getConfirmLabel()}
         destructive={confirmAction === 'deactivate' || confirmAction === 'hardDelete'}
         isLoading={deactivateMutation.isLoading || reactivateMutation.isLoading || hardDeleteMutation.isLoading}
       />

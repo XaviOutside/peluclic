@@ -20,7 +20,7 @@ import type { IStorage } from '@/storage/IStorage';
  */
 export function createMockStorage(): Record<keyof IStorage, ReturnType<typeof vi.fn>> {
   return {
-    // Clients (9)
+    // Clients (8)
     listClients: vi.fn(),
     getClient: vi.fn(),
     createClient: vi.fn(),
@@ -29,7 +29,6 @@ export function createMockStorage(): Record<keyof IStorage, ReturnType<typeof vi
     reactivateClient: vi.fn(),
     deactivateClient: vi.fn(),
     searchClients: vi.fn(),
-    exportClient: vi.fn(),
 
     // Pets (7)
     listPets: vi.fn(),
@@ -60,5 +59,9 @@ export function createMockStorage(): Record<keyof IStorage, ReturnType<typeof vi
     getSettings: vi.fn(),
     updateSettings: vi.fn(),
     uploadLogo: vi.fn(),
+
+    // GDPR (2)
+    hardDeleteClient: vi.fn(),
+    exportClient: vi.fn(),
   };
 }
