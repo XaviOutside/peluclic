@@ -19,6 +19,7 @@ export interface Client {
   status: ClientStatus;
   lastServiceDate: Date | null;
   notes: string | null;
+  consentGivenAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -31,6 +32,7 @@ export interface CreateClientInput {
   phone2?: string | null;
   address?: string | null;
   notes?: string | null;
+  consentGivenAt: Date;
 }
 
 export interface UpdateClientInput {
