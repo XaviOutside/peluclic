@@ -29,6 +29,9 @@
     "submit": {
       "create": "Crear Mascota",
       "update": "Actualizar Mascota"
+    },
+    "warning": {
+      "sensitiveData": "⚠️ Las notas pueden contener datos de salud. Evite almacenar datos personales sensibles (Art. 9 RGPD)."
     }
   },
   "deactivate": {

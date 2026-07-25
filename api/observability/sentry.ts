@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
+import { sanitizeLogPayload } from '../shared/utils/piiSanitizer';
 
 let initialized = false;
 
@@ -53,13 +54,22 @@ export function createSentryStream(): { write(chunk: string): void } {
 
 function processLogLine(line: string): void {
   try {
-    const log = JSON.parse(line);
+    const raw = JSON.parse(line);
+    const log = sanitizeLogPayload(raw) as Record<string, unknown>;
     const pinoLevel = log.level as number;
-    const { hostname, msg, err, ...extra } = log;
+    const hostname = log.hostname as string | undefined;
+    const msg = log.msg as unknown;
+    const err = log.err as { message?: string } | string | undefined;
+    const extra: Record<string, unknown> = {};
+    for (const key of Object.keys(log)) {
+      if (!['level', 'hostname', 'msg', 'err'].includes(key)) {
+        extra[key] = log[key];
+      }
+    }
     const message: string = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
     if (pinoLevel >= 50) {
-      const errorMessage = typeof err === 'string' ? err : (err.message ?? message);
+      const errorMessage = typeof err === 'string' ? err : (err?.message ?? message);
       const error = err ? new Error(errorMessage) : new Error(message);
       Sentry.captureException(error, {
         level: 'error',

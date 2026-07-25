@@ -6,6 +6,7 @@ import {
   updateClient,
   deleteClient,
   hardDeleteClient,
+  exportClient,
   reactivateClient,
   deactivateClient,
   exportClient,
@@ -82,4 +83,8 @@ export function useDeactivateClient() {
 
 export function useHardDeleteClient() {
   return useMutation<[number], void>((id) => hardDeleteClient(id));
+}
+
+export function useExportClient() {
+  return useMutation<[number], Record<string, unknown>>((id) => exportClient(id));
 }

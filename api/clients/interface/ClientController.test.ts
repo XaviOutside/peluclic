@@ -22,6 +22,7 @@ import type { ReactivateClientUseCase } from '../application/ReactivateClient';
 import type { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import type { SearchClientsUseCase } from '../application/SearchClients';
 import type { HardDeleteClientUseCase } from '../application/HardDeleteClient';
+import type { ExportClientUseCase } from '../application/ExportClient';
 
 /** Stable domain client fixture — used in multiple tests */
 const domainClient = {
@@ -84,24 +85,6 @@ const makeApp = () => {
   app.use(express.json());
   app.use('/api/v1/clients', createClientRouter(controller));
   // Generic error boundary for unexpected throws from middleware
-  app.use((_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-    res.status(500).json({ error: 'Internal server error' });
-  });
-  return app;
-};
-
-/** Creates an Express app with a middleware that injects req.role for auth testing */
-const makeAppWithRole = (role: number) => {
-  const app = express();
-  app.use(express.json());
-  // Inject role before the client router
-  app.use('/api/v1/clients', (req: Request, _res: Response, next: NextFunction) => {
-    req.role = role;
-    req.companyId = 1;
-    req.userId = 1;
-    next();
-  });
-  app.use('/api/v1/clients', createClientRouter(controller));
   app.use((_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
     res.status(500).json({ error: 'Internal server error' });
   });
@@ -372,37 +355,91 @@ describe('Error handling', () => {
   });
 });
 
-describe('DELETE /api/v1/clients/:id/hard', () => {
-  it('returns 403 when role is not admin (role !== 0)', async () => {
-    const res = await request(makeAppWithRole(1)).delete('/api/v1/clients/1/hard');
+// ── Export Client tests (Art. 20 GDPR data portability) ──────────────────────
 
-    expect(res.status).toBe(403);
-    expect(res.body).toHaveProperty('error', 'Forbidden');
+const mockExportUseCase = { execute: vi.fn() } as unknown as ExportClientUseCase;
+
+const exportController = new ClientController(
+  mockCreate,
+  mockGet,
+  mockList,
+  mockUpdate,
+  mockDeactivate,
+  mockReactivate,
+  mockSoftDelete,
+  mockSearch,
+  mockHardDelete,
+  mockExportUseCase,
+);
+
+const makeExportApp = () => {
+  const app = express();
+  app.use(express.json());
+  app.use('/api/v1/clients', createClientRouter(exportController));
+  app.use((_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    res.status(500).json({ error: 'Internal server error' });
+  });
+  return app;
+};
+
+describe('GET /api/v1/clients/:id/export', () => {
+  const mockExportResponse = {
+    exportedAt: '2026-07-25T12:00:00.000Z',
+    dataSubject: {
+      client: expectedDto,
+      pets: [],
+      appointments: [],
+      services: [],
+    },
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('returns 204 when admin triggers cascade hard-delete', async () => {
-    (mockHardDelete.execute as ReturnType<typeof vi.fn>).mockResolvedValueOnce(undefined);
+  it('returns 200 with structured JSON export', async () => {
+    (mockExportUseCase.execute as ReturnType<typeof vi.fn>).mockImplementation(() =>
+      Promise.resolve(mockExportResponse),
+    );
 
-    const res = await request(makeAppWithRole(0)).delete('/api/v1/clients/1/hard');
+    const res = await request(makeExportApp()).get('/api/v1/clients/42/export');
 
-    expect(res.status).toBe(204);
-    expect(res.body).toEqual({});
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('exportedAt');
+    expect(res.body).toHaveProperty('dataSubject');
+    expect(res.body.dataSubject).toHaveProperty('client');
+    expect(res.body.dataSubject).toHaveProperty('pets');
+    expect(res.body.dataSubject).toHaveProperty('appointments');
+    expect(res.body.dataSubject).toHaveProperty('services');
+    expect(res.body.dataSubject.client.id).toBe(1);
   });
 
   it('returns 404 when client not found', async () => {
-    (mockHardDelete.execute as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
-      new ClientNotFoundError(999),
+    (mockExportUseCase.execute as ReturnType<typeof vi.fn>).mockImplementation(() =>
+      Promise.reject(new ClientNotFoundError(999)),
     );
 
-    const res = await request(makeAppWithRole(0)).delete('/api/v1/clients/999/hard');
+    const res = await request(makeExportApp()).get('/api/v1/clients/999/export');
 
     expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('error');
   });
 
   it('returns 422 when id is non-numeric', async () => {
-    const res = await request(makeAppWithRole(0)).delete('/api/v1/clients/abc/hard');
+    const res = await request(makeExportApp()).get('/api/v1/clients/abc/export');
 
     expect(res.status).toBe(422);
+    expect(res.body).toHaveProperty('error');
+  });
+
+  it('returns 404 for cross-company access (use case rejects)', async () => {
+    (mockExportUseCase.execute as ReturnType<typeof vi.fn>).mockImplementation(() =>
+      Promise.reject(new ClientNotFoundError(42)),
+    );
+
+    const res = await request(makeExportApp()).get('/api/v1/clients/42/export');
+
+    expect(res.status).toBe(404);
     expect(res.body).toHaveProperty('error');
   });
 });

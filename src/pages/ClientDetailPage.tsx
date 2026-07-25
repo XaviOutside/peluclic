@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { Pet } from '@/types/pet';
 import type { Service } from '@/types/service';
 import { useClient } from '@/hooks/useClient';
-import { useDeactivateClient, useReactivateClient, useHardDeleteClient } from '@/hooks/useClientMutations';
+import { useDeactivateClient, useReactivateClient, useExportClient, useHardDeleteClient } from '@/hooks/useClientMutations';
 import { useUser } from '@/hooks/useUser';
 import { usePets } from '@/hooks/usePets';
 import { useServices } from '@/hooks/useServices';
@@ -70,6 +70,7 @@ export default function ClientDetailPage() {
   const { client, isLoading, error, refetch } = useClient(clientId);
   const deactivateMutation = useDeactivateClient();
   const reactivateMutation = useReactivateClient();
+  const exportMutation = useExportClient();
   const hardDeleteMutation = useHardDeleteClient();
   const user = useUser();
   const isAdmin = user?.role === 'admin';
@@ -212,25 +213,6 @@ export default function ClientDetailPage() {
     );
   }
 
-  function getConfirmTitle(): string {
-    if (confirmAction === 'hardDelete') return t('hardDelete.title');
-    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
-    return t('common:actions.reactivate');
-  }
-
-  function getConfirmMessage(): string {
-    if (!client) return '';
-    if (confirmAction === 'hardDelete') return t('hardDelete.message', { name: client.name });
-    if (confirmAction === 'deactivate') return t('deactivate.message', { name: client.name });
-    return t('reactivate.message', { name: client.name });
-  }
-
-  function getConfirmLabel(): string {
-    if (confirmAction === 'hardDelete') return t('hardDelete.confirmLabel');
-    if (confirmAction === 'deactivate') return t('common:actions.deactivate');
-    return t('common:actions.reactivate');
-  }
-
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <ClientDetailCard
@@ -244,7 +226,7 @@ export default function ClientDetailPage() {
         deactivateLoading={deactivateMutation.isLoading}
         reactivateLoading={reactivateMutation.isLoading}
         hardDeleteLoading={hardDeleteMutation.isLoading}
-        isAdmin={isAdmin}
+        exportLoading={exportMutation.isLoading}
       />
 
       {actionError && (
@@ -264,11 +246,7 @@ export default function ClientDetailPage() {
         message={getConfirmMessage()}
         confirmLabel={getConfirmLabel()}
         destructive={confirmAction === 'deactivate' || confirmAction === 'hardDelete'}
-        isLoading={
-          deactivateMutation.isLoading ||
-          reactivateMutation.isLoading ||
-          hardDeleteMutation.isLoading
-        }
+        isLoading={deactivateMutation.isLoading || reactivateMutation.isLoading || hardDeleteMutation.isLoading}
       />
 
       {/* Embedded pet list */}

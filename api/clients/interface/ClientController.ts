@@ -9,6 +9,7 @@ import { ReactivateClientUseCase } from '../application/ReactivateClient';
 import { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import { SearchClientsUseCase } from '../application/SearchClients';
 import { HardDeleteClientUseCase } from '../application/HardDeleteClient';
+import { ExportClientUseCase } from '../application/ExportClient';
 import {
   ClientNotFoundError,
   ClientValidationError,
@@ -68,6 +69,7 @@ export class ClientController {
     private readonly softDeleteClientUseCase: SoftDeleteClientUseCase,
     private readonly searchClientsUseCase: SearchClientsUseCase,
     private readonly hardDeleteClientUseCase: HardDeleteClientUseCase,
+    private readonly exportClientUseCase?: ExportClientUseCase,
   ) {}
 
   async createClient(req: Request, res: Response): Promise<void> {
@@ -240,6 +242,31 @@ export class ClientController {
     try {
       await this.hardDeleteClientUseCase.execute(id);
       res.status(204).send();
+    } catch (err) {
+      handleError(err, res);
+    }
+  }
+
+  async exportClient(req: Request, res: Response): Promise<void> {
+    if (!this.exportClientUseCase) {
+      res.status(501).json({ error: 'Export not available' });
+      return;
+    }
+
+    const rawId = String(req.params['id'] ?? '');
+    const id = parsePositiveInt(rawId);
+
+    if (id === null) {
+      logger.warn({ id: req.params['id'] }, 'Invalid client id');
+      res.status(422).json({ error: 'Invalid id — must be a positive integer' });
+      return;
+    }
+
+    const companyId = req.companyId;
+
+    try {
+      const exportData = await this.exportClientUseCase.execute(id, companyId);
+      res.status(200).json(exportData);
     } catch (err) {
       handleError(err, res);
     }

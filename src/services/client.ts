@@ -61,3 +61,9 @@ export function hardDeleteClient(id: number): Promise<void> {
   const storage = getStorage();
   return storage.hardDeleteClient(id);
 }
+
+/** Export all client data as structured JSON (Art. 20 GDPR). */
+export function exportClient(id: number): Promise<Record<string, unknown>> {
+  const storage = getStorage();
+  return storage.exportClient(id);
+}

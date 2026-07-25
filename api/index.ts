@@ -5,10 +5,13 @@ initSentry();
 import { setupExpressErrorHandler } from '@sentry/node';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
+import path from 'path';
+import { existsSync } from 'fs';
 import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { logger } from './observability/logger';
+import { sanitizeUrl } from './shared/utils/piiSanitizer';
 import { PrismaClientRepository } from './clients/infrastructure/PrismaClientRepository';
 import { CreateClientUseCase } from './clients/application/CreateClient';
 import { GetClientUseCase } from './clients/application/GetClient';
@@ -17,7 +20,6 @@ import { UpdateClientUseCase } from './clients/application/UpdateClient';
 import { DeactivateClientUseCase } from './clients/application/DeactivateClient';
 import { ReactivateClientUseCase } from './clients/application/ReactivateClient';
 import { SoftDeleteClientUseCase } from './clients/application/SoftDeleteClient';
-import { HardDeleteClientUseCase } from './clients/application/HardDeleteClient';
 import { SearchClientsUseCase } from './clients/application/SearchClients';
 import { ExportClientUseCase } from './clients/application/ExportClient';
 import { ClientController } from './clients/interface/ClientController';
@@ -99,7 +101,7 @@ app.use(express.json());
 
 // Request logging middleware
 app.use((req: Request, _res: Response, next: NextFunction) => {
-  logger.info({ method: req.method, url: req.url }, 'incoming request');
+  logger.info({ method: req.method, url: sanitizeUrl(req.url) }, 'incoming request');
   next();
 });
 
@@ -135,6 +137,17 @@ const authController = new AuthController(
 // Rate limit only applies to the auth router (login + logout)
 app.use('/api/v1/auth', authLimiter, createAuthRouter(authController));
 
+// Logo endpoint is public — <img> tags don't send Authorization headers.
+const UPLOADS_DIR = path.resolve('api/uploads');
+app.get('/api/v1/settings/logo', (_req: Request, res: Response) => {
+  const logoPath = path.join(UPLOADS_DIR, 'logo.png');
+  if (!existsSync(logoPath)) {
+    res.status(404).json({ error: 'No logo uploaded' });
+    return;
+  }
+  res.sendFile(logoPath);
+});
+
 // Apply auth middleware AFTER auth routes but BEFORE all business routes.
 // All /api/v1/* routes below this line require a valid session token.
 app.use('/api/v1', createAuthMiddleware(authRepository));
@@ -155,12 +168,8 @@ const clientController = new ClientController(
   new ReactivateClientUseCase(clientRepository),
   new SoftDeleteClientUseCase(clientRepository, petRepository),
   new SearchClientsUseCase(clientRepository),
-  new HardDeleteClientUseCase(
-    clientRepository,
-    petRepository,
-    appointmentRepository,
-    serviceRepository,
-  ),
+  new HardDeleteClientUseCase(clientRepository, petRepository, appointmentRepository, serviceRepository),
+  new ExportClientUseCase(clientRepository, petRepository, appointmentRepository, serviceRepository),
 );
 app.use('/api/v1/clients', createClientRouter(clientController));
 
