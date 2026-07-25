@@ -21,6 +21,8 @@ import type { DeactivateClientUseCase } from '../application/DeactivateClient';
 import type { ReactivateClientUseCase } from '../application/ReactivateClient';
 import type { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import type { SearchClientsUseCase } from '../application/SearchClients';
+import type { HardDeleteClientUseCase } from '../application/HardDeleteClient';
+import type { ExportClientUseCase } from '../application/ExportClient';
 
 /** Stable domain client fixture — used in multiple tests */
 const domainClient = {
@@ -62,6 +64,7 @@ const mockDeactivate = { execute: vi.fn() } as unknown as DeactivateClientUseCas
 const mockReactivate = { execute: vi.fn() } as unknown as ReactivateClientUseCase;
 const mockSoftDelete = { execute: vi.fn() } as unknown as SoftDeleteClientUseCase;
 const mockSearch = { execute: vi.fn() } as unknown as SearchClientsUseCase;
+const mockHardDelete = { execute: vi.fn() } as unknown as HardDeleteClientUseCase;
 
 const controller = new ClientController(
   mockCreate,
@@ -72,6 +75,7 @@ const controller = new ClientController(
   mockReactivate,
   mockSoftDelete,
   mockSearch,
+  mockHardDelete,
 );
 
 const makeApp = () => {
@@ -326,8 +330,6 @@ describe('Error handling', () => {
 
 // ── Export Client tests (Art. 20 GDPR data portability) ──────────────────────
 
-import { ExportClientUseCase } from '../../clients/application/ExportClient';
-
 const mockExportUseCase = { execute: vi.fn() } as unknown as ExportClientUseCase;
 
 const exportController = new ClientController(
@@ -339,6 +341,7 @@ const exportController = new ClientController(
   mockReactivate,
   mockSoftDelete,
   mockSearch,
+  mockHardDelete,
   mockExportUseCase,
 );
 

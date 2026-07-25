@@ -21,6 +21,7 @@ import { DeactivateClientUseCase } from './clients/application/DeactivateClient'
 import { ReactivateClientUseCase } from './clients/application/ReactivateClient';
 import { SoftDeleteClientUseCase } from './clients/application/SoftDeleteClient';
 import { SearchClientsUseCase } from './clients/application/SearchClients';
+import { HardDeleteClientUseCase } from './clients/application/HardDeleteClient';
 import { ExportClientUseCase } from './clients/application/ExportClient';
 import { ClientController } from './clients/interface/ClientController';
 import { createClientRouter } from './clients/interface/clientRouter';
@@ -168,6 +169,7 @@ const clientController = new ClientController(
   new ReactivateClientUseCase(clientRepository),
   new SoftDeleteClientUseCase(clientRepository, petRepository),
   new SearchClientsUseCase(clientRepository),
+  new HardDeleteClientUseCase(clientRepository, petRepository, appointmentRepository, serviceRepository),
   new ExportClientUseCase(clientRepository, petRepository, appointmentRepository, serviceRepository),
 );
 app.use('/api/v1/clients', createClientRouter(clientController));
