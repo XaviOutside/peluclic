@@ -1,4 +1,5 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
+import type { Prisma } from '@prisma/client';
 import { Service, CreateServiceInput, UpdateServiceInput } from '../domain/Service';
 import { IServiceRepository, FindAllParams } from '../domain/IServiceRepository';
 import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
@@ -103,6 +104,13 @@ export class PrismaServiceRepository implements IServiceRepository {
     await prisma.service.update({
       where: { id },
       data: { deletedAt: new Date() },
+    });
+  }
+
+  async hardDeleteByPetId(petId: number, tx?: Prisma.TransactionClient): Promise<void> {
+    const db = tx ?? prisma;
+    await db.service.deleteMany({
+      where: { petId },
     });
   }
 

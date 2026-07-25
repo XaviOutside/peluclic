@@ -1,4 +1,5 @@
 import { prisma } from '@api/shared/infrastructure/prisma';
+import type { Prisma } from '@prisma/client';
 import { Pet, CreatePetInput, UpdatePetInput, PET_STATUS } from '../domain/Pet';
 import { IPetRepository } from '../domain/IPetRepository';
 import { PaginatedResult } from '@api/shared/domain/PaginatedResult';
@@ -211,6 +212,22 @@ export class PrismaPetRepository implements IPetRepository {
       },
       data: { deletedAt: new Date() },
     });
+  }
+
+  async hardDelete(id: number, tx?: Prisma.TransactionClient): Promise<void> {
+    const db = tx ?? prisma;
+    await db.pet.delete({
+      where: { id },
+    });
+  }
+
+  async findByClientIdIncludeDeleted(clientId: number): Promise<Pet[]> {
+    const rows = await prisma.pet.findMany({
+      where: { client_id: clientId },
+      orderBy: { id: 'asc' },
+    });
+
+    return rows.map((row) => this.mapToPet(row));
   }
 
   /**
