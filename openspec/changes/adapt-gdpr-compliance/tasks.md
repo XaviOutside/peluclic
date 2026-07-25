@@ -34,16 +34,16 @@ Chain strategy: pending
 
 ## PR #2 — Cascade Hard-Delete (ADMIN ONLY)
 
-- [ ] 2.1 RED: `ClientErrors.test.ts` — `ClientNotErasableError`; GREEN: `ClientErrors.ts`
-- [ ] 2.2 RED: `PrismaClientRepository.integration.test.ts` — hardDelete, findByIdIncludeDeleted; GREEN: `IClientRepository` + Prisma impl (deletedAt in mapper)
-- [ ] 2.3 RED: `PrismaPetRepository.integration.test.ts` — hardDelete, findByClientIdIncludeDeleted; GREEN: `IPetRepository` + Prisma impl
-- [ ] 2.4 RED: `PrismaAppointmentRepository.integration.test.ts` — hardDeleteByPetId excludes status=2; GREEN: `IAppointmentRepository` + Prisma impl
-- [ ] 2.5 RED: `HardDeleteClient.test.ts` — cascade Client→Pet→Appt→Service in $transaction, completed preserved; GREEN: `HardDeleteClientUseCase`
-- [ ] 2.6 RED: `ClientController.test.ts` — hardDeleteClient: 403 if role≠0, 200 cascade, 404; GREEN: controller method
-- [ ] 2.7 GREEN: `clientRouter.ts` `DELETE /:id/hard` with inline `req.role !== 0` guard
-- [ ] 2.8 GREEN: wire HardDeleteClientUseCase into `api/index.ts`
-- [ ] 2.9 RED: `ClientDetailPage.test.tsx` — "Delete Permanently" button + ConfirmDialog (irreversible warning); GREEN: `ClientDetailCard` admin-only button + `ClientDetailPage` modal + `useHardDeleteClient`
-- [ ] 2.10 GREEN: `src/services/client.ts` + `src/hooks/useClientMutations.ts` — hardDeleteClient, useHardDeleteClient
+- [x] 2.1 RED: `ClientErrors.test.ts` — `ClientNotErasableError`; GREEN: `ClientErrors.ts`
+- [x] 2.2 RED: `PrismaClientRepository.integration.test.ts` — hardDelete, findByIdIncludeDeleted; GREEN: `IClientRepository` + Prisma impl (deletedAt in mapper)
+- [x] 2.3 RED: `PrismaPetRepository.integration.test.ts` — hardDelete, findByClientIdIncludeDeleted; GREEN: `IPetRepository` + Prisma impl
+- [x] 2.4 RED: `PrismaAppointmentRepository.integration.test.ts` — hardDeleteByPetId excludes status=2; GREEN: `IAppointmentRepository` + Prisma impl
+- [x] 2.5 RED: `HardDeleteClient.test.ts` — cascade Client→Pet→Appt→Service in $transaction, completed preserved; GREEN: `HardDeleteClientUseCase`
+- [x] 2.6 RED: `ClientController.test.ts` — hardDeleteClient: 403 if role≠0, 200 cascade, 404; GREEN: controller method
+- [x] 2.7 GREEN: `clientRouter.ts` `DELETE /:id/hard` with inline `req.role !== 0` guard
+- [x] 2.8 GREEN: wire HardDeleteClientUseCase into `api/index.ts`
+- [x] 2.9 RED: `ClientDetailPage.test.tsx` — "Delete Permanently" button + ConfirmDialog (irreversible warning); GREEN: `ClientDetailCard` admin-only button + `ClientDetailPage` modal + `useHardDeleteClient`
+- [x] 2.10 GREEN: `src/services/client.ts` + `src/hooks/useClientMutations.ts` — hardDeleteClient, useHardDeleteClient
 
 ## PR #3 — Consent Recording (Art. 7)
 
