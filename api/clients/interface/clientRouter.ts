@@ -34,6 +34,17 @@ export function createClientRouter(controller: ClientController): Router {
     controller.exportClient(req, res),
   );
 
+  // DELETE /api/v1/clients/:id/hard — admin-only cascade hard-delete
+  // MUST be declared before /:id
+  router.delete('/:id/hard', (req: Request, res: Response) => {
+    // Admin-only guard — role 0 = admin
+    if (req.role !== 0) {
+      res.status(403).json({ error: 'Forbidden — admin only' });
+      return;
+    }
+    controller.hardDeleteClient(req, res);
+  });
+
   // GET    /api/v1/clients/:id
   router.get('/:id', (req: Request, res: Response) =>
     controller.getClient(req, res),
