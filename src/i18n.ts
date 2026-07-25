@@ -22,7 +22,6 @@ import settingsEn from '@/locales/en/settings.json';
 import appointmentsEn from '@/locales/en/appointments.json';
 import loginEn from '@/locales/en/login.json';
 
-import { getSettings } from '@/services/settings';
 import { LANG_MAP } from '@/types/settings';
 
 i18n
@@ -75,15 +74,26 @@ document.documentElement.lang = i18n.language;
 
 /**
  * Fetch company settings and apply the stored defaultLang
- * before the first render. Falls back to navigator detection
- * (already configured via LanguageDetector) on failure.
+ * before the first render. Uses raw fetch() to avoid depending
+ * on the storage layer (which requires React to be mounted).
+ *
+ * Falls back to navigator detection on failure.
  *
  * Call this in main.tsx BEFORE ReactDOM.createRoot().
  */
 export async function initializeLanguage(): Promise<void> {
   try {
-    const settings = await getSettings();
-    const lang = LANG_MAP[settings.defaultLang];
+    const token = localStorage.getItem('token');
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const res = await fetch('/api/v1/settings', { headers });
+    if (!res.ok) throw new Error(`Settings API returned ${res.status}`);
+
+    const settings = await res.json();
+    const lang = LANG_MAP[settings.defaultLang as 0 | 1];
     if (lang && lang !== i18n.language) {
       await i18n.changeLanguage(lang);
     }
