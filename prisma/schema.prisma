@@ -116,6 +116,7 @@ model Appointment {
   scheduledAt DateTime  @map("scheduled_at")
   status      Int       @db.TinyInt @default(0) // 0=pending, 1=confirmed, 2=completed, 3=cancelled
   notes       String?   @db.VarChar(500)
+  deletedAt   DateTime? @map("deleted_at")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 

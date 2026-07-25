@@ -8,6 +8,7 @@ import { DeactivateClientUseCase } from '../application/DeactivateClient';
 import { ReactivateClientUseCase } from '../application/ReactivateClient';
 import { SoftDeleteClientUseCase } from '../application/SoftDeleteClient';
 import { SearchClientsUseCase } from '../application/SearchClients';
+import { HardDeleteClientUseCase } from '../application/HardDeleteClient';
 import {
   ClientNotFoundError,
   ClientValidationError,
@@ -66,6 +67,7 @@ export class ClientController {
     private readonly reactivateClientUseCase: ReactivateClientUseCase,
     private readonly softDeleteClientUseCase: SoftDeleteClientUseCase,
     private readonly searchClientsUseCase: SearchClientsUseCase,
+    private readonly hardDeleteClientUseCase: HardDeleteClientUseCase,
   ) {}
 
   async createClient(req: Request, res: Response): Promise<void> {
@@ -220,6 +222,24 @@ export class ClientController {
     try {
       const clients = await this.searchClientsUseCase.execute({ query: q as string });
       res.status(200).json(clients.map(toClientResponseDto));
+    } catch (err) {
+      handleError(err, res);
+    }
+  }
+
+  async hardDeleteClient(req: Request, res: Response): Promise<void> {
+    const rawId = String(req.params['id'] ?? '');
+    const id = parsePositiveInt(rawId);
+
+    if (id === null) {
+      logger.warn({ id: req.params['id'] }, 'Invalid client id');
+      res.status(422).json({ error: 'Invalid id — must be a positive integer' });
+      return;
+    }
+
+    try {
+      await this.hardDeleteClientUseCase.execute(id);
+      res.status(204).send();
     } catch (err) {
       handleError(err, res);
     }
