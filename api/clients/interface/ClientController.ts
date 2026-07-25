@@ -71,7 +71,15 @@ export class ClientController {
   async createClient(req: Request, res: Response): Promise<void> {
     try {
       const body = req.body as CreateClientDto;
-      const client = await this.createClientUseCase.execute(body);
+      const client = await this.createClientUseCase.execute({
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        phone2: body.phone2,
+        address: body.address,
+        notes: body.notes,
+        consentGivenAt: new Date(body.consentGivenAt),
+      });
       res.status(201).json(toClientResponseDto(client));
     } catch (err) {
       handleError(err, res);

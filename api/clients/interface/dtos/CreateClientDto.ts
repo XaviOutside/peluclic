@@ -15,4 +15,6 @@ export interface CreateClientDto {
   address?: string;
   /** Notes — optional */
   notes?: string;
+  /** GDPR consent timestamp (ISO 8601) — required for Art. 7 */
+  consentGivenAt: string;
 }

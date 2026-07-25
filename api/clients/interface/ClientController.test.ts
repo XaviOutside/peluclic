@@ -33,6 +33,7 @@ const domainClient = {
   status: 1 as const,
   lastServiceDate: null,
   notes: null,
+  consentGivenAt: new Date('2026-07-25T10:00:00.000Z'),
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
   updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   deletedAt: null,
@@ -49,6 +50,7 @@ const expectedDto = {
   status: 'active',
   lastServiceDate: null,
   notes: null,
+  consentGivenAt: '2026-07-25T10:00:00.000Z',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
 };
@@ -95,11 +97,31 @@ describe('POST /api/v1/clients', () => {
 
     const res = await request(makeApp())
       .post('/api/v1/clients')
-      .send({ name: 'John Doe', email: 'john@example.com', phone: '555-0001' });
+      .send({
+        name: 'John Doe',
+        email: 'john@example.com',
+        phone: '555-0001',
+        consentGivenAt: '2026-07-25T10:00:00Z',
+      });
 
     expect(res.status).toBe(201);
     expect(res.body).toMatchObject(expectedDto);
     expect(res.body).not.toHaveProperty('deletedAt');
+    expect(res.body.consentGivenAt).toBe('2026-07-25T10:00:00.000Z');
+  });
+
+  it('returns 422 when consentGivenAt is missing', async () => {
+    (mockCreate.execute as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new ClientValidationError('GDPR consent is required'),
+    );
+
+    const res = await request(makeApp())
+      .post('/api/v1/clients')
+      .send({ name: 'John Doe', email: 'john@example.com', phone: '555-0001' });
+
+    expect(res.status).toBe(422);
+    expect(res.body).toHaveProperty('error');
+    expect(res.body.error).toBe('GDPR consent is required');
   });
 
   it('returns 422 when name is missing (ClientValidationError)', async () => {
@@ -109,7 +131,7 @@ describe('POST /api/v1/clients', () => {
 
     const res = await request(makeApp())
       .post('/api/v1/clients')
-      .send({ email: 'john@example.com', phone: '555-0001' });
+      .send({ email: 'john@example.com', phone: '555-0001', consentGivenAt: '2026-07-25T10:00:00Z' });
 
     expect(res.status).toBe(422);
     expect(res.body).toHaveProperty('error');
@@ -123,7 +145,12 @@ describe('POST /api/v1/clients', () => {
 
     const res = await request(makeApp())
       .post('/api/v1/clients')
-      .send({ name: 'John Doe', email: 'not-an-email', phone: '555-0001' });
+      .send({
+        name: 'John Doe',
+        email: 'not-an-email',
+        phone: '555-0001',
+        consentGivenAt: '2026-07-25T10:00:00Z',
+      });
 
     expect(res.status).toBe(422);
     expect(res.body).toHaveProperty('error');
