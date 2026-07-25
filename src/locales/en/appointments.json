@@ -44,7 +44,10 @@
     "notesPlaceholder": "Add notes (max 500 characters)",
     "notesMaxLength": "Notes must not exceed 500 characters",
     "save": "Save Appointment",
+    "saveUpdate": "Update",
     "cancel": "Cancel",
+    "close": "Close",
+    "statusLabel": "Status",
     "noPetsFound": "No pets found for this client",
     "petRequired": "Please select a pet",
     "clientRequired": "Please select a client",
@@ -61,6 +64,13 @@
     "loadFailed": "Failed to load appointments. Please refresh the page.",
     "doubleBooking": "Pet already booked at this time.",
     "petNotFound": "Pet not found.",
-    "notFound": "Appointment not found."
+    "notFound": "Appointment not found.",
+    "updateFailed": "Failed to update the appointment. Please try again.",
+    "cancelFailed": "Failed to cancel the appointment. Please try again."
+  },
+  "cancel": {
+    "title": "Cancel Appointment",
+    "message": "Cancel {{petName}}'s appointment on {{date}} at {{time}}?",
+    "confirm": "Yes, cancel it"
   }
 }
