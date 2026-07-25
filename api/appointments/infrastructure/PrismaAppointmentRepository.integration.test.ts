@@ -51,10 +51,9 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  // Clean up appointments before each test for isolation
-  await prisma.appointment.deleteMany({
-    where: { pet_id: TEST_PET_ID },
-  });
+  // Clean up ALL appointments for full test isolation
+  // (findByDateRange queries the whole table — no pet_id filter)
+  await prisma.appointment.deleteMany();
 });
 
 describe('PrismaAppointmentRepository (integration)', () => {
@@ -275,5 +274,112 @@ describe('PrismaAppointmentRepository (integration)', () => {
     expect(updated.status).toBe(APPOINTMENT_STATUS.CANCELLED);
     expect(updated.notes).toBe('Cancelled');
     expect(updated.scheduledAt).toEqual(newTime);
+  });
+
+  // ── softDelete ────────────────────────────────────────────────────────────
+
+  it('softDelete sets status=3 and deletedAt to now', async () => {
+    const created = await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T10:00:00Z'),
+    });
+
+    const before = Date.now();
+    const deleted = await repo.softDelete(created.id);
+    const after = Date.now();
+
+    expect(deleted.id).toBe(created.id);
+    expect(deleted.status).toBe(APPOINTMENT_STATUS.CANCELLED);
+    expect(deleted.deletedAt).toBeInstanceOf(Date);
+    expect(deleted.deletedAt!.getTime()).toBeGreaterThanOrEqual(before);
+    expect(deleted.deletedAt!.getTime()).toBeLessThanOrEqual(after);
+  });
+
+  // ── hardDelete ────────────────────────────────────────────────────────────
+
+  it('hardDelete permanently removes an appointment', async () => {
+    const created = await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T11:00:00Z'),
+    });
+
+    await repo.hardDelete(created.id);
+
+    const found = await repo.findById(created.id);
+    expect(found).toBeNull();
+  });
+
+  // ── hardDeleteByPetId ─────────────────────────────────────────────────────
+
+  it('hardDeleteByPetId removes all appointments for a pet', async () => {
+    await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T12:00:00Z'),
+    });
+    await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T13:00:00Z'),
+    });
+
+    await repo.hardDeleteByPetId(TEST_PET_ID);
+
+    const remaining = await repo.findByDateRange(
+      new Date('2026-07-24T00:00:00Z'),
+      new Date('2026-07-24T23:59:59Z'),
+    );
+    expect(remaining).toEqual([]);
+  });
+
+  // ── hardDeleteByClientId ──────────────────────────────────────────────────
+
+  it('hardDeleteByClientId removes all appointments for a client', async () => {
+    await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T14:00:00Z'),
+    });
+    await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T15:00:00Z'),
+    });
+
+    await repo.hardDeleteByClientId(TEST_CLIENT_ID);
+
+    const remaining = await repo.findByDateRange(
+      new Date('2026-07-24T00:00:00Z'),
+      new Date('2026-07-24T23:59:59Z'),
+    );
+    expect(remaining).toEqual([]);
+  });
+
+  // ── findByClientId ────────────────────────────────────────────────────────
+
+  it('findByClientId returns all appointments for a client, including soft-deleted', async () => {
+    const a1 = await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T16:00:00Z'),
+    });
+    const a2 = await repo.create({
+      petId: TEST_PET_ID,
+      clientId: TEST_CLIENT_ID,
+      scheduledAt: new Date('2026-07-24T17:00:00Z'),
+    });
+
+    // Soft-delete one of them
+    await repo.softDelete(a2.id);
+
+    const results = await repo.findByClientId(TEST_CLIENT_ID);
+    expect(results).toHaveLength(2);
+
+    const deletedOne = results.find((r) => r.id === a2.id);
+    expect(deletedOne).toBeDefined();
+    expect(deletedOne!.deletedAt).toBeInstanceOf(Date);
+    expect(deletedOne!.status).toBe(APPOINTMENT_STATUS.CANCELLED);
   });
 });
