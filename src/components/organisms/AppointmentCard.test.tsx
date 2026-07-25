@@ -80,3 +80,103 @@ describe('AppointmentCard', () => {
     expect(notesEl).toBeNull();
   });
 });
+
+// ── Cancel icon (Spec: appointment-calendar-frontend §AppointmentCard) ──
+
+describe('AppointmentCard cancel icon', () => {
+  it('renders cancel icon for pending appointment (status=0) when onCancel provided', () => {
+    render(
+      <AppointmentCard
+        appointment={{ ...mockAppointment, status: 0 }}
+        onClick={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByTestId('appointment-cancel-icon')).toBeInTheDocument();
+  });
+
+  it('renders cancel icon for confirmed appointment (status=1) when onCancel provided', () => {
+    render(
+      <AppointmentCard
+        appointment={{ ...mockAppointment, status: 1 }}
+        onClick={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByTestId('appointment-cancel-icon')).toBeInTheDocument();
+  });
+
+  it('hides cancel icon for completed appointment (status=2)', () => {
+    render(
+      <AppointmentCard
+        appointment={{ ...mockAppointment, status: 2 }}
+        onClick={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByTestId('appointment-cancel-icon')).toBeNull();
+  });
+
+  it('hides cancel icon for cancelled appointment (status=3)', () => {
+    render(
+      <AppointmentCard
+        appointment={{ ...mockAppointment, status: 3 }}
+        onClick={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByTestId('appointment-cancel-icon')).toBeNull();
+  });
+
+  it('does not render cancel icon when onCancel prop is absent (backward compat)', () => {
+    render(
+      <AppointmentCard
+        appointment={{ ...mockAppointment, status: 0 }}
+        onClick={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByTestId('appointment-cancel-icon')).toBeNull();
+  });
+
+  it('clicking cancel icon calls onCancel, not onClick', () => {
+    const handleCancel = vi.fn();
+    const handleClick = vi.fn();
+
+    render(
+      <AppointmentCard
+        appointment={mockAppointment}
+        onClick={handleClick}
+        onCancel={handleCancel}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId('appointment-cancel-icon'));
+
+    expect(handleCancel).toHaveBeenCalledWith(mockAppointment);
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  it('cancel icon click stopPropagation prevents card onClick', () => {
+    const handleCancel = vi.fn();
+    const handleClick = vi.fn();
+
+    render(
+      <AppointmentCard
+        appointment={mockAppointment}
+        onClick={handleClick}
+        onCancel={handleCancel}
+      />,
+    );
+
+    // Click the cancel icon — should NOT trigger card click
+    fireEvent.click(screen.getByTestId('appointment-cancel-icon'));
+
+    expect(handleClick).not.toHaveBeenCalled();
+    expect(handleCancel).toHaveBeenCalledTimes(1);
+  });
+});
