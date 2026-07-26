@@ -1,7 +1,7 @@
 # Peluclic — Guía de Presentación
 
 > **Uso**: entrega este documento a una IA (ChatGPT, Claude, Gemini) con el prompt:
-> *«Genera una presentación de Google Slides a partir de esta guía. Para cada slide, crea un prompt de generación de imagen en inglés (estilo flat vector illustration, paleta teal #226D7A + sky blue #B0E0E9 + warm brown #8A5928, friendly, professional dog grooming context) y el contenido textual en Markdown listo para copiar a Slides.»*
+> *«Genera una presentación Keynote a partir de esta guía. Para cada slide, crea un prompt de generación de imagen (estilo flat vector illustration, siguiendo el fichero DESIGN.md, friendly, professional dog grooming context) y el contenido textual en Markdown listo para copiar a Slides.»*
 
 ---
 
@@ -9,7 +9,7 @@
 
 **Título:** Peluclic
 
-**Subtítulo:** El software que tu peluquería canina merece. Gestiona clientes, mascotas y citas desde un solo lugar. Sin papel, sin caos, sin olvidos.
+**Subtítulo:** El software que tu peluquería canina merece. Gestiona clientes, mascotas y citas desde un solo lugar. Sin papel, Sin caos, sin olvidos.
 
 **Imagen:** Una ilustración de una peluquería canina moderna y ordenada, con un calendario digital flotando en el centro, perros felices alrededor, y una tableta mostrando la app. Colores teal y crema. Estilo flat vector, cálido y profesional.
 
@@ -37,7 +37,7 @@
 **Puntos:**
 - 🐾 **Ficha de cada cliente y su mascota**: nombre, contacto, raza, historial médico, servicios realizados
 - 📅 **Calendario semanal visual**: arrastra, crea, mueve citas con dos clics
-- 🔍 **Búsqueda instantánea**: escribe dos letras y encuentra al cliente o mascota que buscas
+- 🔍 **Búsqueda instantánea**: escribe tres letras y encuentra al cliente o mascota que buscas
 - 🌐 **Español e inglés**: tú eliges el idioma de la aplicación
 - ⚡ **Sin instalación**: funciona en el navegador, en tu ordenador, tableta o móvil
 
@@ -66,8 +66,7 @@
 **Puntos:**
 - 📅 Vista semanal de lunes a domingo — como una agenda tradicional, pero digital
 - ➕ **Nueva cita en segundos**: buscas al cliente, eliges la mascota, pones día y hora, añades una nota («corte verano + baño») y listo
-- 🚫 **Doble reserva bloqueada**: la app no te deja citar dos veces a la misma mascota a la misma hora — adiós a los conflictos
-- ⬅️➡️ Navega entre semanas con un clic
+- 🚫 **Doble reserva bloqueada**: la app no te deja citar dos veces a la misma mascota a la misma hora
 - 🎨 Cada cita se ve como una tarjeta de color en su hora exacta — imposible perderse
 
 **Imagen:** El calendario semanal en pantalla completa. Columnas de lunes a domingo, filas de 8:00 a 18:00. Tarjetas de colores (teal) ocupando los huecos de las citas. Una mano haciendo clic en «Nueva Cita» y un modal emergiendo con un formulario simple: buscar cliente, elegir mascota, fecha, hora, notas.
@@ -89,19 +88,20 @@
 | 🌐 **Multi-idioma** | Interfaz en Español o Inglés — cambia con un clic |
 | 🏢 **Configuración** | Pon tu logo, nombre del negocio, horarios y días laborables |
 | 📱 **Funciona en todo** | Ordenador, tableta, móvil — solo necesitas un navegador |
+| ICONO_SEGURIDAD **Cumple normativa GDPR** | Tus datos seguros cumpliendo la norma Europea |
 
 **Imagen:** Un grid de 8 iconos circulares (estilo app) con cada funcionalidad. Iconos en teal sobre fondo crema. Debajo de cada icono, una palabra clave. Composición limpia, estilo infografía.
 
 ---
 
-## Slide 7 — ¿Por Qué Canine Concierge?
+## Slide 7 — ¿Por Qué Peluclic?
 
 **Título:** Lo que nos diferencia
 
 **Puntos:**
 - 🎯 **Diseñado para peluquerías caninas**: no es un software genérico adaptado. Cada pantalla, cada botón, cada flujo está pensado para tu día a día.
 - 🚀 **Rápido de verdad**: búsqueda en 3 letras, calendario que carga al instante, crear una cita en menos de 10 segundos.
-- 🔒 **Tus datos seguros**: copias de seguridad automáticas, acceso protegido, sin papeles que se mojen o pierdan.
+- 🔒 **Tus datos seguros**: cumplimiento GDPR, acceso protegido, sin papeles que se mojen o pierdan.
 - 🌱 **Crece contigo**: empieza con lo básico y activa nuevas funciones cuando las necesites (facturación, recordatorios, analytics…).
 - ❤️ **Hecho por gente que entiende el sector**: no somos una gran corporación. Sabemos lo que es atender a 10 perros en un día y que todo cuadre.
 
@@ -117,11 +117,11 @@
 
 | Plan | Ideal para | Incluye |
 |---|---|---|
-| 🌱 **Básico** | Autónomos que empiezan | Hasta 100 clientes, 50 mascotas, calendario semanal, búsqueda |
-| ⭐ **Profesional** | Peluquerías establecidas | Clientes y mascotas ilimitados, informes semanales, personalización de logo |
-| 🏆 **Business** | Varias sedes o equipos | Todo lo anterior + multi-sede, facturación, soporte prioritario |
+| 🌱 **Básico** | Autónomos que empiezan | Hasta 50 clientes, 50 mascotas, calendario semanal, búsqueda |
+| ⭐ **Profesional** | Peluquerías establecidas | Clientes y mascotas ilimitados, informes semanales, facturación y todo lo básico |
+| 🏆 **Business** | Varias sedes o equipos | Todo lo anterior + multi-sede, agentes IA, soporte prioritario |
 
-*Precios disponibles bajo solicitud. Período de prueba gratuito de 30 días sin compromiso.*
+*Precios disponibles bajo solicitud. Demo gratuita disponible en la web sin necesidad de login.*
 
 **Imagen:** Tres tarjetas horizontales con los planes. Cada tarjeta tiene un color distintivo (verde suave para Básico, teal para Profesional, teal oscuro para Business). Iconos representando cada característica incluida. Diseño limpio tipo SaaS.
 
@@ -135,11 +135,10 @@
 
 | 🗓️ Próximamente | 🚀 En el horizonte |
 |---|---|
-| **Recordatorios automáticos** por email y SMS un día antes de la cita | **Control horario** del personal: fichar entrada y salida |
+| **Recordatorios automáticos** por email y SMS un día antes de la cita | **Control horario** del personal: fichar entrada y salida obligatorio por ley |
 | **Facturación integrada**: genera facturas en PDF desde la cita completada | **Dashboard de negocio**: ingresos, ocupación, servicios más vendidos |
-| **Login multi-usuario**: cada groomer con su propio acceso | **Comandos por voz**: «Crear cita para Max el lunes a las 10» |
 | **App móvil nativa** para iOS y Android | **Integración con WhatsApp**: confirmación automática y booking por chat |
-| | **Programa de fidelización**: puntos por visita, descuentos automáticos |
+| **Login multi-usuario**: cada groomer con su propio acceso | **Agente de IA**: Tu ayudante virtual |
 
 **Imagen:** Una línea de tiempo horizontal (timeline) con hitos. A la izquierda, elementos ya completados (check verde). En el centro, "Próximamente" con iconos de email, factura, login, móvil. A la derecha, "En el horizonte" con iconos futuristas. Estilo roadmap visual, teal y sky blue.
 
@@ -149,16 +148,16 @@
 
 **Título:** Empieza hoy — sin compromiso
 
-**Mensaje principal:** 30 días gratis. Sin tarjeta de crédito. Sin permanencia. Cancela cuando quieras.
+**Mensaje principal:** Demo gratuita. Sin tarjeta de crédito.
 
 **Puntos:**
-- ✨ Regístrate en 2 minutos
+- ✨ Demo sin registro.
 - 📅 Empieza a añadir clientes y citas hoy mismo
 - 📧 Soporte real por email y chat — respondemos personas, no bots
 - 🔄 Actualizaciones constantes con nuevas funciones
 
 **Call to action:**
-> Visita **canineconcierge.app** o escríbenos a **hola@canineconcierge.app**
+> Visita **Peluclic.com** o escríbenos a **hola@peluclic.com**
 
 **Imagen:** Un perro feliz (un golden retriever o similar) recién peinado, con un pañuelo teal al cuello, mirando a cámara. En la esquina inferior, el logo de Canine Concierge y el call to action. Fondo degradado suave de teal a sky blue. Transmite alegría, confianza y profesionalidad.
 
@@ -166,31 +165,7 @@
 
 ## Notas para el Diseñador
 
-### Paleta de Colores
-
-| Color | Código Hex | Uso |
-|---|---|---|
-| Teal principal | `#226D7A` | Botones, titulares, acentos |
-| Sky blue | `#B0E0E9` | Fondos secundarios, highlights |
-| Warm brown | `#8A5928` | Detalles, iconos terciarios |
-| Surface cream | `#F9FCFD` | Fondos de diapositiva |
-| White | `#FFFFFF` | Texto sobre fondos oscuros |
-| Success green | `#4CAF50` | Checks, completado |
-| Error red | `#E53935` | Solo si es necesario |
-
-### Tipografía
-
-- **Títulos**: Open Sans Bold, 36-40pt
-- **Cuerpo**: Open Sans Regular, 18-22pt
-- **Labels / Datos**: Inter Medium, 14-16pt
-
-### Estilo Visual
-
-- **Flat vector illustration** en todas las imágenes — nada de fotos de stock genéricas
-- **Perros** como protagonistas secundarios (golden retriever, bulldog francés, caniche)
-- **Personas** representadas como peluqueros profesionales con delantal, diversas en género y edad
-- **Transiciones entre slides**: el caos → el orden → la satisfacción
-- **Sin clutter**: máximo 5 bullets por slide, mucho espacio en blanco, una idea por slide
+Utiliza el fichero DESIGN.md.
 
 ### Prompt Base para IA de Imágenes
 
