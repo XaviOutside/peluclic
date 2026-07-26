@@ -203,7 +203,7 @@ async function main() {
         address: null,
         notes: null,
         lastServiceDate: null,
-        status: 0, // inactive
+        status: 1, // active — needed for e2e search tests
       },
     }),
   ]);

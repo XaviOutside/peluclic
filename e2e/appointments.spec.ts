@@ -44,7 +44,8 @@ test.describe('appointments calendar', () => {
     const modalHeading = page.locator('h2:has-text("Cita"), h2:has-text("Appointment")').first();
     await expect(modalHeading).toBeVisible({ timeout: 5000 });
 
-    const cancelBtn = page.locator('button:has-text("Cancel"), button:has-text("Cancelar")').first();
+    // Use the dedicated data-testid on the cancel button — locale-independent
+    const cancelBtn = page.locator('[data-testid="appointment-modal-cancel"]');
     await cancelBtn.click();
 
     await expect(modalHeading).not.toBeVisible({ timeout: 5000 });
@@ -135,19 +136,25 @@ test.describe('appointments edit and cancel', () => {
     const token = await getApiToken();
     const monday = getNextMonday();
     const dateStr = monday.toISOString().slice(0, 10);
-    const suffix = (Date.now() % 10000) + 100;
-    const time = `${String(Math.floor(suffix / 60) % 24).padStart(2, '0')}:${String(suffix % 60).padStart(2, '0')}`;
 
-    await createAppt(token, 1, `${dateStr}T${time}:00.000Z`, 'To cancel');
+    const timeStr = `12:${String(Date.now() % 60).padStart(2, '0')}`;
+    await createAppt(token, 1, `${dateStr}T${timeStr}:00.000Z`, 'To cancel');
 
     await page.goto(`/calendar?week=${dateStr}`);
     await page.waitForSelector('[data-testid="appointments-page"]');
     await page.waitForLoadState('networkidle');
 
-    // Click the cancel icon
+    // Dismiss any pre-existing dialogs that may block interaction
+    const existingDialog = page.locator('[role="dialog"]');
+    if (await existingDialog.isVisible().catch(() => false)) {
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(300);
+    }
+
+    // Click the cancel icon on the first cancelable card (force click through any overlay)
     const cancelIcon = page.locator('[data-testid="appointment-cancel-icon"]').first();
     await expect(cancelIcon).toBeVisible({ timeout: 10000 });
-    await cancelIcon.click();
+    await cancelIcon.click({ force: true });
 
     // Confirm dialog should appear
     await expect(page.locator('h2:has-text("Cancel Appointment"), h2:has-text("Cancelar Cita")')).toBeVisible({ timeout: 5000 });

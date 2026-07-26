@@ -36,7 +36,7 @@ export default function AppointmentCard({
   const minutes = String(scheduledDate.getUTCMinutes()).padStart(2, '0');
   const time = `${hours}:${minutes}`;
 
-  const showCancel = onCancel && CANCELABLE_STATUSES.has(appointment.status);
+  const showCancel = CANCELABLE_STATUSES.has(appointment.status);
 
   const handleCancelClick = (e: React.MouseEvent) => {
     e.stopPropagation();

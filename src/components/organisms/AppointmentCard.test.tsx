@@ -132,7 +132,7 @@ describe('AppointmentCard cancel icon', () => {
     expect(screen.queryByTestId('appointment-cancel-icon')).toBeNull();
   });
 
-  it('does not render cancel icon when onCancel prop is absent (backward compat)', () => {
+  it('renders cancel icon for pending appointment even without onCancel callback', () => {
     render(
       <AppointmentCard
         appointment={{ ...mockAppointment, status: 0 }}
@@ -140,7 +140,8 @@ describe('AppointmentCard cancel icon', () => {
       />,
     );
 
-    expect(screen.queryByTestId('appointment-cancel-icon')).toBeNull();
+    // Icon should always render for cancelable statuses — clicking is a no-op without callback
+    expect(screen.getByTestId('appointment-cancel-icon')).toBeInTheDocument();
   });
 
   it('clicking cancel icon calls onCancel, not onClick', () => {

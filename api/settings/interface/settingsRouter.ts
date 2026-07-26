@@ -22,7 +22,7 @@ export function createSettingsRouter(controller: SettingsController): Router {
   });
 
   // Multer error handler — catches LIMIT_FILE_SIZE before it reaches the controller
-  const uploadWithErrorHandling = (req: Request, res: Response, next: NextFunction) => {
+  const uploadWithErrorHandling = (req: Request, res: Response, next: NextFunction): void => {
     upload.single('logo')(req, res, (err) => {
       if (err) {
         if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
