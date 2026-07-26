@@ -63,8 +63,8 @@ jobs:
             git reset --hard origin/main
 
             # ── 2. Build & restart containers ────────────────────────
-            docker compose -f docker-compose.prod.yml down api app --timeout 10
-            docker compose -f docker-compose.prod.yml build --no-cache api app
+            docker compose -f docker-compose.prod.yml down api frontend-builder web --timeout 10
+            docker compose -f docker-compose.prod.yml build --no-cache api frontend-builder
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
             # ── 3. Run database migrations ───────────────────────────
