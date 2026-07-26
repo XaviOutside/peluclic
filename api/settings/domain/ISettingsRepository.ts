@@ -10,4 +10,7 @@ export interface ISettingsRepository {
 
   /** Upserts the singleton settings row: findFirst → update or create. */
   upsert(data: UpdateSettingsInput): Promise<CompanySettings>;
+
+  /** Updates only the logoFilename field. Used after logo upload/deletion. */
+  updateLogoFilename(filename: string | null): Promise<CompanySettings>;
 }

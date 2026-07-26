@@ -149,6 +149,10 @@ node_modules/.prisma/
 .npmrc-approvals
 .DS_Store
 
+# Uploaded user content — never track
+api/uploads/*
+!api/uploads/.gitkeep
+
 # Master presentation
 Presentation.key
 playwright-report/

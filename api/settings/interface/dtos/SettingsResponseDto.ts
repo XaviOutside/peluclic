@@ -1,6 +1,4 @@
-import { CompanySettings } from '../../domain/CompanySettings';
-import { existsSync, statSync } from 'fs';
-import { LOGO_PATH } from '../../domain/CompanySettings';
+import type { CompanySettings } from '../../domain/CompanySettings';
 
 /**
  * Response DTO for the singleton settings resource.
@@ -8,7 +6,7 @@ import { LOGO_PATH } from '../../domain/CompanySettings';
  * - times are HH:MM strings.
  * - defaultLang is the raw TINYINT (0=en, 1=es) — the frontend maps it.
  * - tagline is optional company subtitle.
- * - logoUrl is included only when a logo file exists on disk.
+ * - logoUrl is included only when a logo has been uploaded (logoFilename is set).
  * - createdAt / updatedAt are ISO 8601 strings.
  */
 export interface SettingsResponseDto {
@@ -26,19 +24,12 @@ export interface SettingsResponseDto {
 
 /**
  * Maps a domain CompanySettings entity to a SettingsResponseDto.
- * Includes logoUrl when the file exists on disk.
+ * Includes logoUrl when logoFilename is set on the settings row.
  */
 export function toSettingsResponseDto(settings: CompanySettings): SettingsResponseDto {
-  let logoUrl: string | null = null;
-  try {
-    if (existsSync(LOGO_PATH)) {
-      // Append file size as cache-buster query param
-      const size = statSync(LOGO_PATH).size;
-      logoUrl = `/api/v1/settings/logo?cb=${size}`;
-    }
-  } catch {
-    // File missing or unreadable — omit logoUrl
-  }
+  const logoUrl = settings.logoFilename
+    ? `/api/v1/settings/logo`
+    : null;
 
   return {
     id: settings.id,

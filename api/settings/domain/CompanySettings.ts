@@ -27,6 +27,7 @@ export interface CompanySettings {
   workStartTime: string;
   workEndTime: string;
   defaultLang: Lang;
+  logoFilename: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,7 +46,6 @@ export interface UpdateSettingsInput {
 export const MAX_COMPANY_NAME_LENGTH = 200;
 export const MAX_TAGLINE_LENGTH = 100;
 export const MAX_LOGO_SIZE = 1 * 1024 * 1024; // 1 MB
-export const LOGO_PATH = 'api/uploads/logo.png';
 const TIME_REGEX = /^\d{2}:\d{2}$/;
 
 /* ── Validation functions ── */

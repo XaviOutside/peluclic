@@ -1,6 +1,6 @@
 /**
  * Supertest tests for SettingsController routes.
- * Use cases are mocked — no DB connection required.
+ * Use cases and repositories are mocked — no DB connection required.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
@@ -10,6 +10,8 @@ import { createSettingsRouter } from './settingsRouter';
 import { SettingsNotFoundError, SettingsValidationError } from '../domain/SettingsErrors';
 import type { GetSettingsUseCase } from '../application/GetSettings';
 import type { UpdateSettingsUseCase } from '../application/UpdateSettings';
+import type { ISettingsRepository } from '../domain/ISettingsRepository';
+import type { LogoAssetRepository } from '../infrastructure/LogoAssetRepository';
 
 const domainSettings = {
   id: 1,
@@ -19,6 +21,7 @@ const domainSettings = {
   workStartTime: '09:00',
   workEndTime: '17:00',
   defaultLang: 0 as const,
+  logoFilename: null as string | null,
   createdAt: new Date('2026-07-19T00:00:00.000Z'),
   updatedAt: new Date('2026-07-19T00:00:00.000Z'),
 };
@@ -35,8 +38,26 @@ const validBody = {
 const mockGetSettings = { execute: vi.fn() } as unknown as GetSettingsUseCase;
 const mockUpdateSettings = { execute: vi.fn() } as unknown as UpdateSettingsUseCase;
 
+// Mock repositories
+const mockSettingsRepo = {
+  findSettings: vi.fn(),
+  upsert: vi.fn(),
+  updateLogoFilename: vi.fn(),
+} as unknown as ISettingsRepository;
+
+const mockLogoAssetRepo = {
+  create: vi.fn(),
+  findByFilename: vi.fn(),
+  deleteOlderThan: vi.fn(),
+} as unknown as LogoAssetRepository;
+
 function createApp() {
-  const controller = new SettingsController(mockGetSettings, mockUpdateSettings);
+  const controller = new SettingsController(
+    mockGetSettings,
+    mockUpdateSettings,
+    mockSettingsRepo,
+    mockLogoAssetRepo,
+  );
   const app = express();
   app.use(express.json());
   app.use('/api/v1/settings', createSettingsRouter(controller));
@@ -53,7 +74,7 @@ describe('GET /api/v1/settings', () => {
     app = createApp();
   });
 
-  it('returns 200 with settings DTO', async () => {
+  it('returns 200 with settings DTO (logoUrl null when no logo uploaded)', async () => {
     vi.mocked(mockGetSettings.execute).mockResolvedValue(domainSettings);
 
     const res = await request(app).get('/api/v1/settings');
@@ -69,8 +90,20 @@ describe('GET /api/v1/settings', () => {
       defaultLang: 0,
       createdAt: '2026-07-19T00:00:00.000Z',
       updatedAt: '2026-07-19T00:00:00.000Z',
-      logoUrl: expect.stringMatching(/^\/api\/v1\/settings\/logo\?cb=\d+$/),
+      logoUrl: null,
     });
+  });
+
+  it('returns 200 with logoUrl when logo is uploaded', async () => {
+    vi.mocked(mockGetSettings.execute).mockResolvedValue({
+      ...domainSettings,
+      logoFilename: 'logo-abc123.png',
+    });
+
+    const res = await request(app).get('/api/v1/settings');
+
+    expect(res.status).toBe(200);
+    expect(res.body.logoUrl).toBe('/api/v1/settings/logo');
   });
 
   it('returns 404 when settings not found', async () => {

@@ -7,13 +7,12 @@ import { toSettingsResponseDto } from './dtos/SettingsResponseDto';
 import type { UpdateSettingsDto } from './dtos/UpdateSettingsDto';
 import type { UpdateSettingsInput } from '../domain/CompanySettings';
 import { MAX_LOGO_SIZE } from '../domain/CompanySettings';
-import { existsSync, mkdirSync } from 'fs';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { randomUUID } from 'crypto';
+import { LogoAssetRepository } from '../infrastructure/LogoAssetRepository';
+import type { ISettingsRepository } from '../domain/ISettingsRepository';
 
 /** Accepted logo MIME types — PNG only. */
 const ALLOWED_LOGO_TYPES = new Set(['image/png']);
-const UPLOADS_DIR = path.resolve('api/uploads');
 
 /**
  * Maps domain errors to HTTP status codes and response bodies.
@@ -41,6 +40,8 @@ export class SettingsController {
   constructor(
     private readonly getSettingsUseCase: GetSettingsUseCase,
     private readonly updateSettingsUseCase: UpdateSettingsUseCase,
+    private readonly settingsRepository: ISettingsRepository,
+    private readonly logoAssetRepo: LogoAssetRepository,
   ) {}
 
   async getSettings(_req: Request, res: Response): Promise<void> {
@@ -75,7 +76,8 @@ export class SettingsController {
 
   /**
    * Uploads a company logo. Only PNG files ≤ 1 MB are accepted.
-   * Existing logo is replaced. File is stored at api/uploads/logo.png.
+   * Binary is stored in the logo_assets DB table (distributed-friendly).
+   * The filename is a UUID and is persisted in CompanySettings.logoFilename.
    */
   async uploadLogo(req: Request, res: Response): Promise<void> {
     try {
@@ -98,14 +100,15 @@ export class SettingsController {
         return;
       }
 
-      // Ensure uploads directory exists
-      if (!existsSync(UPLOADS_DIR)) {
-        mkdirSync(UPLOADS_DIR, { recursive: true });
-      }
+      // Generate unique filename and persist to DB
+      const filename = `logo-${randomUUID()}.png`;
+      const asset = await this.logoAssetRepo.create(filename, file.buffer, file.mimetype, file.size);
 
-      // Write buffer to disk (replaces existing logo)
-      const destPath = path.join(UPLOADS_DIR, 'logo.png');
-      await writeFile(destPath, file.buffer);
+      // Update settings to point to the new logo
+      await this.settingsRepository.updateLogoFilename(filename);
+
+      // Clean up old logo rows (keep only the latest)
+      await this.logoAssetRepo.deleteOlderThan(asset.id);
 
       // Return updated settings with logoUrl
       const settings = await this.getSettingsUseCase.execute();
@@ -115,13 +118,26 @@ export class SettingsController {
     }
   }
 
-  /** Serves the company logo file if it exists on disk. */
-  serveLogo(_req: Request, res: Response): void {
-    const logoPath = path.join(UPLOADS_DIR, 'logo.png');
-    if (!existsSync(logoPath)) {
-      res.status(404).json({ error: 'No logo uploaded' });
-      return;
+  /** Serves the current company logo from the database. */
+  async serveLogo(_req: Request, res: Response): Promise<void> {
+    try {
+      const settings = await this.settingsRepository.findSettings();
+      if (!settings?.logoFilename) {
+        res.status(404).json({ error: 'No logo uploaded' });
+        return;
+      }
+
+      const asset = await this.logoAssetRepo.findByFilename(settings.logoFilename);
+      if (!asset) {
+        res.status(404).json({ error: 'No logo uploaded' });
+        return;
+      }
+
+      res.setHeader('Content-Type', asset.mimeType);
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send(asset.data);
+    } catch (err) {
+      handleError(err, res);
     }
-    res.sendFile(logoPath);
   }
 }

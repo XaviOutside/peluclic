@@ -50,6 +50,32 @@ export class PrismaSettingsRepository implements ISettingsRepository {
     return this.mapToSettings(created);
   }
 
+  async updateLogoFilename(filename: string | null): Promise<CompanySettings> {
+    const existing = await prisma.companySettings.findFirst();
+
+    if (existing) {
+      const updated = await prisma.companySettings.update({
+        where: { id: existing.id },
+        data: { logoFilename: filename },
+      });
+      return this.mapToSettings(updated);
+    }
+
+    // Should never happen — settings row is seeded.
+    const created = await prisma.companySettings.create({
+      data: {
+        companyName: 'My Business',
+        tagline: null,
+        workdays: [1, 2, 3, 4, 5],
+        workStartTime: '09:00',
+        workEndTime: '17:00',
+        defaultLang: 0,
+        logoFilename: filename,
+      },
+    });
+    return this.mapToSettings(created);
+  }
+
   /**
    * Maps a Prisma CompanySettings model row to the domain CompanySettings type.
    * Parses the JSON workdays column into a number[].
@@ -62,6 +88,7 @@ export class PrismaSettingsRepository implements ISettingsRepository {
     workStartTime: string;
     workEndTime: string;
     defaultLang: number;
+    logoFilename: string | null;
     createdAt: Date;
     updatedAt: Date;
   }): CompanySettings {
@@ -73,6 +100,7 @@ export class PrismaSettingsRepository implements ISettingsRepository {
       workStartTime: row.workStartTime,
       workEndTime: row.workEndTime,
       defaultLang: row.defaultLang as 0 | 1,
+      logoFilename: row.logoFilename,
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
     };
