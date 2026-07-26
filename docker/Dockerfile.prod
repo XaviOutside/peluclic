@@ -37,6 +37,10 @@ COPY --from=builder /app/dist ./dist
 # Copy generated Prisma client
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
+# tsconfig-paths needs a tsconfig.json at runtime for @api/* path aliases.
+# The prod version uses baseUrl=dist since compiled output lives there.
+COPY --from=builder /app/tsconfig.prod.json ./tsconfig.json
+
 EXPOSE 3000
 
-CMD ["node", "dist/api/index.js"]
+CMD ["node", "-r", "tsconfig-paths/register", "dist/api/index.js"]
