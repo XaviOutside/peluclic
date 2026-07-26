@@ -73,7 +73,7 @@ jobs:
 
             # ── 4. Health check ──────────────────────────────────────
             sleep 3
-            curl -f --max-time 10 http://localhost:3000/api/v1/health || echo "⚠️ Health check failed"
+            curl -f --max-time 10 http://localhost:3000/health || echo "⚠️ Health check failed"
 
             # ── 5. Show running containers ───────────────────────────
             docker compose -f docker-compose.prod.yml ps
