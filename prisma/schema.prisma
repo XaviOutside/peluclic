@@ -136,9 +136,23 @@ model CompanySettings {
   workStartTime String   @map("work_start_time") @db.VarChar(5) // HH:MM format
   workEndTime   String   @map("work_end_time") @db.VarChar(5)   // HH:MM format
   defaultLang   Int      @map("default_lang") @db.TinyInt // 0=English, 1=Spanish
+  logoFilename  String?  @map("logo_filename") @db.VarChar(255) // current logo filename
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@index([companyId])
   @@map("company_settings")
+}
+
+model LogoAsset {
+  id        Int      @id @default(autoincrement())
+  companyId Int      @default(1) @map("company_id") // ref: companies.id — no FK
+  filename  String   @db.VarChar(255)
+  data      Bytes    @db.LongBlob
+  mimeType  String   @map("mime_type") @db.VarChar(50)
+  size      Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([companyId])
+  @@map("logo_assets")
 }

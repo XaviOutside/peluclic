@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import { SettingsController } from './SettingsController';
 import { MAX_LOGO_SIZE } from '../domain/CompanySettings';
@@ -21,6 +21,21 @@ export function createSettingsRouter(controller: SettingsController): Router {
     limits: { fileSize: MAX_LOGO_SIZE },
   });
 
+  // Multer error handler — catches LIMIT_FILE_SIZE before it reaches the controller
+  const uploadWithErrorHandling = (req: Request, res: Response, next: NextFunction) => {
+    upload.single('logo')(req, res, (err) => {
+      if (err) {
+        if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+          res.status(422).json({ error: 'Logo must be 1 MB or smaller' });
+          return;
+        }
+        next(err);
+        return;
+      }
+      next();
+    });
+  };
+
   // GET  /api/v1/settings
   router.get('/', (req: Request, res: Response) =>
     controller.getSettings(req, res),
@@ -32,7 +47,7 @@ export function createSettingsRouter(controller: SettingsController): Router {
   );
 
   // POST /api/v1/settings/logo
-  router.post('/logo', upload.single('logo'), (req: Request, res: Response) =>
+  router.post('/logo', uploadWithErrorHandling, (req: Request, res: Response) =>
     controller.uploadLogo(req, res),
   );
 

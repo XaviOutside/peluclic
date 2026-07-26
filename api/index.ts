@@ -5,8 +5,6 @@ initSentry();
 import { setupExpressErrorHandler } from '@sentry/node';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import path from 'path';
-import { existsSync } from 'fs';
 import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
@@ -54,6 +52,7 @@ import { CancelAppointmentUseCase } from './appointments/application/CancelAppoi
 import { AppointmentController } from './appointments/interface/AppointmentController';
 import { createAppointmentRouter } from './appointments/interface/appointmentRouter';
 import { PrismaSettingsRepository } from './settings/infrastructure/PrismaSettingsRepository';
+import { LogoAssetRepository } from './settings/infrastructure/LogoAssetRepository';
 import { GetSettingsUseCase } from './settings/application/GetSettings';
 import { UpdateSettingsUseCase } from './settings/application/UpdateSettings';
 import { SettingsController } from './settings/interface/SettingsController';
@@ -139,14 +138,27 @@ const authController = new AuthController(
 app.use('/api/v1/auth', authLimiter, createAuthRouter(authController));
 
 // Logo endpoint is public — <img> tags don't send Authorization headers.
-const UPLOADS_DIR = path.resolve('api/uploads');
-app.get('/api/v1/settings/logo', (_req: Request, res: Response) => {
-  const logoPath = path.join(UPLOADS_DIR, 'logo.png');
-  if (!existsSync(logoPath)) {
-    res.status(404).json({ error: 'No logo uploaded' });
-    return;
+// Served from the DB (logo_assets table) for distributed support.
+const logoAssetRepo = new LogoAssetRepository();
+const publicSettingsRepo = new PrismaSettingsRepository();
+app.get('/api/v1/settings/logo', async (_req: Request, res: Response) => {
+  try {
+    const settings = await publicSettingsRepo.findSettings();
+    if (!settings?.logoFilename) {
+      res.status(404).json({ error: 'No logo uploaded' });
+      return;
+    }
+    const asset = await logoAssetRepo.findByFilename(settings.logoFilename);
+    if (!asset) {
+      res.status(404).json({ error: 'No logo uploaded' });
+      return;
+    }
+    res.setHeader('Content-Type', asset.mimeType);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(asset.data);
+  } catch {
+    res.status(500).json({ error: 'Internal server error' });
   }
-  res.sendFile(logoPath);
 });
 
 // Apply auth middleware AFTER auth routes but BEFORE all business routes.
@@ -213,6 +225,8 @@ const settingsRepository = new PrismaSettingsRepository();
 const settingsController = new SettingsController(
   new GetSettingsUseCase(settingsRepository),
   new UpdateSettingsUseCase(settingsRepository),
+  settingsRepository,
+  logoAssetRepo,
 );
 app.use('/api/v1/settings', createSettingsRouter(settingsController));
 
