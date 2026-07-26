@@ -139,7 +139,6 @@ test.describe('appointments edit and cancel', () => {
 
     const timeStr = `12:${String(Date.now() % 60).padStart(2, '0')}`;
     await createAppt(token, 1, `${dateStr}T${timeStr}:00.000Z`, 'To cancel');
-    console.log(`Created appointment at ${dateStr}T${timeStr}:00.000Z`);
 
     await page.goto(`/calendar?week=${dateStr}`);
     await page.waitForSelector('[data-testid="appointments-page"]');
