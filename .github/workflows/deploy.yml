@@ -36,6 +36,8 @@ jobs:
         run: npm test
         env:
           DATABASE_URL: mysql://test:test@localhost:3306/test
+          SEED_ADMIN_EMAIL: ci-test@peluclic.local
+          SEED_ADMIN_PASSWORD: ci-test-password
 
   deploy:
     name: Deploy to Contabo
