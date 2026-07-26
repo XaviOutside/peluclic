@@ -125,11 +125,11 @@ async function main() {
   const company = await seedCompany(prisma, 'Bark & Bubbles');
   console.log(`✅ Company "${company.name}" (id=${company.id}) ready`);
 
-  if (SEED_ADMIN_PASSWORD) {
+  if (SEED_ADMIN_PASSWORD && SEED_ADMIN_EMAIL) {
     const admin = await seedAdminUser(prisma, company.id, SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD);
     console.log(`✅ Admin user "${admin.email}" (id=${admin.id}) ready`);
   } else {
-    console.log('⚠️  Skipping admin user creation — set SEED_ADMIN_PASSWORD to create the admin user.');
+    console.log('⚠️  Skipping admin user creation — set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD to create the admin user.');
   }
 
   /* ── Clients ── */
@@ -536,8 +536,9 @@ async function main() {
   console.log('   ✅ Pagination ready — 20+ items per entity');
 }
 
-// Only run when executed directly (e.g. `tsx prisma/seed.ts`), not when imported by tests
-if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.includes('prisma/seed')) {
+// Only run when executed directly (e.g. `tsx prisma/seed.ts` or `node dist/prisma/seed.js`), not when imported by tests
+const isMainModule = require.main === module || process.argv[1]?.includes('prisma/seed');
+if (isMainModule) {
   main()
     .catch((e) => {
       console.error('❌ Seed failed:', e);

@@ -16,6 +16,7 @@
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
+    "seed:prod": "node dist/prisma/seed.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "security": "snyk test && snyk code test",

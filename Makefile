@@ -31,7 +31,7 @@ prod:         ## Full production deploy (build + up + migrate + seed)
 	docker compose -f docker-compose.prod.yml up -d
 	sleep 10
 	docker compose -f docker-compose.prod.yml exec api npx prisma migrate deploy
-	docker compose -f docker-compose.prod.yml exec api npx prisma db seed
+	docker compose -f docker-compose.prod.yml exec api npm run seed:prod
 
 prod-down:    ## Stop production
 	docker compose -f docker-compose.prod.yml down

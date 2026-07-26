@@ -20,6 +20,6 @@
     "declarationMap": true,
     "sourceMap": true
   },
-  "include": ["api/**/*", "src/**/*"],
+  "include": ["api/**/*", "src/**/*", "prisma/seed.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
