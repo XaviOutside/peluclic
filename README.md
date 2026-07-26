@@ -170,6 +170,9 @@ Conéctate por SSH a tu VPS Contabo y ejecuta:
 # ── Actualizar paquetes ─────────────────────────────────────
 apt update && apt upgrade -y
 
+# ── Instalar dependencias ────────────────────────────────────
+apt install -y make git curl
+
 # ── Instalar Docker ─────────────────────────────────────────
 curl -fsSL https://get.docker.com | bash
 systemctl enable docker
@@ -228,9 +231,8 @@ VITE_API_BASE_URL=https://tudominio.com
 #### 4. Primer Arranque
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d --build
-docker compose -f docker-compose.prod.yml exec api npx prisma migrate deploy
-docker compose -f docker-compose.prod.yml exec api npx tsx prisma/seed.ts
+# Con un solo comando: build → up → migrate → seed
+make prod
 ```
 
 #### 5. Configurar Dominio y HTTPS
@@ -299,8 +301,7 @@ Antes de que GitHub Actions funcione, haz el primer deploy manualmente:
 ```bash
 ssh root@<IP-DE-TU-VPS>
 cd /opt/peluclic
-docker compose -f docker-compose.prod.yml up -d --build
-docker compose -f docker-compose.prod.yml exec api npx prisma migrate deploy
+make prod
 ```
 
 A partir de aquí, cada merge a `main` desplegará automáticamente.
@@ -312,9 +313,21 @@ También puedes disparar el deploy manualmente desde la UI de GitHub: **Actions 
 ### Comandos Útiles
 
 ```bash
+# ── Makefile (recomendado) ──────────────────────────────────
+make help              # Lista todos los comandos
+make dev               # Entorno de desarrollo
+make up / make down    # Iniciar / parar desarrollo
+make prod              # Despliegue completo en producción
+make prod-down         # Parar producción
+make prod-logs         # Logs de producción
+make prod-restart      # Reiniciar API en producción
+
+# ── Docker directo ──────────────────────────────────────────
 docker compose ps                  # Estado de servicios
 docker compose logs -f api         # Logs del backend
 docker compose exec api npx prisma studio  # Interfaz visual de BD
+
+# ── Desarrollo local ────────────────────────────────────────
 npm run lint                       # ESLint + TypeScript check
 npm run build                      # Build de producción
 npm test                           # Tests unitarios y de componente
