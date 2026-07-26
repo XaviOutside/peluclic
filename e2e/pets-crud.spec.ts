@@ -34,12 +34,12 @@ test.describe('pets CRUD', () => {
     const uniqueSuffix = Date.now();
     const petName = `E2E Pet ${uniqueSuffix}`;
 
-    await page.getByLabel('Name').fill(petName);
-    await page.getByLabel('Species').fill('Dog');
-    await page.getByLabel('Breed').fill('Labrador');
+    await page.getByLabel(/name|nombre/i).fill(petName);
+    await page.getByLabel(/species|especie/i).fill('Dog');
+    await page.getByLabel(/breed|raza/i).fill('Labrador');
 
     // Select the first client from the Client dropdown
-    await page.getByLabel('Client').selectOption({ index: 1 });
+    await page.getByLabel(/client|cliente/i).selectOption({ index: 1 });
 
     await page
       .locator('button:has-text("Crear"), button:has-text("Create")')
@@ -72,7 +72,7 @@ test.describe('pets CRUD', () => {
     await expect(page).toHaveURL(/\/pets\/\d+\/edit/);
 
     const newName = `E2E Updated Pet ${Date.now()}`;
-    await page.getByLabel('Name').fill(newName);
+    await page.getByLabel(/name|nombre/i).fill(newName);
 
     await page
       .locator('button:has-text("Actualizar"), button:has-text("Update")')

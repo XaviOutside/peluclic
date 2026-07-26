@@ -44,7 +44,8 @@ test.describe('appointments calendar', () => {
     const modalHeading = page.locator('h2:has-text("Cita"), h2:has-text("Appointment")').first();
     await expect(modalHeading).toBeVisible({ timeout: 5000 });
 
-    const cancelBtn = page.locator('button:has-text("Cancel"), button:has-text("Cancelar")').first();
+    // Use the dedicated data-testid on the cancel button — locale-independent
+    const cancelBtn = page.locator('[data-testid="appointment-modal-cancel"]');
     await cancelBtn.click();
 
     await expect(modalHeading).not.toBeVisible({ timeout: 5000 });
@@ -135,14 +136,21 @@ test.describe('appointments edit and cancel', () => {
     const token = await getApiToken();
     const monday = getNextMonday();
     const dateStr = monday.toISOString().slice(0, 10);
-    const suffix = (Date.now() % 10000) + 100;
-    const time = `${String(Math.floor(suffix / 60) % 24).padStart(2, '0')}:${String(suffix % 60).padStart(2, '0')}`;
 
-    await createAppt(token, 1, `${dateStr}T${time}:00.000Z`, 'To cancel');
+    const hour = 14 + ((Date.now() / 60000) % 4 | 0); // 14:00–17:00, shifts per minute
+    const minute = Date.now() % 60;
+    const timeStr = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    await createAppt(token, 1, `${dateStr}T${timeStr}:00.000Z`, 'To cancel');
+
+    // Give the API a moment to persist
+    await page.waitForTimeout(300);
 
     await page.goto(`/calendar?week=${dateStr}`);
     await page.waitForSelector('[data-testid="appointments-page"]');
     await page.waitForLoadState('networkidle');
+
+    // Wait for appointment cards to render — at least one should appear
+    await expect(page.locator('[data-testid="appointment-card"]').first()).toBeVisible({ timeout: 5000 });
 
     // Click the cancel icon
     const cancelIcon = page.locator('[data-testid="appointment-cancel-icon"]').first();

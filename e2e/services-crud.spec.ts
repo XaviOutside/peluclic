@@ -34,8 +34,8 @@ test.describe('services CRUD', () => {
     const uniqueSuffix = Date.now();
     const serviceName = `E2E Service ${uniqueSuffix}`;
 
-    await page.getByLabel('Name').fill(serviceName);
-    await page.getByLabel('Price ($)').fill('35.00');
+    await page.getByLabel(/name|nombre/i).fill(serviceName);
+    await page.getByLabel(/price|precio/i).fill('35.00');
 
     await page
       .locator('button:has-text("Crear"), button:has-text("Create")')
@@ -68,7 +68,7 @@ test.describe('services CRUD', () => {
     await expect(page).toHaveURL(/\/services\/\d+\/edit/);
 
     const newName = `E2E Updated Service ${Date.now()}`;
-    await page.getByLabel('Name').fill(newName);
+    await page.getByLabel(/name|nombre/i).fill(newName);
 
     await page
       .locator('button:has-text("Actualizar"), button:has-text("Update")')

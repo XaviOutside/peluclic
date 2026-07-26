@@ -34,9 +34,9 @@ test.describe('clients CRUD', () => {
     const uniqueSuffix = Date.now();
     const testName = `E2E Create ${uniqueSuffix}`;
 
-    await page.getByLabel('Name').fill(testName);
-    await page.getByLabel('Email').fill(`e2e-create-${uniqueSuffix}@test.com`);
-    await page.locator('#phone').fill('555-0100');
+    await page.getByLabel(/name|nombre/i).fill(testName);
+    await page.getByLabel(/email|correo/i).fill(`e2e-create-${uniqueSuffix}@test.com`);
+    await page.getByLabel(/phone|teléfono/i).first().fill('555-0100');
 
     // GDPR consent checkbox — required since Art. 7 compliance
     await page.getByRole('checkbox').check({ force: true });
@@ -76,7 +76,7 @@ test.describe('clients CRUD', () => {
     await expect(page).toHaveURL(/\/clients\/\d+\/edit/);
 
     const newName = `E2E Updated ${Date.now()}`;
-    await page.getByLabel('Name').fill(newName);
+    await page.getByLabel(/name|nombre/i).fill(newName);
 
     // Ensure GDPR consent checkbox is checked (may be pre-checked for existing clients)
     const checkbox = page.getByRole('checkbox');
@@ -118,9 +118,9 @@ test.describe('clients CRUD', () => {
     const uniqueSuffix = Date.now();
     const testName = `E2E HardDelete ${uniqueSuffix}`;
 
-    await page.getByLabel('Name').fill(testName);
-    await page.getByLabel('Email').fill(`e2e-harddelete-${uniqueSuffix}@test.com`);
-    await page.locator('#phone').fill('555-0200');
+    await page.getByLabel(/name|nombre/i).fill(testName);
+    await page.getByLabel(/email|correo/i).fill(`e2e-harddelete-${uniqueSuffix}@test.com`);
+    await page.getByLabel(/phone|teléfono/i).first().fill('555-0200');
     await page.getByRole('checkbox').check({ force: true });
 
     await page
