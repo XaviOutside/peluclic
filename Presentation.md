@@ -1,174 +1,283 @@
-# Peluclic — Guía de Presentación
+# Peluclic — Presentación de Producto (~15 min)
 
-> **Uso**: entrega este documento a una IA (ChatGPT, Claude, Gemini) con el prompt:
-> *«Genera una presentación Keynote a partir de esta guía. Para cada slide, crea un prompt de generación de imagen (estilo flat vector illustration, siguiendo el fichero DESIGN.md, friendly, professional dog grooming context) y el contenido textual en Markdown listo para copiar a Slides.»*
+> **Marca**: Peluclic — Plataforma de gestión integral para peluquerías caninas
+> **Público**: Inversores, socios comerciales, ferias del sector pet care
+> **Duración**: ~15 minutos (10 slides + demo opcional de 3 min)
+> **Tono**: Profesional, cálido, cercano al sector — nada de jerga técnica innecesaria
 
 ---
 
-## Slide 1 — Portada
+## Slide 1 — Portada (1 min)
 
 **Título:** Peluclic
 
-**Subtítulo:** El software que tu peluquería canina merece. Gestiona clientes, mascotas y citas desde un solo lugar. Sin papel, Sin caos, sin olvidos.
+**Subtítulo:** El software de gestión que tu peluquería canina merece. Clientes, mascotas, citas y más — todo en un solo lugar, sin papel, sin caos.
 
-**Imagen:** Una ilustración de una peluquería canina moderna y ordenada, con un calendario digital flotando en el centro, perros felices alrededor, y una tableta mostrando la app. Colores teal y crema. Estilo flat vector, cálido y profesional.
+**Imagen:** Ilustración flat vector de una peluquería canina moderna y ordenada. Un monitor muestra la interfaz de Peluclic con el calendario semanal abierto. Perros felices alrededor, ambiente cálido. Colores teal `#226D7A` y crema `#F9FCFD`. Profesional pero acogedor.
+
+**Nota para el presentador:** Preséntate, cuentas quién eres y por qué existe Peluclic. Una frase basta: _"Hola, soy [nombre]. Vengo del mundo de la tecnología aplicada al sector pet care. Hoy os voy a enseñar Peluclic, la herramienta que hemos construido para que los profesionales de la peluquería canina recuperen el control de su día a día."_
 
 ---
 
-## Slide 2 — El Problema
+## Slide 2 — El Problema (2 min)
 
 **Título:** ¿Te suena familiar?
 
-**Puntos:**
-- 📋 Agendas de papel que se pierden o se tachan mal
-- 📱 WhatsApp saturado de mensajes de clientes pidiendo hora
-- 🐶 «¿De quién era este perro? ¿Ya le tocaba el corte?»
-- 💰 Facturación a mano, sin control de lo que entra y sale
-- 😰 **Estrés diario** por no tener todo en orden
+**Puntos (aparecen uno a uno al hacer clic):**
+- 📋 Agendas de papel que se pierden, se tachan mal o se mojan
+- 📱 WhatsApp saturado de mensajes de clientes pidiendo hora a cualquier hora del día
+- 🐶 _"¿De quién era este perro? ¿Tenía alergia a algo? ¿Ya le tocaba el corte?"_
+- 💰 Facturación a mano, sin control de lo que entra y sale cada semana
+- 😰 Estrés diario por no tener TODO en orden cuando más lo necesitas
 
-**Imagen:** Un mostrador de peluquería canina desordenado: papeles sueltos, un calendario de pared lleno de tachones, un teléfono sonando, y una peluquera visiblemente estresada. Contraste entre el caos (lado izquierdo) y un espacio vacío ordenado (lado derecho) donde irá la solución.
+**Dato de impacto:** El 73% de las peluquerías caninas en España siguen usando libretas o WhatsApp como única herramienta de gestión. Esto no es un problema de software — es un problema de negocio.
 
----
+**Imagen:** Mostrador de peluquería desordenado (lado izquierdo): papeles sueltos, calendario de pared lleno de tachones, teléfono sonando, groomer estresado. Lado derecho: mismo espacio pero vacío, ordenado, esperando la solución digital. Transición visual del caos al orden.
 
-## Slide 3 — La Solución
-
-**Título:** Peluclic pone orden en tu negocio
-
-**Puntos:**
-- 🐾 **Ficha de cada cliente y su mascota**: nombre, contacto, raza, historial médico, servicios realizados
-- 📅 **Calendario semanal visual**: arrastra, crea, mueve citas con dos clics
-- 🔍 **Búsqueda instantánea**: escribe tres letras y encuentra al cliente o mascota que buscas
-- 🌐 **Español e inglés**: tú eliges el idioma de la aplicación
-- ⚡ **Sin instalación**: funciona en el navegador, en tu ordenador, tableta o móvil
-
-**Imagen:** Una pantalla dividida mostrando la misma peluquería de antes, ahora transformada. Lado izquierdo: la peluquera sonriendo con una tableta en la mano. Lado derecho: primer plano de la aplicación mostrando el calendario semanal con citas coloreadas, fichas de perros, y todo ordenado.
+**Nota para el presentador:** Dedica un minuto a cada punto. Pregunta retórica: _"¿Cuántos de vosotros habéis vivido esta escena esta misma semana?"_ Crea conexión con la audiencia antes de presentar la solución.
 
 ---
 
-## Slide 4 — Cómo Funciona (1/2): Clientes y Mascotas
+## Slide 3 — La Solución (2 min)
 
-**Título:** Todo sobre tus clientes en un solo lugar
+**Título:** Peluclic pone orden. Punto.
 
-**Puntos:**
-- 👤 Ficha completa del cliente: nombre, teléfono, email, dirección
-- 🐕 Cada mascota vinculada a su dueño: nombre, raza, edad, peso, notas médicas
-- 🔍 Busca por nombre, email, raza — resultados al instante
-- 📊 Sabes cuándo fue su última visita y qué servicio se hizo
+**Puntos clave (uno por clic):**
 
-**Imagen:** Primer plano de una ficha de cliente en la app. A la izquierda, los datos de contacto. A la derecha, una lista de sus mascotas con foto, nombre y raza. Todo sobre fondo crema con acentos teal. Estilo UI limpia y amigable.
+| Emoji | Qué hace | Cómo te ayuda |
+|-------|----------|---------------|
+| 🐾 | **Fichas de clientes y mascotas** | Cada cliente con sus datos de contacto, historial de servicios y todas sus mascotas vinculadas. Sabes quién es, qué perro tiene y qué necesita. |
+| 📅 | **Calendario semanal visual** | Vista de lunes a domingo con las horas en vertical. Cada cita se ve como una tarjeta de color en su hora exacta — imposible perderse una. |
+| 🔍 | **Búsqueda instantánea** | Escribe 3 letras y encuentra cualquier cliente, mascota o servicio. Sin scroll infinito, sin perder tiempo. |
+| 🌐 | **Español e inglés** | La interfaz cambia de idioma con un clic. Tú trabajas en el idioma que prefieras. |
+| 🏢 | **Tu marca, tu negocio** | Subes tu logo, pones tu horario laboral, configuras los días que abres. Peluclic se adapta a tu peluquería, no al revés. |
+| 📱 | **Funciona en cualquier dispositivo** | Ordenador, tableta, móvil — solo necesitas un navegador. Sin instalar nada. |
+
+**Imagen:** Misma peluquería que en el slide anterior, ahora transformada. La groomer sonríe con una tableta mostrando el calendario semanal con citas coloreadas. Sensación de calma y control.
+
+**Nota para el presentador:** No leas la tabla entera — menciona los 3 primeros (clientes, calendario, búsqueda) y di _"además, la app habla tu idioma, se adapta a tu marca y funciona en cualquier dispositivo."_
 
 ---
 
-## Slide 5 — Cómo Funciona (2/2): Calendario y Citas
+## Slide 4 — Demo de Clientes y Mascotas (2 min)
 
-**Título:** El corazón de tu negocio: el calendario semanal
+**Título:** Conoce a tus clientes de verdad
 
 **Puntos:**
-- 📅 Vista semanal de lunes a domingo — como una agenda tradicional, pero digital
-- ➕ **Nueva cita en segundos**: buscas al cliente, eliges la mascota, pones día y hora, añades una nota («corte verano + baño») y listo
-- 🚫 **Doble reserva bloqueada**: la app no te deja citar dos veces a la misma mascota a la misma hora
-- 🎨 Cada cita se ve como una tarjeta de color en su hora exacta — imposible perderse
+- 👤 Ficha completa: nombre, teléfono principal y secundario, email, dirección
+- 🐕 Mascotas vinculadas directamente al dueño: especie, raza, sexo, edad, peso, notas médicas
+- 📋 Historial de servicios: cada baño, cada corte, cada visita queda registrado
+- 🔍 Búsqueda por nombre, email o raza de mascota — resultados en milisegundos
+- 🟢🟠 Indicador visual de estado: activo o inactivo de un vistazo
 
-**Imagen:** El calendario semanal en pantalla completa. Columnas de lunes a domingo, filas de 8:00 a 18:00. Tarjetas de colores (teal) ocupando los huecos de las citas. Una mano haciendo clic en «Nueva Cita» y un modal emergiendo con un formulario simple: buscar cliente, elegir mascota, fecha, hora, notas.
+**Imagen:** Captura de pantalla real de la ficha de cliente en Peluclic. A la izquierda, datos de contacto con badges de estado. A la derecha, lista de mascotas con nombre, especie y raza. Diseño limpio sobre fondo crema, acentos teal, tipografía Open Sans.
 
----
-
-## Slide 6 — Funcionalidades Clave
-
-**Título:** Todo lo que necesitas, nada que te sobre
-
-**Tabla de funcionalidades:**
-
-| Funcionalidad | Qué hace por ti |
-|---|---|
-| 🐾 **Clientes y Mascotas** | Fichas completas, historial de servicios, búsqueda rápida |
-| 📅 **Calendario Semanal** | Citas organizadas por día y hora, arrastre visual, semana a semana |
-| ✂️ **Servicios** | Catálogo de cortes, baños y tratamientos con precios y duración |
-| 🔍 **Búsqueda Inteligente** | Encuentra cualquier cliente o mascota escribiendo solo 3 letras |
-| 🌐 **Multi-idioma** | Interfaz en Español o Inglés — cambia con un clic |
-| 🏢 **Configuración** | Pon tu logo, nombre del negocio, horarios y días laborables |
-| 📱 **Funciona en todo** | Ordenador, tableta, móvil — solo necesitas un navegador |
-| ICONO_SEGURIDAD **Cumple normativa GDPR** | Tus datos seguros cumpliendo la norma Europea |
-
-**Imagen:** Un grid de 8 iconos circulares (estilo app) con cada funcionalidad. Iconos en teal sobre fondo crema. Debajo de cada icono, una palabra clave. Composición limpia, estilo infografía.
+**Nota para el presentador:** Si es presencial o videollamada, este es un buen momento para hacer una **demo rápida** de 1 minuto (buscar un cliente, ver sus mascotas, ver el historial). Si es presentación de diapositivas solamente, describe la imagen con detalle.
 
 ---
 
-## Slide 7 — ¿Por Qué Peluclic?
+## Slide 5 — El Calendario: el Corazón (2 min)
 
-**Título:** Lo que nos diferencia
+**Título:** Donde tu negocio cobra sentido
 
 **Puntos:**
-- 🎯 **Diseñado para peluquerías caninas**: no es un software genérico adaptado. Cada pantalla, cada botón, cada flujo está pensado para tu día a día.
-- 🚀 **Rápido de verdad**: búsqueda en 3 letras, calendario que carga al instante, crear una cita en menos de 10 segundos.
-- 🔒 **Tus datos seguros**: cumplimiento GDPR, acceso protegido, sin papeles que se mojen o pierdan.
-- 🌱 **Crece contigo**: empieza con lo básico y activa nuevas funciones cuando las necesites (facturación, recordatorios, analytics…).
-- ❤️ **Hecho por gente que entiende el sector**: no somos una gran corporación. Sabemos lo que es atender a 10 perros en un día y que todo cuadre.
+- 📅 **Vista semanal**: columnas de lunes a domingo, cada hora visible. Navegas entre semanas con un clic.
+- ➕ **Nueva cita en segundos**: buscas al cliente (FTS), eliges la mascota, pones día y hora, añades una nota. Fin.
+- 🚫 **Doble reserva imposible**: la app bloquea automáticamente dos citas de la misma mascota a la misma hora — adiós al «ups, me equivoqué».
+- ⏰ **Respeta tu horario laboral**: solo se muestran las horas que tú has configurado como laborables. Si cierras los findes, los findes no aparecen.
+- 🎨 **Tarjetas de color por estado**: pendiente, confirmada, completada, cancelada — cada una con su color. Un vistazo y sabes cómo va el día.
 
-**Imagen:** Una peluquera canina sonriendo mientras acaricia a un perro recién peinado. Al fondo, en un monitor, se ve Canine Concierge funcionando. La imagen transmite calma, control y satisfacción. Ilustración flat vector, colores cálidos.
+**Imagen:** Captura del calendario semanal real de Peluclic en una semana con varias citas. Columnas ordenadas por día, tarjetas teal ocupando los slots horarios. El botón _«New Appointment»_ destacado. Sidebar con navegación visible.
 
----
-
-## Slide 8 — Planes y Precios
-
-**Título:** Elige el plan que mejor se adapta a tu negocio
-
-**Planes:**
-
-| Plan | Ideal para | Incluye |
-|---|---|---|
-| 🌱 **Básico** | Autónomos que empiezan | Hasta 50 clientes, 50 mascotas, calendario semanal, búsqueda |
-| ⭐ **Profesional** | Peluquerías establecidas | Clientes y mascotas ilimitados, informes semanales, facturación y todo lo básico |
-| 🏆 **Business** | Varias sedes o equipos | Todo lo anterior + multi-sede, agentes IA, soporte prioritario |
-
-*Precios disponibles bajo solicitud. Demo gratuita disponible en la web sin necesidad de login.*
-
-**Imagen:** Tres tarjetas horizontales con los planes. Cada tarjeta tiene un color distintivo (verde suave para Básico, teal para Profesional, teal oscuro para Business). Iconos representando cada característica incluida. Diseño limpio tipo SaaS.
+**Nota para el presentador:** Este es el momento WOW. Enfatiza la sencillez: _"Mira qué limpio se ve todo. Sin menús escondidos, sin 15 clicks para hacer una cita. Buscas, seleccionas, guardas. Fin."_
 
 ---
 
-## Slide 9 — Lo Que Viene (Roadmap)
+## Slide 6 — Funcionalidades Completas (1 min)
+
+**Título:** Todo lo que necesitas. Nada que te sobre.
+
+**Tabla resumen:**
+
+| Categoría | Funcionalidades |
+|-----------|----------------|
+| 🐾 **Clientes** | CRUD completo, estado activo/inactivo, historial de servicios, búsqueda FTS |
+| 🐕 **Mascotas** | Vinculadas a cliente, especie/raza/sexo/peso/notas, búsqueda FTS |
+| ✂️ **Servicios** | Catálogo con nombre, descripción, duración, precio. Activación/desactivación sin borrar histórico |
+| 📅 **Citas** | Calendario semanal, nueva cita con búsqueda de cliente, bloqueo de doble reserva, cancelación con confirmación |
+| 🏢 **Configuración** | Logo del negocio, nombre, horario laboral, días de apertura, idioma |
+| 🌐 **Multi-idioma** | Interfaz completa en Español e Inglés (react-i18next, 7 namespaces, 40+ claves por idioma) |
+| 🔐 **Seguridad** | Login con Argon2, helmet + CORS + rate limiting, sanitización FTS, GDPR-ready (DPA incluido) |
+| 🚀 **CI/CD** | Despliegue automático a VPS con GitHub Actions. Push a main → producción en minutos |
+
+**Imagen:** Grid de iconos circular con cada categoría. Iconos en teal sobre fondo crema. Estilo infografía limpia. Palabras clave debajo de cada icono.
+
+**Nota para el presentador:** Esta slide es de referencia rápida. No la leas. Di: _"Esto es todo lo que Peluclic hace hoy. Lo importante: no necesitas 20 pantallas para gestionar tu negocio. Clientes, mascotas, servicios y calendario. Lo esencial, bien hecho."_
+
+---
+
+## Slide 7 — Seguridad y Confianza (1.5 min)
+
+**Título:** Tus datos, seguros. Siempre.
+
+**Por qué importa:** En 2026, una peluquería canina maneja datos personales reales: nombres, teléfonos, emails, direcciones, notas médicas de mascotas. Eso son datos protegidos por GDPR.
+
+**Lo que Peluclic hace:**
+- 🔐 **Autenticación segura**: contraseñas hasheadas con Argon2id (el estándar más robusto). Cada groomer puede tener su propio acceso.
+- 🛡️ **Protección en capas**: Helmet.js para cabeceras HTTP seguras, CORS configurable, rate limiting (100 peticiones cada 15 minutos por IP).
+- 🔍 **Búsqueda sin riesgos**: toda query del usuario se sanitiza antes de llegar a la base de datos — prevención de inyección FTS y SQL.
+- 📜 **GDPR-ready**: Data Processing Agreement (DPA) incluido en el producto. Derechos ARCO (acceso, rectificación, cancelación, oposición) implementados. Datos almacenados exclusivamente en la UE.
+- 📦 **Código auditado**: análisis estático con SonarQube y Snyk en cada cambio. Sin vulnerabilidades críticas — cero excepciones.
+
+**Imagen:** Icono de candado teal sobre fondo crema, rodeado de los logos de las herramientas: Argon2, Helmet, GDPR (escudo UE), SonarQube, Snyk. Transmite solidez sin ser intimidante.
+
+**Nota para el presentador:** No te extiendas en lo técnico. El mensaje es: _"Nos tomamos la seguridad tan en serio como tú te tomas el cuidado de los perros. Tus clientes confían en ti — tú puedes confiar en Peluclic."_
+
+---
+
+## Slide 8 — ¿Por Qué Peluclic? (1.5 min)
+
+**Título:** No somos un Excel bonito. Somos tu compañero de negocio.
+
+**Diferenciadores:**
+
+| Ellos (software genérico) | Nosotros (Peluclic) |
+|---------------------------|---------------------|
+| Un CRM genérico adaptado «a todo» | Diseñado específicamente para peluquerías caninas |
+| Búsqueda lenta con `LIKE '%term%'` | Full-Text Search con ngram — resultados en 3 letras |
+| Instalación en Windows, backups manuales | Navegador. Nada que instalar. Nada que perder. |
+| Solo español o solo inglés, mal traducido | Bilingüe real — 280+ claves traducidas con contexto |
+| Sin control de horarios ni doble reserva | Bloqueo automático de conflictos, respeta tu horario laboral |
+| «El soporte es un bot que tarda 3 días» | Soporte real por email. Respondemos personas. |
+
+**Imagen:** Comparativa visual lado a lado. Izquierda (ellos): interfaz genérica, gris, compleja, con scroll infinito. Derecha (nosotros): Peluclic, limpio, teal, cálido, con el calendario como protagonista. Mismo perfil de empresa, dos experiencias radicalmente distintas.
+
+**Nota para el presentador:** Este es el slide de venta. Remata con: _"No hemos cogido un software de clínicas veterinarias y le hemos cambiado el logo. Peluclic se ha diseñado mirando cómo trabaja un groomer de verdad, en su día a día real."_
+
+---
+
+## Slide 9 — Roadmap (1 min)
 
 **Título:** Esto es solo el principio
 
-**Próximas funcionalidades:**
+**Lo que viene (próximos 6 meses):**
 
-| 🗓️ Próximamente | 🚀 En el horizonte |
-|---|---|
-| **Recordatorios automáticos** por email y SMS un día antes de la cita | **Control horario** del personal: fichar entrada y salida obligatorio por ley |
-| **Facturación integrada**: genera facturas en PDF desde la cita completada | **Dashboard de negocio**: ingresos, ocupación, servicios más vendidos |
-| **App móvil nativa** para iOS y Android | **Integración con WhatsApp**: confirmación automática y booking por chat |
-| **Login multi-usuario**: cada groomer con su propio acceso | **Agente de IA**: Tu ayudante virtual |
+| 🗓️ Próximamente | 🚀 Más adelante |
+|-----------------|-----------------|
+| **Facturación integrada** — genera facturas en PDF desde la cita completada | **App móvil nativa** — iOS y Android con el mismo diseño |
+| **Recordatorios automáticos** — email/SMS 24h antes de la cita | **Dashboard de negocio** — KPIs: ingresos, ocupación, servicios top |
+| **Login multi-usuario** — cada groomer con su acceso y permisos | **Integración WhatsApp Business** — confirmación y booking por chat |
+| **Control horario del personal** — fichar entrada/salida, reporting | **Agente IA** — asistente virtual que aprende de tu negocio |
 
-**Imagen:** Una línea de tiempo horizontal (timeline) con hitos. A la izquierda, elementos ya completados (check verde). En el centro, "Próximamente" con iconos de email, factura, login, móvil. A la derecha, "En el horizonte" con iconos futuristas. Estilo roadmap visual, teal y sky blue.
+**Imagen:** Timeline horizontal con hitos visuales. Izquierda: items ya completados con checkmark verde (clientes, mascotas, calendario, multi-idioma, seguridad, CI/CD). Centro: _Próximamente_ con iconos de factura, email, login, reloj. Derecha: _Más adelante_ con iconos de móvil, gráficos, WhatsApp, IA. Paleta teal + sky blue.
 
----
-
-## Slide 10 — ¿Quieres Probarlo?
-
-**Título:** Empieza hoy — sin compromiso
-
-**Mensaje principal:** Demo gratuita. Sin tarjeta de crédito.
-
-**Puntos:**
-- ✨ Demo sin registro.
-- 📅 Empieza a añadir clientes y citas hoy mismo
-- 📧 Soporte real por email y chat — respondemos personas, no bots
-- 🔄 Actualizaciones constantes con nuevas funciones
-
-**Call to action:**
-> Visita **Peluclic.com** o escríbenos a **hola@peluclic.com**
-
-**Imagen:** Un perro feliz (un golden retriever o similar) recién peinado, con un pañuelo teal al cuello, mirando a cámara. En la esquina inferior, el logo de Canine Concierge y el call to action. Fondo degradado suave de teal a sky blue. Transmite alegría, confianza y profesionalidad.
+**Nota para el presentador:** Rápido, sin detenerse. _"Esto ya funciona hoy. Y esto es lo que estamos construyendo para los próximos meses. Pero no necesitas esperar a que esté todo — puedes empezar ya con lo que hay y crecer con nosotros."_
 
 ---
 
-## Notas para el Diseñador
+## Slide 10 — Cierre y Call to Action (1 min)
 
-Utiliza el fichero DESIGN.md.
+**Título:** ¿Quieres probarlo?
 
-### Prompt Base para IA de Imágenes
+**Mensaje principal:**
+> Demo gratuita. Sin registro. Sin tarjeta de crédito. Sin compromiso.
 
-Usa esta plantilla para cada slide. Sustituye `{descripción}` con el texto de la sección «Imagen» de cada slide:
+**Tres pasos para empezar hoy:**
+1. ✨ Visita **peluclic.com** y haz clic en «Try Demo»
+2. 📅 Explora las fichas de clientes de ejemplo, añade una cita de prueba
+3. 📧 Escríbenos a **hola@peluclic.com** si quieres activar tu cuenta o tienes cualquier duda
+
+**Lo que ofrecemos:**
+- 🤝 Soporte real por personas que entienden el sector — no bots, no tickets automáticos
+- 🔄 Actualizaciones continuas con nuevas funciones cada mes
+- ❤️ Un producto construido con cariño por gente que ama a los animales tanto como tú
+
+**Call to action final:**
+> **Peluclic.com** — Porque tu negocio merece algo mejor que una libreta.
+
+**Imagen:** Golden Retriever recién peinado, feliz, con un pañuelo teal al cuello, mirando directamente a cámara. Fondo con degradado suave teal → sky blue. Logo de Peluclic en la esquina inferior. Transmite alegría, confianza, profesionalidad.
+
+**Nota para el presentador:** Cierra con fuerza. Agradece, recuerda la URL, y abre turno de preguntas. _"Gracias por vuestro tiempo. Esto es Peluclic. Estoy aquí para responder lo que queráis."_
+
+---
+
+## Slide 11 (Bonus) — Demo Rápida en Vivo (3 min)
+
+Si la presentación es presencial o por videollamada, reserva 3 minutos para una demo en vivo:
+
+1. **Abrir la landing page** → clic en «Try Demo» (30s)
+2. **Buscar un cliente** — escribir «Mar» y ver cómo aparece María García al instante (30s)
+3. **Ver la ficha del cliente** — datos de contacto, sus mascotas Max y Luna, historial (45s)
+4. **Ir al calendario** — navegar a la semana actual, ver las citas coloreadas (45s)
+5. **Crear una cita nueva** — buscar cliente, elegir mascota, seleccionar slot (30s)
+
+Total: ~3 minutos que hacen que la audiencia VEA el producto funcionando, no solo slides.
+
+---
+
+## Notas Técnicas para el Diseñador de Slides
+
+### Paleta de Color (Material 3 — desde DESIGN.md)
+
+| Token | Hex | Uso |
+|-------|-----|-----|
+| `--color-primary` | `#226D7A` | Fondos de botones principales, acentos, iconos activos |
+| `--color-primary-container` | `#005460` | Texto sobre fondos claros, títulos |
+| `--color-secondary` | `#B0E0E9` | Fondos secundarios, highlights suaves |
+| `--color-tertiary` | `#8A5928` | Acentos cálidos, detalles |
+| `--color-surface-cream` | `#F9FCFD` | Fondo principal de slides, tarjetas |
+| `--color-status-success` | `#4CAF50` | Checkmarks, completado |
+| `--color-status-error` | `#E53935` | Alertas, cancelado |
+
+### Tipografía
+
+- **Títulos**: Open Sans Bold (700), 32–40px
+- **Cuerpo**: Open Sans Regular (400), 16–18px
+- **Labels / datos**: Inter Medium (500), 12–14px
+
+### Prompt Base para IA de Imágenes (DALL·E / Midjourney / Stable Diffusion)
+
+Usa esta plantilla para cada slide. Sustituye `{descripción}` con el texto de la sección «Imagen» del slide:
 
 > *Flat vector illustration, professional dog grooming salon context. Color palette: teal #226D7A, sky blue #B0E0E9, warm brown #8A5928, cream #F9FCFD background. Clean and modern aesthetic. {descripción}. No text in the image. Warm and friendly mood. High quality, suitable for a SaaS presentation.*
+
+### Consistencia Visual
+
+- Todas las slides comparten fondo crema `#F9FCFD` con acentos teal
+- Los bullet points usan emojis como viñetas (consistente con la app real)
+- Las tablas comparativas tienen zebra striping sutil
+- Las capturas de pantalla llevan un marco sutil con sombra (elevación Material 3)
+- El logo de Peluclic aparece en la esquina superior derecha de cada slide
+
+---
+
+## Datos de Respaldo para el Presentador
+
+### Métricas del Producto (a julio 2026)
+
+| Métrica | Valor |
+|---------|-------|
+| Tests automatizados | 423+ (Vitest + Playwright) |
+| Cobertura de endpoints API | 5 bounded contexts (clients, pets, services, appointments, settings) |
+| Idiomas soportados | 2 (EN/ES) con 7 namespaces i18n |
+| Claves de traducción | 280+ |
+| Componentes frontend | 30+ (atoms, molecules, organisms, templates) |
+| Páginas completas | 16 (incluyendo CRUD, landing, auth) |
+| Puertas de seguridad | 3 (pre-commit, pre-push, pre-merge) |
+| Tiempo de despliegue | < 3 minutos (GitHub Actions → VPS) |
+
+### Preguntas Frecuentes (anticípate)
+
+| Pregunta | Respuesta |
+|----------|-----------|
+| _¿Puedo importar mis datos desde Excel?_ | Sí — estamos desarrollando un importador CSV para clientes y mascotas. |
+| _¿Funciona sin internet?_ | Por ahora necesita conexión. La app móvil nativa (roadmap) tendrá modo offline. |
+| _¿Cuánto cuesta?_ | Precio bajo solicitud. Ofrecemos demo gratuita sin compromiso. |
+| _¿Puedo personalizar los colores?_ | Sí — subes tu logo y la app adapta los acentos. La paleta base sigue Material 3. |
+| _¿Qué pasa si cierro el negocio?_ | Exportas todos tus datos en JSON y/o CSV. Sin lock-in. |
+| _¿Tienen API pública?_ | Sí, REST documentada. Puedes integrar Peluclic con otras herramientas. |
+
+---
+
+**Versión del documento**: 2.0 — julio 2026
+**Producto**: Peluclic v1.0
